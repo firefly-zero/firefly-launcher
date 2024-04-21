@@ -1,0 +1,9 @@
+author_id = "sys"
+app_id = "launcher"
+author_name = "System"
+app_name = "Launcher"
+launcher = true
+sudo = true
+
+[files]
+font = { path = "../fonts/ascii/eg_6x9.fff" }
