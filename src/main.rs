@@ -22,7 +22,7 @@ pub const HEIGHT: usize = 160;
 
 #[no_mangle]
 extern fn boot() {
-    let font = FileBuf::load("font");
+    let font = rom::load_buf("font");
     unsafe { FONT.set(font) }.ok().unwrap();
 }
 
