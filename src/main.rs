@@ -141,7 +141,12 @@ fn apply_command() {
     let command = unsafe { COMMAND.take() };
     let Some(command) = command else { return };
     match command {
-        Command::GoDown => unsafe { POS += 1 },
+        Command::GoDown => unsafe {
+            let apps_count = APPS.get().unwrap().len();
+            if POS + 1 < apps_count {
+                POS += 1
+            }
+        },
         Command::GoUp => unsafe {
             POS = POS.saturating_sub(1);
         },
