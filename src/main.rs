@@ -146,6 +146,12 @@ fn apply_command() {
         Command::GoUp => unsafe {
             POS = POS.saturating_sub(1);
         },
-        Command::Launch => todo!(),
+        Command::Launch => {
+            let apps = unsafe { APPS.get() }.unwrap();
+            let pos = unsafe { POS };
+            if let Some(app) = apps.get(pos) {
+                sudo::run_app(&app.author_id, &app.app_id);
+            }
+        }
     }
 }
