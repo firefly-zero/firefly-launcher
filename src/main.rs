@@ -1,10 +1,11 @@
 #![no_std]
 #![no_main]
 extern crate alloc;
+use alloc::borrow::ToOwned;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
-use core::cell::OnceCell;
+use core::cell::{Cell, OnceCell};
 use firefly_meta::Meta;
 use firefly_rust::*;
 use talc::locking::AssumeUnlockable;
@@ -22,12 +23,20 @@ static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
 
 static mut FONT: OnceCell<FileBuf> = OnceCell::new();
 static mut APPS: OnceCell<Vec<App>> = OnceCell::new();
+static mut POS: usize = 0;
+static mut OLD_BUTTONS: Cell<Option<Buttons>> = Cell::new(None);
+static mut COMMAND: Cell<Option<Command>> = Cell::new(None);
 
 pub const WIDTH: usize = 240;
 pub const HEIGHT: usize = 160;
 
+enum Command {
+    GoDown,
+    GoUp,
+    Launch,
+}
+
 struct App {
-    path:      String,
     app_name:  String,
     author_id: String,
     app_id:    String,
@@ -51,7 +60,6 @@ extern fn boot() {
                 continue;
             };
             apps.push(App {
-                path:      app_path,
                 app_name:  meta.app_name.to_string(),
                 author_id: meta.author_id.to_string(),
                 app_id:    meta.app_id.to_string(),
@@ -62,20 +70,82 @@ extern fn boot() {
 }
 
 #[no_mangle]
+extern fn update() {
+    handle_input()
+}
+
+#[no_mangle]
 extern fn render() {
     clear_screen(Color::LIGHT);
     let font = unsafe { FONT.get() }.unwrap();
     let font: Font = font.into();
     let apps = unsafe { APPS.get() }.unwrap();
+    apply_command();
+    draw_selection();
     for (i, app) in apps.iter().enumerate() {
         draw_text(
             &app.app_name,
             &font,
             Point {
-                x: 10,
+                x: 20,
                 y: 10 + i as i32 * 10,
             },
             Color::DARK,
         );
+    }
+}
+
+fn handle_input() {
+    let new_buttons = read_buttons();
+    let old_buttons = unsafe { OLD_BUTTONS.get_mut() };
+    let Some(old_buttons) = old_buttons else {
+        let old_buttons = Some(Buttons::default());
+        unsafe {
+            OLD_BUTTONS.set(old_buttons);
+        }
+        return;
+    };
+    let pressed = new_buttons.just_pressed(old_buttons);
+    unsafe {
+        OLD_BUTTONS.set(Some(new_buttons));
+    };
+    let command = if pressed.x {
+        Some(Command::GoDown)
+    } else if pressed.y {
+        Some(Command::GoUp)
+    } else if pressed.a {
+        Some(Command::Launch)
+    } else {
+        None
+    };
+    unsafe {
+        COMMAND.set(command);
+    }
+}
+
+fn draw_selection() {
+    let pos = unsafe { POS };
+    draw_circle(
+        Point {
+            x: 10,
+            y: 4 + pos as i32 * 10,
+        },
+        8,
+        Style {
+            fill_color: Color::DARK,
+            ..Style::default()
+        },
+    );
+}
+
+fn apply_command() {
+    let command = unsafe { COMMAND.take() };
+    let Some(command) = command else { return };
+    match command {
+        Command::GoDown => unsafe { POS += 1 },
+        Command::GoUp => unsafe {
+            POS = POS.saturating_sub(1);
+        },
+        Command::Launch => todo!(),
     }
 }
