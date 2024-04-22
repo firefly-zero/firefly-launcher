@@ -1,7 +1,6 @@
 #![no_std]
 #![no_main]
 extern crate alloc;
-use alloc::borrow::ToOwned;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
