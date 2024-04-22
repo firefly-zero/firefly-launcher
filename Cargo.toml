@@ -3,6 +3,9 @@ name = "firefly-launcher"
 version = "0.1.0"
 edition = "2021"
 
+[dependencies]
+firefly-meta = { path = "../firefly-meta" }
+
 [dependencies.firefly-rust]
 path = "../firefly-rust"
 default-features = false
