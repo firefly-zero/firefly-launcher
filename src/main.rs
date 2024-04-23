@@ -95,7 +95,7 @@ extern fn render() {
 }
 
 fn handle_input() {
-    let new_buttons = read_buttons();
+    let new_buttons = read_buttons(Player::P0);
     let old_buttons = unsafe { OLD_BUTTONS.get_mut() };
     let Some(old_buttons) = old_buttons else {
         let old_buttons = Some(Buttons::default());
