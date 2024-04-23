@@ -75,7 +75,7 @@ extern fn update() {
 
 #[no_mangle]
 extern fn render() {
-    clear_screen(Color::LIGHT);
+    clear_screen(Color::Light);
     let font = unsafe { FONT.get() }.unwrap();
     let font: Font = font.into();
     let apps = unsafe { APPS.get() }.unwrap();
@@ -89,7 +89,7 @@ extern fn render() {
                 x: 20,
                 y: 10 + i as i32 * 10,
             },
-            Color::DARK,
+            Color::Dark,
         );
     }
 }
@@ -131,7 +131,7 @@ fn draw_selection() {
         },
         8,
         Style {
-            fill_color: Color::DARK,
+            fill_color: Color::Dark,
             ..Style::default()
         },
     );
