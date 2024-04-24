@@ -24,6 +24,7 @@ static mut FONT: OnceCell<FileBuf> = OnceCell::new();
 static mut APPS: OnceCell<Vec<App>> = OnceCell::new();
 static mut POS: usize = 0;
 static mut OLD_BUTTONS: Cell<Option<Buttons>> = Cell::new(None);
+static mut OLD_DPAD: Cell<Option<DPad>> = Cell::new(None);
 static mut COMMAND: Cell<Option<Command>> = Cell::new(None);
 
 pub const WIDTH: usize = 240;
@@ -96,28 +97,38 @@ extern fn render() {
 
 fn handle_input() {
     let new_buttons = read_buttons(Player::P0);
+    let new_pad = read_pad(Player::P0).unwrap_or_default();
+    let new_dpad = new_pad.as_dpad();
     let old_buttons = unsafe { OLD_BUTTONS.get_mut() };
+    let old_dpad = unsafe { OLD_DPAD.get_mut() };
     let Some(old_buttons) = old_buttons else {
-        let old_buttons = Some(Buttons::default());
+        let new_buttons = Some(Buttons::default());
         unsafe {
-            OLD_BUTTONS.set(old_buttons);
+            OLD_BUTTONS.set(new_buttons);
+            OLD_DPAD.set(Some(new_dpad));
         }
         return;
     };
-    let pressed = new_buttons.just_pressed(old_buttons);
-    unsafe {
-        OLD_BUTTONS.set(Some(new_buttons));
-    };
-    let command = if pressed.x {
-        Some(Command::GoDown)
-    } else if pressed.y {
-        Some(Command::GoUp)
-    } else if pressed.a {
+    let pressed_buttons = new_buttons.just_pressed(old_buttons);
+    let command = if pressed_buttons.a {
         Some(Command::Launch)
     } else {
-        None
+        let old_dpad = match old_dpad {
+            Some(old_dpad) => old_dpad,
+            None => &DPad::default(),
+        };
+        let pressed_dpad = new_dpad.just_pressed(old_dpad);
+        if pressed_dpad.up {
+            Some(Command::GoUp)
+        } else if pressed_dpad.down {
+            Some(Command::GoDown)
+        } else {
+            None
+        }
     };
     unsafe {
+        OLD_BUTTONS.set(Some(new_buttons));
+        OLD_DPAD.set(Some(new_dpad));
         COMMAND.set(command);
     }
 }
