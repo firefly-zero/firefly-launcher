@@ -1,20 +1,15 @@
 [package]
 name = "firefly-launcher"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [dependencies]
 firefly-meta = "0.1.0"
-
-[dependencies.firefly-rust]
-version = "0.1.1"
-default-features = false
-features = ["alloc", "sudo"]
-
-[dependencies.talc]
-version = "4.4.0"
-default-features = false
-features = ["lock_api"]
+firefly-rust = { version = "0.2.0", default-features = false, features = [
+    "alloc",
+    "sudo",
+] }
+talc = { version = "4.4.0", default-features = false, features = ["lock_api"] }
 
 # https://github.com/johnthagen/min-sized-rust
 [profile.release]

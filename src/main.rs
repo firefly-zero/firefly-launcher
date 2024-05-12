@@ -22,9 +22,7 @@ static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
 .lock();
 
 static mut STATE: OnceCell<State> = OnceCell::new();
-
-pub const WIDTH: usize = 240;
-pub const HEIGHT: usize = 160;
+pub const LINE_HEIGHT: i32 = 12;
 
 enum Command {
     GoDown,
@@ -38,7 +36,7 @@ struct App {
     app_id:    String,
 }
 
-/// All the global state. Create in [boot], updated in [update] and [render].
+/// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 struct State {
     font:        FileBuf,
     apps:        Vec<App>,
@@ -98,7 +96,7 @@ extern fn update() {
 #[no_mangle]
 extern fn render() {
     let state = get_state();
-    clear_screen(Color::Light);
+    clear_screen(Color::White);
     apply_command(state);
     draw_selection(state);
     let font = state.font.as_font();
@@ -107,10 +105,10 @@ extern fn render() {
             &app.app_name,
             &font,
             Point {
-                x: 20,
-                y: 10 + i as i32 * 10,
+                x: 10,
+                y: 10 + i as i32 * LINE_HEIGHT,
             },
-            Color::Dark,
+            Color::DarkBlue,
         );
     }
 }
@@ -140,14 +138,22 @@ fn handle_input() {
 }
 
 fn draw_selection(state: &mut State) {
-    draw_circle(
+    const MARGIN: i32 = 5;
+    draw_rounded_rect(
         Point {
-            x: 10,
-            y: 4 + state.pos as i32 * 10,
+            x: MARGIN,
+            y: 3 + state.pos as i32 * LINE_HEIGHT,
         },
-        8,
+        Size {
+            width:  WIDTH - MARGIN * 2,
+            height: LINE_HEIGHT,
+        },
+        Size {
+            width:  4,
+            height: 4,
+        },
         Style {
-            fill_color: Color::Dark,
+            stroke_color: Color::DarkBlue,
             ..Style::default()
         },
     );
