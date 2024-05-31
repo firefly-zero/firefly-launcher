@@ -178,7 +178,13 @@ fn handle_input() {
         state.shift = 0;
     }
 
-    state.top_pos = state.pos.saturating_sub(PER_SCREEN);
+    // If the selection cursor tries to go out of screen,
+    // scroll the list to keep the selection on the screen.
+    if state.pos > state.top_pos + PER_SCREEN {
+        state.top_pos = state.pos - PER_SCREEN;
+    } else if state.pos < state.top_pos {
+        state.top_pos = state.pos
+    }
 
     state.old_buttons = new_buttons;
     state.old_dpad = new_dpad;
@@ -187,7 +193,7 @@ fn handle_input() {
 
 fn draw_selection(state: &mut State) {
     const MARGIN: i32 = 5;
-    let pos = usize::min(state.pos, PER_SCREEN);
+    let pos = state.pos.saturating_sub(state.top_pos);
     draw_rounded_rect(
         Point {
             x: MARGIN,
