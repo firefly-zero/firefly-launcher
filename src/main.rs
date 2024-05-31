@@ -126,7 +126,7 @@ extern fn render() {
     for (i, app) in state.apps.iter().skip(state.top_pos).enumerate() {
         let point = Point {
             x: 10,
-            y: 10 + i as i32 * LINE_HEIGHT,
+            y: 9 + i as i32 * LINE_HEIGHT,
         };
         draw_text(&app.app_name, &font, point, Color::DarkBlue);
     }
@@ -191,7 +191,7 @@ fn draw_selection(state: &mut State) {
     draw_rounded_rect(
         Point {
             x: MARGIN,
-            y: 3 + pos as i32 * LINE_HEIGHT + state.shift,
+            y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
             width: WIDTH - MARGIN * 2,
