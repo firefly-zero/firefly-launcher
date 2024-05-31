@@ -117,15 +117,11 @@ extern fn render() {
     draw_selection(state);
     let font = state.font.as_font();
     for (i, app) in state.apps.iter().enumerate() {
-        draw_text(
-            &app.app_name,
-            &font,
-            Point {
-                x: 10,
-                y: 10 + i as i32 * LINE_HEIGHT,
-            },
-            Color::DarkBlue,
-        );
+        let point = Point {
+            x: 10,
+            y: 10 + i as i32 * LINE_HEIGHT,
+        };
+        draw_text(&app.app_name, &font, point, Color::DarkBlue);
     }
 }
 
@@ -135,27 +131,26 @@ fn handle_input() {
     let new_pad = read_pad(Player::P0).unwrap_or_default();
     let new_dpad = new_pad.as_dpad();
 
+    // If a direction button is held, track for how long.
     if new_dpad.up || new_dpad.down {
-        // A direction button is held. Track for how long.
-        state.held_for += 1
+        state.held_for += 1;
     } else {
-        // No direction button is held.
-        state.held_for = 0
+        state.held_for = 0;
     }
 
     let pressed_buttons = new_buttons.just_pressed(&state.old_buttons);
     let command = if pressed_buttons.a {
         Some(Command::Launch)
+    } else if state.held_for > 30 && state.held_for % 4 == 0 {
+        // a button is held for 0.5s
+        Some(if new_dpad.up {
+            Command::GoUp
+        } else {
+            Command::GoDown
+        })
     } else {
         let pressed_dpad = new_dpad.just_pressed(&state.old_dpad);
-        if state.held_for > 30 && state.held_for % 4 == 0 {
-            // a button is held for 0.5s
-            Some(if new_dpad.up {
-                Command::GoUp
-            } else {
-                Command::GoDown
-            })
-        } else if pressed_dpad.up {
+        if pressed_dpad.up {
             Some(Command::GoUp)
         } else if pressed_dpad.down {
             Some(Command::GoDown)
