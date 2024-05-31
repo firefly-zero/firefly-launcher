@@ -104,6 +104,7 @@ fn read_apps() -> Vec<App> {
             });
         }
     }
+    apps.sort_by(|a, b| a.app_name.cmp(&b.app_name));
     apps
 }
 
