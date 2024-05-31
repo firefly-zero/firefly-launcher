@@ -39,11 +39,18 @@ struct App {
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 struct State {
     font: FileBuf,
+    /// The list of all installed apps.
     apps: Vec<App>,
+    /// The currently selected app index.
     pos: usize,
+    /// The state of buttons on the previous frame.
     old_buttons: Buttons,
+    /// The state of direction buttons on the previous frame.
     old_dpad: DPad,
+    /// The next command to run when rendering.
     command: Option<Command>,
+    /// For how long up or down button (pad) is held.
+    held_for: u32,
 }
 
 /// Get the global state
@@ -60,6 +67,7 @@ extern fn boot() {
         old_buttons: Default::default(),
         old_dpad: Default::default(),
         command: None,
+        held_for: 0,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }
@@ -94,7 +102,7 @@ fn read_apps() -> Vec<App> {
 
 #[no_mangle]
 extern fn update() {
-    handle_input()
+    handle_input();
 }
 
 #[no_mangle]
@@ -127,12 +135,27 @@ fn handle_input() {
     let new_pad = read_pad(Player::P0).unwrap_or_default();
     let new_dpad = new_pad.as_dpad();
 
+    if new_dpad.up || new_dpad.down {
+        // A direction button is held. Track for how long.
+        state.held_for += 1
+    } else {
+        // No direction button is held.
+        state.held_for = 0
+    }
+
     let pressed_buttons = new_buttons.just_pressed(&state.old_buttons);
     let command = if pressed_buttons.a {
         Some(Command::Launch)
     } else {
         let pressed_dpad = new_dpad.just_pressed(&state.old_dpad);
-        if pressed_dpad.up {
+        if state.held_for > 30 && state.held_for % 4 == 0 {
+            // a button is held for 0.5s
+            Some(if new_dpad.up {
+                Command::GoUp
+            } else {
+                Command::GoDown
+            })
+        } else if pressed_dpad.up {
             Some(Command::GoUp)
         } else if pressed_dpad.down {
             Some(Command::GoDown)
