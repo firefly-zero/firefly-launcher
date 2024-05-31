@@ -31,19 +31,19 @@ enum Command {
 }
 
 struct App {
-    app_name:  String,
+    app_name: String,
     author_id: String,
-    app_id:    String,
+    app_id: String,
 }
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 struct State {
-    font:        FileBuf,
-    apps:        Vec<App>,
-    pos:         usize,
+    font: FileBuf,
+    apps: Vec<App>,
+    pos: usize,
     old_buttons: Buttons,
-    old_dpad:    DPad,
-    command:     Option<Command>,
+    old_dpad: DPad,
+    command: Option<Command>,
 }
 
 /// Get the global state
@@ -54,12 +54,12 @@ fn get_state() -> &'static mut State {
 #[no_mangle]
 extern fn boot() {
     let state = State {
-        font:        rom::load_buf("font"),
-        apps:        read_apps(),
-        pos:         0,
+        font: rom::load_buf("font"),
+        apps: read_apps(),
+        pos: 0,
         old_buttons: Default::default(),
-        old_dpad:    Default::default(),
-        command:     None,
+        old_dpad: Default::default(),
+        command: None,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }
@@ -78,10 +78,14 @@ fn read_apps() -> Vec<App> {
             let Ok(meta) = Meta::decode(meta_raw.data()) else {
                 continue;
             };
+            // Hide the launcher itself from the list.
+            if meta.author_id == "sys" && meta.app_id == "launcher" {
+                continue;
+            }
             apps.push(App {
-                app_name:  meta.app_name.to_string(),
+                app_name: meta.app_name.to_string(),
                 author_id: meta.author_id.to_string(),
-                app_id:    meta.app_id.to_string(),
+                app_id: meta.app_id.to_string(),
             });
         }
     }
@@ -95,8 +99,12 @@ extern fn update() {
 
 #[no_mangle]
 extern fn render() {
-    let state = get_state();
     clear_screen(Color::White);
+    let state = get_state();
+    if (&state.apps).is_empty() {
+        render_empty(state);
+        return;
+    }
     apply_command(state);
     draw_selection(state);
     let font = state.font.as_font();
@@ -145,11 +153,11 @@ fn draw_selection(state: &mut State) {
             y: 3 + state.pos as i32 * LINE_HEIGHT,
         },
         Size {
-            width:  WIDTH - MARGIN * 2,
+            width: WIDTH - MARGIN * 2,
             height: LINE_HEIGHT,
         },
         Size {
-            width:  4,
+            width: 4,
             height: 4,
         },
         Style {
@@ -179,4 +187,14 @@ fn apply_command(state: &mut State) {
             }
         }
     }
+}
+
+/// Show message about no apps (except launcher itself) installed.
+fn render_empty(state: &mut State) {
+    let font = state.font.as_font();
+    let point = Point {
+        x: 62,
+        y: HEIGHT / 2 - LINE_HEIGHT / 2,
+    };
+    draw_text("No apps installed", &font, point, Color::DarkBlue);
 }
