@@ -1,6 +1,13 @@
 #![no_std]
 #![no_main]
+#![deny(clippy::pedantic)]
+#![allow(clippy::cast_possible_truncation)]
+#![allow(clippy::cast_possible_wrap)]
+#![allow(clippy::wildcard_imports)]
+#![allow(clippy::similar_names)]
+
 extern crate alloc;
+
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -33,9 +40,9 @@ enum Command {
 }
 
 struct App {
-    app_name: String,
+    name: String,
     author_id: String,
-    app_id: String,
+    id: String,
 }
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
@@ -70,8 +77,8 @@ extern fn boot() {
         apps: read_apps(),
         pos: 0,
         top_pos: 0,
-        old_buttons: Default::default(),
-        old_dpad: Default::default(),
+        old_buttons: Buttons::default(),
+        old_dpad: DPad::default(),
         command: None,
         held_for: 0,
         shift: 0,
@@ -98,13 +105,13 @@ fn read_apps() -> Vec<App> {
                 continue;
             }
             apps.push(App {
-                app_name: meta.app_name.to_string(),
+                name: meta.app_name.to_string(),
                 author_id: meta.author_id.to_string(),
-                app_id: meta.app_id.to_string(),
+                id: meta.app_id.to_string(),
             });
         }
     }
-    apps.sort_by(|a, b| a.app_name.cmp(&b.app_name));
+    apps.sort_by(|a, b| a.name.cmp(&b.name));
     apps
 }
 
@@ -117,7 +124,7 @@ extern fn update() {
 extern fn render() {
     clear_screen(Color::White);
     let state = get_state();
-    if (&state.apps).is_empty() {
+    if state.apps.is_empty() {
         render_empty(state);
         return;
     }
@@ -129,7 +136,7 @@ extern fn render() {
             x: 10,
             y: 9 + i as i32 * LINE_HEIGHT,
         };
-        draw_text(&app.app_name, &font, point, Color::DarkBlue);
+        draw_text(&app.name, &font, point, Color::DarkBlue);
     }
 }
 
@@ -184,7 +191,7 @@ fn handle_input() {
     if state.pos > state.top_pos + PER_SCREEN {
         state.top_pos = state.pos - PER_SCREEN;
     } else if state.pos < state.top_pos {
-        state.top_pos = state.pos
+        state.top_pos = state.pos;
     }
 
     state.old_buttons = new_buttons;
@@ -223,7 +230,7 @@ fn apply_command(state: &mut State) {
         Command::GoDown => {
             let apps_count = state.apps.len();
             if state.pos + 1 < apps_count {
-                state.pos += 1
+                state.pos += 1;
             }
         }
         Command::GoUp => {
@@ -231,7 +238,7 @@ fn apply_command(state: &mut State) {
         }
         Command::Launch => {
             if let Some(app) = state.apps.get(state.pos) {
-                sudo::run_app(&app.author_id, &app.app_id);
+                sudo::run_app(&app.author_id, &app.id);
             }
         }
     }
