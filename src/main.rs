@@ -22,7 +22,9 @@ static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
 .lock();
 
 static mut STATE: OnceCell<State> = OnceCell::new();
-pub const LINE_HEIGHT: i32 = 12;
+const LINE_HEIGHT: i32 = 12;
+/// How many apps fit on the same page
+const PER_SCREEN: usize = 12;
 
 enum Command {
     GoDown,
@@ -43,6 +45,8 @@ struct State {
     apps: Vec<App>,
     /// The currently selected app index.
     pos: usize,
+    /// The index of the firs app on the screen.
+    top_pos: usize,
     /// The state of buttons on the previous frame.
     old_buttons: Buttons,
     /// The state of direction buttons on the previous frame.
@@ -65,6 +69,7 @@ extern fn boot() {
         font: rom::load_buf("font"),
         apps: read_apps(),
         pos: 0,
+        top_pos: 0,
         old_buttons: Default::default(),
         old_dpad: Default::default(),
         command: None,
@@ -118,7 +123,7 @@ extern fn render() {
     apply_command(state);
     draw_selection(state);
     let font = state.font.as_font();
-    for (i, app) in state.apps.iter().enumerate() {
+    for (i, app) in state.apps.iter().skip(state.top_pos).enumerate() {
         let point = Point {
             x: 10,
             y: 10 + i as i32 * LINE_HEIGHT,
@@ -173,6 +178,8 @@ fn handle_input() {
         state.shift = 0;
     }
 
+    state.top_pos = state.pos.saturating_sub(PER_SCREEN);
+
     state.old_buttons = new_buttons;
     state.old_dpad = new_dpad;
     state.command = command;
@@ -180,10 +187,11 @@ fn handle_input() {
 
 fn draw_selection(state: &mut State) {
     const MARGIN: i32 = 5;
+    let pos = usize::min(state.pos, PER_SCREEN);
     draw_rounded_rect(
         Point {
             x: MARGIN,
-            y: 3 + state.pos as i32 * LINE_HEIGHT + state.shift,
+            y: 3 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
             width: WIDTH - MARGIN * 2,
