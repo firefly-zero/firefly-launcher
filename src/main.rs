@@ -51,6 +51,7 @@ struct State {
     command: Option<Command>,
     /// For how long up or down button (pad) is held.
     held_for: u32,
+    shift: i32,
 }
 
 /// Get the global state
@@ -68,6 +69,7 @@ extern fn boot() {
         old_dpad: Default::default(),
         command: None,
         held_for: 0,
+        shift: 0,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }
@@ -158,6 +160,19 @@ fn handle_input() {
             None
         }
     };
+
+    // Shift and stutter the selection when the first or the last app
+    // is selected to indicate that there are no more items on the list.
+    if state.held_for % 30 >= 25 {
+        state.shift = 0;
+    } else if new_dpad.down && state.pos + 1 == state.apps.len() {
+        state.shift = 1;
+    } else if new_dpad.up && state.pos == 0 {
+        state.shift = -1;
+    } else {
+        state.shift = 0;
+    }
+
     state.old_buttons = new_buttons;
     state.old_dpad = new_dpad;
     state.command = command;
@@ -168,7 +183,7 @@ fn draw_selection(state: &mut State) {
     draw_rounded_rect(
         Point {
             x: MARGIN,
-            y: 3 + state.pos as i32 * LINE_HEIGHT,
+            y: 3 + state.pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
             width: WIDTH - MARGIN * 2,
