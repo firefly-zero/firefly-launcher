@@ -141,7 +141,7 @@ fn draw_apps(state: &mut State) {
     let apps = state.apps[state.top_pos..][..=PER_SCREEN].iter();
     for (i, app) in apps.enumerate() {
         let point = Point {
-            x: 10,
+            x: 6,
             y: 9 + i as i32 * LINE_HEIGHT,
         };
         draw_text(&app.name, &font, point, Color::DarkBlue);
@@ -190,7 +190,7 @@ fn draw_arrows(state: &mut State) {
 
 fn draw_scroll(state: &mut State) {
     const SCROLL_WIDTH: i32 = 6;
-    const SCROLL_HEIGHT: usize = HEIGHT as usize - 16;
+    const SCROLL_HEIGHT: usize = HEIGHT as usize - 4;
     if state.apps.len() <= PER_SCREEN {
         return;
     }
@@ -200,15 +200,15 @@ fn draw_scroll(state: &mut State) {
     };
     let point = Point {
         x: WIDTH - SCROLL_WIDTH - 4,
-        y: (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 8,
+        y: (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2,
     };
     let size = Size {
         width:  SCROLL_WIDTH + 1,
-        height: 8,
+        height: 10,
     };
     let corner = Size {
         width:  4,
-        height: 4,
+        height: 6,
     };
     draw_rounded_rect(point, size, corner, style);
 }
@@ -273,7 +273,7 @@ fn handle_input() {
 }
 
 fn draw_selection(state: &mut State) {
-    const MARGIN: i32 = 5;
+    const MARGIN: i32 = 3;
     let pos = state.pos.saturating_sub(state.top_pos);
     draw_rounded_rect(
         Point {
