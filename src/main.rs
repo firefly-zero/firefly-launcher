@@ -192,7 +192,7 @@ fn draw_arrows(state: &State) {
 fn draw_scroll(state: &State) {
     const SCROLL_WIDTH: i32 = 6;
     const SCROLL_HEIGHT: usize = HEIGHT as usize - 4;
-    if state.apps.len() <= PER_SCREEN {
+    if state.apps.len() - 1 <= PER_SCREEN {
         return;
     }
     let style = Style {
@@ -275,13 +275,19 @@ fn handle_input(state: &mut State) {
 fn draw_selection(state: &State) {
     const MARGIN: i32 = 3;
     let pos = state.pos.saturating_sub(state.top_pos);
+    let mut width = WIDTH - MARGIN * 2;
+    // If not all apps fit on the screen, give some space on the right
+    // for the scroll bar.
+    if state.apps.len() - 1 > PER_SCREEN {
+        width -= 10;
+    }
     draw_rounded_rect(
         Point {
             x: MARGIN,
             y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
-            width:  WIDTH - MARGIN * 2 - 10,
+            width,
             height: LINE_HEIGHT,
         },
         Size {
