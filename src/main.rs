@@ -40,29 +40,29 @@ enum Command {
 }
 
 struct App {
-    name: String,
+    name:      String,
     author_id: String,
-    id: String,
+    id:        String,
 }
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 struct State {
-    font: FileBuf,
+    font:        FileBuf,
     /// The list of all installed apps.
-    apps: Vec<App>,
+    apps:        Vec<App>,
     /// The currently selected app index.
-    pos: usize,
+    pos:         usize,
     /// The index of the firs app on the screen.
-    top_pos: usize,
+    top_pos:     usize,
     /// The state of buttons on the previous frame.
     old_buttons: Buttons,
     /// The state of direction buttons on the previous frame.
-    old_dpad: DPad,
+    old_dpad:    DPad,
     /// The next command to run when rendering.
-    command: Option<Command>,
+    command:     Option<Command>,
     /// For how long up or down button (pad) is held.
-    held_for: u32,
-    shift: i32,
+    held_for:    u32,
+    shift:       i32,
 }
 
 /// Get the global state
@@ -73,15 +73,15 @@ fn get_state() -> &'static mut State {
 #[no_mangle]
 extern fn boot() {
     let state = State {
-        font: rom::load_buf("font"),
-        apps: read_apps(),
-        pos: 0,
-        top_pos: 0,
+        font:        rom::load_buf("font"),
+        apps:        read_apps(),
+        pos:         0,
+        top_pos:     0,
         old_buttons: Buttons::default(),
-        old_dpad: DPad::default(),
-        command: None,
-        held_for: 0,
-        shift: 0,
+        old_dpad:    DPad::default(),
+        command:     None,
+        held_for:    0,
+        shift:       0,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }
@@ -105,9 +105,9 @@ fn read_apps() -> Vec<App> {
                 continue;
             }
             apps.push(App {
-                name: meta.app_name.to_string(),
+                name:      meta.app_name.to_string(),
                 author_id: meta.author_id.to_string(),
-                id: meta.app_id.to_string(),
+                id:        meta.app_id.to_string(),
             });
         }
     }
@@ -130,8 +130,13 @@ extern fn render() {
     }
     apply_command(state);
     draw_selection(state);
+    draw_apps(state);
+}
+
+fn draw_apps(state: &mut State) {
     let font = state.font.as_font();
-    for (i, app) in state.apps.iter().skip(state.top_pos).enumerate() {
+    let apps = state.apps[state.top_pos..=(state.top_pos + PER_SCREEN)].iter();
+    for (i, app) in apps.enumerate() {
         let point = Point {
             x: 10,
             y: 9 + i as i32 * LINE_HEIGHT,
@@ -208,11 +213,11 @@ fn draw_selection(state: &mut State) {
             y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
-            width: WIDTH - MARGIN * 2,
+            width:  WIDTH - MARGIN * 2,
             height: LINE_HEIGHT,
         },
         Size {
-            width: 4,
+            width:  4,
             height: 4,
         },
         Style {
