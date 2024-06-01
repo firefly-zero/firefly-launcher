@@ -132,6 +132,7 @@ extern fn render() {
     draw_selection(state);
     draw_apps(state);
     draw_arrows(state);
+    draw_scroll(state);
 }
 
 /// Render the list of installed apps.
@@ -147,7 +148,7 @@ fn draw_apps(state: &mut State) {
     }
 }
 
-/// Draw ap and/or down arros if not all apps fit on the screen.
+/// Draw ap and/or down arrows on the right if not all apps fit on the screen.
 fn draw_arrows(state: &mut State) {
     const SCROLL_WIDTH: i32 = 6;
     let style = Style {
@@ -157,12 +158,12 @@ fn draw_arrows(state: &mut State) {
     if state.top_pos > 0 {
         draw_triangle(
             Point {
-                x: WIDTH - SCROLL_WIDTH - 2,
+                x: WIDTH - SCROLL_WIDTH - 4,
                 y: 5,
             },
-            Point { x: WIDTH - 2, y: 5 },
+            Point { x: WIDTH - 4, y: 5 },
             Point {
-                x: WIDTH - SCROLL_WIDTH / 2 - 2,
+                x: WIDTH - SCROLL_WIDTH / 2 - 4,
                 y: 5 - SCROLL_WIDTH / 2,
             },
             style,
@@ -185,6 +186,31 @@ fn draw_arrows(state: &mut State) {
             style,
         );
     }
+}
+
+fn draw_scroll(state: &mut State) {
+    const SCROLL_WIDTH: i32 = 6;
+    const SCROLL_HEIGHT: usize = HEIGHT as usize - 16;
+    if state.apps.len() <= PER_SCREEN {
+        return;
+    }
+    let style = Style {
+        fill_color: Color::DarkBlue,
+        ..Style::default()
+    };
+    let point = Point {
+        x: WIDTH - SCROLL_WIDTH - 4,
+        y: (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 8,
+    };
+    let size = Size {
+        width:  SCROLL_WIDTH + 1,
+        height: 8,
+    };
+    let corner = Size {
+        width:  4,
+        height: 4,
+    };
+    draw_rounded_rect(point, size, corner, style);
 }
 
 fn handle_input() {
