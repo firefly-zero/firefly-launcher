@@ -131,17 +131,59 @@ extern fn render() {
     apply_command(state);
     draw_selection(state);
     draw_apps(state);
+    draw_arrows(state);
 }
 
+/// Render the list of installed apps.
 fn draw_apps(state: &mut State) {
     let font = state.font.as_font();
-    let apps = state.apps[state.top_pos..=(state.top_pos + PER_SCREEN)].iter();
+    let apps = state.apps[state.top_pos..][..=PER_SCREEN].iter();
     for (i, app) in apps.enumerate() {
         let point = Point {
             x: 10,
             y: 9 + i as i32 * LINE_HEIGHT,
         };
         draw_text(&app.name, &font, point, Color::DarkBlue);
+    }
+}
+
+/// Draw ap and/or down arros if not all apps fit on the screen.
+fn draw_arrows(state: &mut State) {
+    const SCROLL_WIDTH: i32 = 6;
+    let style = Style {
+        fill_color: Color::DarkBlue,
+        ..Style::default()
+    };
+    if state.top_pos > 0 {
+        draw_triangle(
+            Point {
+                x: WIDTH - SCROLL_WIDTH - 2,
+                y: 5,
+            },
+            Point { x: WIDTH - 2, y: 5 },
+            Point {
+                x: WIDTH - SCROLL_WIDTH / 2 - 2,
+                y: 5 - SCROLL_WIDTH / 2,
+            },
+            style,
+        );
+    }
+    if state.apps.len() - 1 > state.top_pos + PER_SCREEN {
+        draw_triangle(
+            Point {
+                x: WIDTH - SCROLL_WIDTH - 4,
+                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
+            },
+            Point {
+                x: WIDTH - 4,
+                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
+            },
+            Point {
+                x: WIDTH - SCROLL_WIDTH / 2 - 4,
+                y: HEIGHT - 5,
+            },
+            style,
+        );
     }
 }
 
@@ -213,7 +255,7 @@ fn draw_selection(state: &mut State) {
             y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
-            width:  WIDTH - MARGIN * 2,
+            width:  WIDTH - MARGIN * 2 - 10,
             height: LINE_HEIGHT,
         },
         Size {
