@@ -138,7 +138,7 @@ extern fn render() {
 /// Render the list of installed apps.
 fn draw_apps(state: &mut State) {
     let font = state.font.as_font();
-    let apps = state.apps[state.top_pos..][..=PER_SCREEN].iter();
+    let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
         let point = Point {
             x: 6,
