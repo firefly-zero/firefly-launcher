@@ -117,7 +117,9 @@ fn read_apps() -> Vec<App> {
 
 #[no_mangle]
 extern fn update() {
-    handle_input();
+    let state = get_state();
+    handle_input(state);
+    apply_command(state);
 }
 
 #[no_mangle]
@@ -128,25 +130,91 @@ extern fn render() {
         render_empty(state);
         return;
     }
-    apply_command(state);
     draw_selection(state);
     draw_apps(state);
+    draw_arrows(state);
+    draw_scroll(state);
 }
 
-fn draw_apps(state: &mut State) {
+/// Render the list of installed apps.
+fn draw_apps(state: &State) {
     let font = state.font.as_font();
-    let apps = state.apps[state.top_pos..=(state.top_pos + PER_SCREEN)].iter();
+    let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
         let point = Point {
-            x: 10,
+            x: 6,
             y: 9 + i as i32 * LINE_HEIGHT,
         };
         draw_text(&app.name, &font, point, Color::DarkBlue);
     }
 }
 
-fn handle_input() {
-    let state = get_state();
+/// Draw ap and/or down arrows on the right if not all apps fit on the screen.
+fn draw_arrows(state: &State) {
+    const SCROLL_WIDTH: i32 = 6;
+    let style = Style {
+        fill_color: Color::DarkBlue,
+        ..Style::default()
+    };
+    if state.top_pos > 0 {
+        draw_triangle(
+            Point {
+                x: WIDTH - SCROLL_WIDTH - 4,
+                y: 5,
+            },
+            Point { x: WIDTH - 4, y: 5 },
+            Point {
+                x: WIDTH - SCROLL_WIDTH / 2 - 4,
+                y: 5 - SCROLL_WIDTH / 2,
+            },
+            style,
+        );
+    }
+    if state.apps.len() - 1 > state.top_pos + PER_SCREEN {
+        draw_triangle(
+            Point {
+                x: WIDTH - SCROLL_WIDTH - 4,
+                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
+            },
+            Point {
+                x: WIDTH - 4,
+                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
+            },
+            Point {
+                x: WIDTH - SCROLL_WIDTH / 2 - 4,
+                y: HEIGHT - 5,
+            },
+            style,
+        );
+    }
+}
+
+fn draw_scroll(state: &State) {
+    const SCROLL_WIDTH: i32 = 6;
+    const SCROLL_HEIGHT: usize = HEIGHT as usize - 4;
+    if state.apps.len() - 1 <= PER_SCREEN {
+        return;
+    }
+    let style = Style {
+        fill_color: Color::DarkBlue,
+        ..Style::default()
+    };
+    let point = Point {
+        x: WIDTH - SCROLL_WIDTH - 4,
+        y: (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2,
+    };
+    let size = Size {
+        width:  SCROLL_WIDTH + 1,
+        height: 10,
+    };
+    let corner = Size {
+        width:  4,
+        height: 6,
+    };
+    draw_rounded_rect(point, size, corner, style);
+}
+
+fn handle_input(state: &mut State) {
     let new_buttons = read_buttons(Player::P0);
     let new_pad = read_pad(Player::P0).unwrap_or_default();
     let new_dpad = new_pad.as_dpad();
@@ -204,16 +272,22 @@ fn handle_input() {
     state.command = command;
 }
 
-fn draw_selection(state: &mut State) {
-    const MARGIN: i32 = 5;
+fn draw_selection(state: &State) {
+    const MARGIN: i32 = 3;
     let pos = state.pos.saturating_sub(state.top_pos);
+    let mut width = WIDTH - MARGIN * 2;
+    // If not all apps fit on the screen, give some space on the right
+    // for the scroll bar.
+    if state.apps.len() - 1 > PER_SCREEN {
+        width -= 10;
+    }
     draw_rounded_rect(
         Point {
             x: MARGIN,
             y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
         },
         Size {
-            width:  WIDTH - MARGIN * 2,
+            width,
             height: LINE_HEIGHT,
         },
         Size {
@@ -250,7 +324,7 @@ fn apply_command(state: &mut State) {
 }
 
 /// Show message about no apps (except launcher itself) installed.
-fn render_empty(state: &mut State) {
+fn render_empty(state: &State) {
     let font = state.font.as_font();
     let point = Point {
         x: 62,
