@@ -95,8 +95,12 @@ fn read_apps() -> Vec<App> {
         let app_dirs = sudo::DirBuf::list_dirs(&author_path);
         for app_dir in app_dirs.iter() {
             let app_path = format!("{author_path}/{app_dir}");
-            let meta_path = format!("{app_path}/meta");
-            let meta_raw = sudo::load_file_buf(&meta_path);
+            let meta_path = format!("{app_path}/_meta");
+            let mut meta_raw = sudo::load_file_buf(&meta_path);
+            if meta_raw.data().is_empty() {
+                let meta_path = format!("{app_path}/meta");
+                meta_raw = sudo::load_file_buf(&meta_path);
+            }
             let Ok(meta) = Meta::decode(meta_raw.data()) else {
                 continue;
             };
