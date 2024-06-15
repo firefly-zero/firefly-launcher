@@ -96,11 +96,15 @@ fn read_apps() -> Vec<App> {
         for app_dir in app_dirs.iter() {
             let app_path = format!("{author_path}/{app_dir}");
             let meta_path = format!("{app_path}/_meta");
-            let mut meta_raw = sudo::load_file_buf(&meta_path);
-            if meta_raw.data().is_empty() {
+            let meta_raw = if let Some(meta_raw) = sudo::load_file_buf(&meta_path) {
+                meta_raw
+            } else {
                 let meta_path = format!("{app_path}/meta");
-                meta_raw = sudo::load_file_buf(&meta_path);
-            }
+                let Some(meta_raw) = sudo::load_file_buf(&meta_path) else {
+                    continue;
+                };
+                meta_raw
+            };
             let Ok(meta) = Meta::decode(meta_raw.data()) else {
                 continue;
             };
@@ -145,10 +149,7 @@ fn draw_apps(state: &State) {
     let font = state.font.as_font();
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
-        let point = Point {
-            x: 6,
-            y: 9 + i as i32 * LINE_HEIGHT,
-        };
+        let point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
         draw_text(&app.name, &font, point, Color::DarkBlue);
     }
 }
@@ -162,32 +163,17 @@ fn draw_arrows(state: &State) {
     };
     if state.top_pos > 0 {
         draw_triangle(
-            Point {
-                x: WIDTH - SCROLL_WIDTH - 4,
-                y: 5,
-            },
-            Point { x: WIDTH - 4, y: 5 },
-            Point {
-                x: WIDTH - SCROLL_WIDTH / 2 - 4,
-                y: 5 - SCROLL_WIDTH / 2,
-            },
+            Point::new(WIDTH - SCROLL_WIDTH - 4, 5),
+            Point::new(WIDTH - 4, 5),
+            Point::new(WIDTH - SCROLL_WIDTH / 2 - 4, 5 - SCROLL_WIDTH / 2),
             style,
         );
     }
     if state.apps.len() - 1 > state.top_pos + PER_SCREEN {
         draw_triangle(
-            Point {
-                x: WIDTH - SCROLL_WIDTH - 4,
-                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
-            },
-            Point {
-                x: WIDTH - 4,
-                y: HEIGHT - 5 - SCROLL_WIDTH / 2,
-            },
-            Point {
-                x: WIDTH - SCROLL_WIDTH / 2 - 4,
-                y: HEIGHT - 5,
-            },
+            Point::new(WIDTH - SCROLL_WIDTH - 4, HEIGHT - 5 - SCROLL_WIDTH / 2),
+            Point::new(WIDTH - 4, HEIGHT - 5 - SCROLL_WIDTH / 2),
+            Point::new(WIDTH - SCROLL_WIDTH / 2 - 4, HEIGHT - 5),
             style,
         );
     }
@@ -199,23 +185,18 @@ fn draw_scroll(state: &State) {
     if state.apps.len() - 1 <= PER_SCREEN {
         return;
     }
-    let style = Style {
-        fill_color: Color::DarkBlue,
-        ..Style::default()
-    };
-    let point = Point {
-        x: WIDTH - SCROLL_WIDTH - 4,
-        y: (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2,
-    };
-    let size = Size {
-        width:  SCROLL_WIDTH + 1,
-        height: 10,
-    };
-    let corner = Size {
-        width:  4,
-        height: 6,
-    };
-    draw_rounded_rect(point, size, corner, style);
+    draw_rounded_rect(
+        Point::new(
+            WIDTH - SCROLL_WIDTH - 4,
+            (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2,
+        ),
+        Size::new(SCROLL_WIDTH + 1, 10),
+        Size::new(4, 6),
+        Style {
+            fill_color: Color::DarkBlue,
+            ..Style::default()
+        },
+    );
 }
 
 fn handle_input(state: &mut State) {
@@ -286,18 +267,9 @@ fn draw_selection(state: &State) {
         width -= 10;
     }
     draw_rounded_rect(
-        Point {
-            x: MARGIN,
-            y: 2 + pos as i32 * LINE_HEIGHT + state.shift,
-        },
-        Size {
-            width,
-            height: LINE_HEIGHT,
-        },
-        Size {
-            width:  4,
-            height: 4,
-        },
+        Point::new(MARGIN, 2 + pos as i32 * LINE_HEIGHT + state.shift),
+        Size::new(width, LINE_HEIGHT),
+        Size::new(4, 4),
         Style {
             stroke_color: Color::DarkBlue,
             ..Style::default()
@@ -330,9 +302,6 @@ fn apply_command(state: &mut State) {
 /// Show message about no apps (except launcher itself) installed.
 fn render_empty(state: &State) {
     let font = state.font.as_font();
-    let point = Point {
-        x: 62,
-        y: HEIGHT / 2 - LINE_HEIGHT / 2,
-    };
+    let point = Point::new(62, HEIGHT / 2 - LINE_HEIGHT / 2);
     draw_text("No apps installed", &font, point, Color::DarkBlue);
 }
