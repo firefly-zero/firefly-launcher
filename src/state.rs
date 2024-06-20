@@ -8,7 +8,7 @@ static mut STATE: OnceCell<State> = OnceCell::new();
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 pub struct State {
-    pub scene: Scene,
+    scene: Scene,
     pub font: FileBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
@@ -46,4 +46,18 @@ pub fn init_state() {
         shift: 0,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
+}
+
+impl State {
+    pub fn scene(&self) -> &Scene {
+        &self.scene
+    }
+
+    pub fn transition_to(&mut self, scene: Scene) {
+        self.scene = scene;
+        match self.scene {
+            Scene::List => list_scene::init(self),
+            Scene::Info => info_scene::init(self),
+        }
+    }
 }

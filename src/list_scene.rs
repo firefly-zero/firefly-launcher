@@ -11,6 +11,10 @@ pub enum Command {
     Launch,
 }
 
+pub fn init(state: &mut State) {
+    state.apps = read_apps()
+}
+
 pub fn update(state: &mut State) {
     handle_input(state);
     apply_command(state);

@@ -41,8 +41,7 @@ pub enum Scene {
 extern fn handle_menu(i: u32) {
     let state = get_state();
     assert!(i == 0);
-    state.scene = Scene::Info;
-    info_scene::init(state);
+    state.transition_to(Scene::Info);
 }
 
 #[no_mangle]
@@ -54,7 +53,7 @@ extern fn boot() {
 #[no_mangle]
 extern fn update() {
     let state = get_state();
-    match state.scene {
+    match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
     }
@@ -63,7 +62,7 @@ extern fn update() {
 #[no_mangle]
 extern fn render() {
     let state = get_state();
-    match state.scene {
+    match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
     }

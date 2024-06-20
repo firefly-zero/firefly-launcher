@@ -9,7 +9,8 @@ pub fn update(state: &mut State) {
     let new_buttons = read_buttons(Player::P0);
     let released_buttons = new_buttons.just_released(&state.old_buttons);
     if released_buttons.any() {
-        state.scene = Scene::List;
+        state.transition_to(Scene::List);
+        open_menu();
     }
     state.old_buttons = new_buttons;
 }
