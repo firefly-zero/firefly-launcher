@@ -7,6 +7,7 @@
 #![allow(clippy::similar_names)]
 
 mod apps;
+mod delete_scene;
 mod info_scene;
 mod list_scene;
 mod state;
@@ -35,18 +36,23 @@ static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
 pub enum Scene {
     List,
     Info,
+    ClearData,
 }
 
 #[no_mangle]
 extern fn handle_menu(i: u32) {
     let state = get_state();
-    assert!(i == 0);
-    state.transition_to(Scene::Info);
+    match i {
+        1 => state.transition_to(Scene::Info),
+        2 => state.transition_to(Scene::ClearData),
+        _ => unreachable!(),
+    }
 }
 
 #[no_mangle]
 extern fn boot() {
-    add_menu_item(0, "app info");
+    add_menu_item(1, "app info");
+    add_menu_item(2, "clear data");
     init_state()
 }
 
@@ -56,6 +62,7 @@ extern fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
+        Scene::ClearData => delete_scene::update(state),
     }
 }
 
@@ -65,5 +72,6 @@ extern fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
+        Scene::ClearData => delete_scene::render(state),
     }
 }
