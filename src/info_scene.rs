@@ -1,4 +1,5 @@
 use crate::*;
+use alloc::format;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
@@ -24,6 +25,18 @@ pub fn update(state: &mut State) {
         // open_menu();
     }
     state.old_buttons = new_buttons;
+
+    let app = &mut state.apps[state.pos];
+    if app.rom_size.is_none() {
+        let app_path = format!("roms/{}/{}", app.author_id, app.id);
+        let files = sudo::DirBuf::list_dirs(&app_path);
+        let mut size = 0;
+        for file in files.iter() {
+            let file_path = format!("{app_path}/{file}");
+            size += sudo::get_file_size(&file_path);
+        }
+        app.rom_size = Some(size)
+    }
 }
 
 pub fn render(state: &State) {
@@ -38,9 +51,24 @@ pub fn render(state: &State) {
     render_info(&font, 2, &app.id);
     render_info(&font, 3, &app.author_name);
     render_info(&font, 4, &app.name);
+    if let Some(size) = app.rom_size {
+        render_info(&font, 5, &format_size(size));
+    }
 }
 
 fn render_info(font: &Font, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
     draw_text(t, &font, point, Color::DarkBlue);
+}
+
+fn format_size(size: usize) -> alloc::string::String {
+    if size > 2 * 1024 * 1024 {
+        let size = size / (1024 * 1024);
+        return format!("{size} MB");
+    }
+    if size > 2048 {
+        let size = size / 1024;
+        return format!("{size} KB");
+    }
+    format!("{size} B")
 }
