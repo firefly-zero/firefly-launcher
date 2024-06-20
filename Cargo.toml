@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 firefly-meta = "0.1.0"
-firefly-rust = { version = "0.2.0", default-features = false, features = [
+firefly-rust = { path = "../firefly-rust", default-features = false, features = [
     "alloc",
     "sudo",
 ] }

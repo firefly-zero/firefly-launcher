@@ -72,7 +72,13 @@ fn get_state() -> &'static mut State {
 }
 
 #[no_mangle]
+extern fn handle_menu(i: u32) {
+    assert!(i == 0);
+}
+
+#[no_mangle]
 extern fn boot() {
+    add_menu_item(0, "app info");
     let state = State {
         font: rom::load_buf("font"),
         apps: read_apps(),
