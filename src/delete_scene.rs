@@ -2,9 +2,22 @@ use crate::*;
 use alloc::format;
 use firefly_rust::*;
 
-pub fn init(_state: &mut State) {}
+pub fn init(state: &mut State) {
+    state.dialog_yes = false;
+}
 
-pub fn update(_state: &mut State) {}
+pub fn update(state: &mut State) {
+    let Some(pad) = read_pad(Player::P0) else {
+        return;
+    };
+    let pad = pad.as_dpad();
+    if pad.right {
+        state.dialog_yes = true;
+    }
+    if pad.left {
+        state.dialog_yes = false;
+    }
+}
 
 pub fn render(state: &State) {
     clear_screen(Color::White);
@@ -40,23 +53,27 @@ pub fn render(state: &State) {
         let x = MARGIN + box_width / 2 - (btn_width + btn_width / 2);
         let point = Point::new(x + 3, y + 7);
         draw_text("nuh", &font, point, Color::DarkBlue);
-        draw_rounded_rect(
-            Point::new(x, y),
-            Size::new(btn_width, 12),
-            corner,
-            box_style,
-        );
+        if !state.dialog_yes {
+            draw_rounded_rect(
+                Point::new(x, y),
+                Size::new(btn_width, 12),
+                corner,
+                box_style,
+            );
+        }
     }
 
     {
         let x = MARGIN + box_width / 2 + btn_width / 2;
         let point = Point::new(x + 3, y + 7);
         draw_text("yep", &font, point, Color::DarkBlue);
-        draw_rounded_rect(
-            Point::new(x, y),
-            Size::new(btn_width, 12),
-            corner,
-            box_style,
-        );
+        if state.dialog_yes {
+            draw_rounded_rect(
+                Point::new(x, y),
+                Size::new(btn_width, 12),
+                corner,
+                box_style,
+            );
+        }
     }
 }

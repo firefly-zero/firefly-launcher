@@ -14,6 +14,7 @@ pub struct State {
     pub apps: Vec<App>,
     /// The currently selected app index.
     pub pos: usize,
+    pub dialog_yes: bool,
     /// The index of the firs app on the screen.
     pub top_pos: usize,
     /// The state of buttons on the previous frame.
@@ -38,6 +39,7 @@ pub fn init_state() {
         font: rom::load_buf("font"),
         apps: read_apps(),
         pos: 0,
+        dialog_yes: false,
         top_pos: 0,
         old_buttons: Buttons::default(),
         old_dpad: DPad::default(),
