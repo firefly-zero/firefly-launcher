@@ -8,6 +8,7 @@ static mut STATE: OnceCell<State> = OnceCell::new();
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 pub struct State {
+    pub scene: Scene,
     pub font: FileBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
@@ -33,6 +34,7 @@ pub fn get_state() -> &'static mut State {
 
 pub fn init_state() {
     let state = State {
+        scene: Scene::List,
         font: rom::load_buf("font"),
         apps: read_apps(),
         pos: 0,

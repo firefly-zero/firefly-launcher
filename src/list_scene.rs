@@ -11,15 +11,13 @@ pub enum Command {
     Launch,
 }
 
-pub fn update_list() {
-    let state = get_state();
+pub fn update(state: &mut State) {
     handle_input(state);
     apply_command(state);
 }
 
-pub fn render_list() {
+pub fn render(state: &State) {
     clear_screen(Color::White);
-    let state = get_state();
     if state.apps.is_empty() {
         render_empty(state);
         return;

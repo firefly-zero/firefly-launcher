@@ -7,10 +7,12 @@
 #![allow(clippy::similar_names)]
 
 mod apps;
-mod list;
+mod info_scene;
+mod list_scene;
 mod state;
+
 use apps::*;
-use list::*;
+use list_scene::Command;
 use state::*;
 
 extern crate alloc;
@@ -30,6 +32,11 @@ static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
 })
 .lock();
 
+pub enum Scene {
+    List,
+    Info,
+}
+
 #[no_mangle]
 extern fn handle_menu(i: u32) {
     assert!(i == 0);
@@ -43,10 +50,18 @@ extern fn boot() {
 
 #[no_mangle]
 extern fn update() {
-    update_list();
+    let state = get_state();
+    match state.scene {
+        Scene::List => list_scene::update(state),
+        Scene::Info => info_scene::update(state),
+    }
 }
 
 #[no_mangle]
 extern fn render() {
-    render_list();
+    let state = get_state();
+    match state.scene {
+        Scene::List => list_scene::render(state),
+        Scene::Info => info_scene::render(state),
+    }
 }
