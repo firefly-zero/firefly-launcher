@@ -17,7 +17,7 @@ use state::*;
 
 extern crate alloc;
 
-use firefly_rust::*;
+use firefly_rust::add_menu_item;
 use talc::locking::AssumeUnlockable;
 use talc::{ClaimOnOom, Span, Talc, Talck};
 
@@ -39,7 +39,10 @@ pub enum Scene {
 
 #[no_mangle]
 extern fn handle_menu(i: u32) {
+    let state = get_state();
     assert!(i == 0);
+    state.scene = Scene::Info;
+    info_scene::init(state);
 }
 
 #[no_mangle]
