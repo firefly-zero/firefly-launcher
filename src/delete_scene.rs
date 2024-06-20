@@ -33,27 +33,28 @@ pub fn render(state: &State) {
         );
     }
 
-    let box_width = 24;
+    let box_width = WIDTH - MARGIN * 2;
+    let btn_width = 24;
     let y = 96;
     {
-        let x = MARGIN + 25;
+        let x = MARGIN + box_width / 2 - (btn_width + btn_width / 2);
         let point = Point::new(x + 3, y + 7);
-        draw_text("yep", &font, point, Color::DarkBlue);
+        draw_text("nuh", &font, point, Color::DarkBlue);
         draw_rounded_rect(
             Point::new(x, y),
-            Size::new(box_width, 12),
+            Size::new(btn_width, 12),
             corner,
             box_style,
         );
     }
 
     {
-        let x = MARGIN + 75;
+        let x = MARGIN + box_width / 2 + btn_width / 2;
         let point = Point::new(x + 3, y + 7);
-        draw_text("nuh", &font, point, Color::DarkBlue);
+        draw_text("yep", &font, point, Color::DarkBlue);
         draw_rounded_rect(
             Point::new(x, y),
-            Size::new(box_width, 12),
+            Size::new(btn_width, 12),
             corner,
             box_style,
         );
