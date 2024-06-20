@@ -163,8 +163,7 @@ fn draw_apps(state: &State) {
             continue;
         }
         let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
-        let text = format!("by {}", &app.author_name);
-        draw_text(&text, &font, point, Color::LightGray);
+        draw_text(&app.author_name, &font, point, Color::LightGray);
     }
 }
 
