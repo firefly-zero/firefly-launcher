@@ -40,29 +40,30 @@ enum Command {
 }
 
 struct App {
-    name:      String,
+    id: String,
     author_id: String,
-    id:        String,
+    name: String,
+    author_name: String,
 }
 
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 struct State {
-    font:        FileBuf,
+    font: FileBuf,
     /// The list of all installed apps.
-    apps:        Vec<App>,
+    apps: Vec<App>,
     /// The currently selected app index.
-    pos:         usize,
+    pos: usize,
     /// The index of the firs app on the screen.
-    top_pos:     usize,
+    top_pos: usize,
     /// The state of buttons on the previous frame.
     old_buttons: Buttons,
     /// The state of direction buttons on the previous frame.
-    old_dpad:    DPad,
+    old_dpad: DPad,
     /// The next command to run when rendering.
-    command:     Option<Command>,
+    command: Option<Command>,
     /// For how long up or down button (pad) is held.
-    held_for:    u32,
-    shift:       i32,
+    held_for: u32,
+    shift: i32,
 }
 
 /// Get the global state
@@ -73,15 +74,15 @@ fn get_state() -> &'static mut State {
 #[no_mangle]
 extern fn boot() {
     let state = State {
-        font:        rom::load_buf("font"),
-        apps:        read_apps(),
-        pos:         0,
-        top_pos:     0,
+        font: rom::load_buf("font"),
+        apps: read_apps(),
+        pos: 0,
+        top_pos: 0,
         old_buttons: Buttons::default(),
-        old_dpad:    DPad::default(),
-        command:     None,
-        held_for:    0,
-        shift:       0,
+        old_dpad: DPad::default(),
+        command: None,
+        held_for: 0,
+        shift: 0,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }
@@ -113,9 +114,10 @@ fn read_apps() -> Vec<App> {
                 continue;
             }
             apps.push(App {
-                name:      meta.app_name.to_string(),
+                id: meta.app_id.to_string(),
                 author_id: meta.author_id.to_string(),
-                id:        meta.app_id.to_string(),
+                name: meta.app_name.to_string(),
+                author_name: meta.author_name.to_string(),
             });
         }
     }
@@ -151,6 +153,18 @@ fn draw_apps(state: &State) {
     for (i, app) in apps.enumerate() {
         let point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
         draw_text(&app.name, &font, point, Color::DarkBlue);
+        // Don't show the author name
+        // if the app name takes more than half of the screen.
+        if app.name.len() > 19 {
+            continue;
+        }
+        // Don't show the author name if it doesn't fit on the screen.
+        if app.author_name.len() > 16 {
+            continue;
+        }
+        let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
+        let text = format!("by {}", &app.author_name);
+        draw_text(&text, &font, point, Color::LightGray);
     }
 }
 
