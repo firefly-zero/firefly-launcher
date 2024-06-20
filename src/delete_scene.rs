@@ -7,16 +7,31 @@ pub fn init(state: &mut State) {
 }
 
 pub fn update(state: &mut State) {
-    let Some(pad) = read_pad(Player::P0) else {
-        return;
+    let buttons = read_buttons(Player::P0);
+    let released = buttons.just_released(&state.old_buttons);
+    state.old_buttons = buttons;
+    if released.a {
+        if state.dialog_yes {
+            delete_app(state);
+        }
+        state.transition_to(Scene::List);
+    }
+
+    if let Some(pad) = read_pad(Player::P0) {
+        let dpad = pad.as_dpad();
+        if dpad.right {
+            state.dialog_yes = true;
+        }
+        if dpad.left {
+            state.dialog_yes = false;
+        }
     };
-    let pad = pad.as_dpad();
-    if pad.right {
-        state.dialog_yes = true;
-    }
-    if pad.left {
-        state.dialog_yes = false;
-    }
+}
+
+fn delete_app(state: &mut State) {
+    let app = &mut state.apps[state.pos];
+    app.data_size = None;
+    todo!()
 }
 
 pub fn render(state: &State) {
