@@ -10,6 +10,7 @@ pub struct App {
     pub name: String,
     pub author_name: String,
     pub rom_size: Option<usize>,
+    pub data_size: Option<usize>,
 }
 
 /// Go through all ROMs and read their metadata.
@@ -44,6 +45,7 @@ pub fn read_apps() -> Vec<App> {
                 name: meta.app_name.to_string(),
                 author_name: meta.author_name.to_string(),
                 rom_size: None,
+                data_size: None,
             });
         }
     }

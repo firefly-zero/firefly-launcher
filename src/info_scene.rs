@@ -29,14 +29,22 @@ pub fn update(state: &mut State) {
     let app = &mut state.apps[state.pos];
     if app.rom_size.is_none() {
         let app_path = format!("roms/{}/{}", app.author_id, app.id);
-        let files = sudo::DirBuf::list_dirs(&app_path);
-        let mut size = 0;
-        for file in files.iter() {
-            let file_path = format!("{app_path}/{file}");
-            size += sudo::get_file_size(&file_path);
-        }
-        app.rom_size = Some(size)
+        app.rom_size = Some(get_dir_size(&app_path));
     }
+    if app.data_size.is_none() {
+        let data_path = format!("data/{}/{}", app.author_id, app.id);
+        app.data_size = Some(get_dir_size(&data_path));
+    }
+}
+
+fn get_dir_size(dir_path: &str) -> usize {
+    let files = sudo::DirBuf::list_dirs(&dir_path);
+    let mut size = 0;
+    for file in files.iter() {
+        let file_path = format!("{dir_path}/{file}");
+        size += sudo::get_file_size(&file_path);
+    }
+    size
 }
 
 pub fn render(state: &State) {
@@ -53,6 +61,9 @@ pub fn render(state: &State) {
     render_info(&font, 4, &app.name);
     if let Some(size) = app.rom_size {
         render_info(&font, 5, &format_size(size));
+    }
+    if let Some(size) = app.data_size {
+        render_info(&font, 6, &format_size(size));
     }
 }
 
