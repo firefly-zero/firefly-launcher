@@ -5,6 +5,7 @@
 #![allow(clippy::cast_possible_wrap)]
 #![allow(clippy::wildcard_imports)]
 #![allow(clippy::similar_names)]
+#![allow(clippy::module_name_repetitions)]
 
 mod apps;
 mod delete_scene;
@@ -53,7 +54,7 @@ extern fn handle_menu(i: u32) {
 extern fn boot() {
     add_menu_item(1, "app info");
     add_menu_item(2, "clear data");
-    init_state()
+    init_state();
 }
 
 #[no_mangle]

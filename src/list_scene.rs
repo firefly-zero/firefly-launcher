@@ -12,7 +12,7 @@ pub enum Command {
 }
 
 pub fn init(state: &mut State) {
-    state.apps = read_apps()
+    state.apps = read_apps();
 }
 
 pub fn update(state: &mut State) {

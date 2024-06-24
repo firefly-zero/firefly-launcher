@@ -35,8 +35,8 @@ fn delete_app(state: &mut State) {
 }
 
 pub fn render(state: &State) {
-    clear_screen(Color::White);
     const MARGIN: i32 = 46;
+    clear_screen(Color::White);
     let app = &state.apps[state.pos];
 
     let font = state.font.as_font();
