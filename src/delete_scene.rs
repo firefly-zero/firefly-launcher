@@ -31,7 +31,13 @@ pub fn update(state: &mut State) {
 fn delete_app(state: &mut State) {
     let app = &mut state.apps[state.pos];
     app.data_size = None;
-    todo!()
+    let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
+    let files = sudo::DirBuf::list_dirs(&data_path);
+    for file_path in files.iter() {
+        // TODO: actually remove files when runtime supports it
+        let msg = format!("cannot remove {file_path}: file removal not implemented yet");
+        log_error(&msg);
+    }
 }
 
 pub fn render(state: &State) {

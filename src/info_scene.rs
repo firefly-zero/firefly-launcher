@@ -32,7 +32,7 @@ pub fn update(state: &mut State) {
         app.rom_size = Some(get_dir_size(&app_path));
     }
     if app.data_size.is_none() {
-        let data_path = format!("data/{}/{}", app.author_id, app.id);
+        let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
         app.data_size = Some(get_dir_size(&data_path));
     }
 }
