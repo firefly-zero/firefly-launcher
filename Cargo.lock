@@ -35,7 +35,9 @@ dependencies = [
 
 [[package]]
 name = "firefly-rust"
-version = "0.2.1"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe2501b65f8d24683166108809121001e9767319bc53eb5432dea73da53e8613"
 
 [[package]]
 name = "lock_api"

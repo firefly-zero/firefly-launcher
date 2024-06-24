@@ -4,12 +4,12 @@ version = "0.1.2"
 edition = "2021"
 
 [dependencies]
-firefly-meta = "0.1.0"
-firefly-rust = { path = "../firefly-rust", default-features = false, features = [
+firefly-rust = { version = "0.2.2", default-features = false, features = [
     "alloc",
     "sudo",
 ] }
-talc = { version = "4.4.0", default-features = false, features = ["lock_api"] }
+firefly-meta = "0.1.2"
+talc = { version = "4.4.1", default-features = false, features = ["lock_api"] }
 
 # https://github.com/johnthagen/min-sized-rust
 [profile.release]
