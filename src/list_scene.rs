@@ -99,8 +99,8 @@ fn draw_scroll(state: &State) {
 }
 
 fn handle_input(state: &mut State) {
-    let new_buttons = read_buttons(Player::P0);
-    let new_pad = read_pad(Player::P0).unwrap_or_default();
+    let new_buttons = read_buttons(Peer::COMBINED);
+    let new_pad = read_pad(Peer::COMBINED).unwrap_or_default();
     let new_dpad = new_pad.as_dpad();
 
     // If a direction button is held, track for how long.

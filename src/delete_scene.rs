@@ -7,7 +7,7 @@ pub fn init(state: &mut State) {
 }
 
 pub fn update(state: &mut State) {
-    let buttons = read_buttons(Player::P0);
+    let buttons = read_buttons(Peer::COMBINED);
     let released = buttons.just_released(&state.old_buttons);
     state.old_buttons = buttons;
     if released.a {
@@ -17,7 +17,7 @@ pub fn update(state: &mut State) {
         state.transition_to(Scene::List);
     }
 
-    if let Some(pad) = read_pad(Player::P0) {
+    if let Some(pad) = read_pad(Peer::COMBINED) {
         let dpad = pad.as_dpad();
         if dpad.right {
             state.dialog_yes = true;
