@@ -49,6 +49,21 @@ pub fn read_apps() -> Vec<App> {
             });
         }
     }
-    apps.sort_by(|a, b| a.name.cmp(&b.name));
+    bubble_sort(&mut apps);
     apps
+}
+
+/// Good old bubble sort. Slower but smaller than the built-in sort function.
+fn bubble_sort(array: &mut [App]) {
+    let len = array.len();
+    let mut sorted = false;
+    while !sorted {
+        sorted = true;
+        for i in 0..len - 1 {
+            if array[i].name > array[i + 1].name {
+                array.swap(i, i + 1);
+                sorted = false;
+            }
+        }
+    }
 }
