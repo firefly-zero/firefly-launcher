@@ -226,5 +226,5 @@ fn play_note(f: audio::Freq) {
         end_at: audio::Time::ms(DURATION),
     });
 
-    gain2.add_triangle(f, 0.);
+    gain2.add_sine(f, 0.);
 }
