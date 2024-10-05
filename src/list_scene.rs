@@ -186,9 +186,11 @@ fn apply_command(state: &mut State) {
             if state.pos + 1 < apps_count {
                 state.pos += 1;
             }
+            play_note(audio::Freq::A4);
         }
         Command::GoUp => {
             state.pos = state.pos.saturating_sub(1);
+            play_note(audio::Freq::AS4);
         }
         Command::Launch => {
             if let Some(app) = state.apps.get(state.pos) {
@@ -203,4 +205,26 @@ fn render_empty(state: &State) {
     let font = state.font.as_font();
     let point = Point::new(62, HEIGHT / 2 - LINE_HEIGHT / 2);
     draw_text("No apps installed", &font, point, Color::DarkBlue);
+}
+
+fn play_note(f: audio::Freq) {
+    const DURATION: u32 = 140;
+    audio::OUT.clear();
+    let gain1 = audio::OUT.add_gain(0.5);
+    gain1.modulate(audio::LinearModulator {
+        start: 0.0,
+        end: 0.5,
+        start_at: audio::Time::ZERO,
+        end_at: audio::Time::ms(DURATION / 2),
+    });
+
+    let gain2 = gain1.add_gain(0.5);
+    gain2.modulate(audio::LinearModulator {
+        start: 0.5,
+        end: 0.0,
+        start_at: audio::Time::ms(DURATION / 2),
+        end_at: audio::Time::ms(DURATION),
+    });
+
+    gain2.add_sine(f, 0.);
 }
