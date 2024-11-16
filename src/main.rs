@@ -1,11 +1,21 @@
 #![no_std]
 #![no_main]
-#![deny(clippy::pedantic)]
-#![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::cast_possible_wrap)]
-#![allow(clippy::wildcard_imports)]
-#![allow(clippy::similar_names)]
-#![allow(clippy::module_name_repetitions)]
+#![deny(
+    rust_2018_idioms,
+    redundant_lifetimes,
+    redundant_semicolons,
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::allow_attributes
+)]
+#![allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_possible_wrap,
+    clippy::wildcard_imports,
+    clippy::similar_names,
+    clippy::module_name_repetitions
+)]
 
 mod apps;
 mod delete_scene;

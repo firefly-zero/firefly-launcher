@@ -36,7 +36,7 @@ pub fn get_state() -> &'static mut State {
 pub fn init_state() {
     let state = State {
         scene: Scene::List,
-        font: rom::load_buf("font"),
+        font: load_file_buf("font").unwrap(),
         apps: read_apps(),
         pos: 0,
         dialog_yes: false,
@@ -51,7 +51,7 @@ pub fn init_state() {
 }
 
 impl State {
-    pub fn scene(&self) -> &Scene {
+    pub const fn scene(&self) -> &Scene {
         &self.scene
     }
 

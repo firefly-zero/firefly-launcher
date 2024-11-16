@@ -1,8 +1,8 @@
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
-use firefly_meta::Meta;
 use firefly_rust::*;
+use firefly_types::{Encode, Meta};
 
 pub struct App {
     pub id: String,

@@ -67,7 +67,7 @@ pub fn render(state: &State) {
     }
 }
 
-fn render_info(font: &Font, i: i32, t: &str) {
+fn render_info(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
     draw_text(t, font, point, Color::DarkBlue);
 }
