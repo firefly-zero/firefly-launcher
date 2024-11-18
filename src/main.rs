@@ -17,6 +17,8 @@
     clippy::module_name_repetitions
 )]
 
+extern crate alloc;
+
 mod apps;
 mod delete_scene;
 mod info_scene;
@@ -24,23 +26,19 @@ mod list_scene;
 mod state;
 
 use apps::*;
+use core::ptr::addr_of;
+use firefly_rust::add_menu_item;
 use list_scene::Command;
 use state::*;
-
-extern crate alloc;
-
-use firefly_rust::add_menu_item;
-use talc::locking::AssumeUnlockable;
 use talc::{ClaimOnOom, Span, Talc, Talck};
 
 // one wasm page
 static mut ARENA: [u8; 65536] = [0; 65536];
 
-// Setup Talc as the global allocator.
 #[global_allocator]
-static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
+static ALLOCATOR: Talck<spin::Mutex<()>, ClaimOnOom> = Talc::new(unsafe {
     //
-    ClaimOnOom::new(Span::from_const_array(core::ptr::addr_of!(ARENA)))
+    ClaimOnOom::new(Span::from_array(addr_of!(ARENA) as *mut [u8; 10000]))
 })
 .lock();
 
