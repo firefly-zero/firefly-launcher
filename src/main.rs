@@ -26,21 +26,12 @@ mod list_scene;
 mod state;
 
 use apps::*;
-use core::ptr::addr_of;
 use firefly_rust::add_menu_item;
 use list_scene::Command;
 use state::*;
-use talc::{locking::AssumeUnlockable, ClaimOnOom, Span, Talc, Talck};
-
-// one wasm page
-static mut ARENA: [u8; 65536] = [0; 65536];
 
 #[global_allocator]
-static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
-    //
-    ClaimOnOom::new(Span::from_array(addr_of!(ARENA).cast_mut()))
-})
-.lock();
+static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
 
 pub enum Scene {
     List,
