@@ -30,15 +30,15 @@ use core::ptr::addr_of;
 use firefly_rust::add_menu_item;
 use list_scene::Command;
 use state::*;
-use talc::{ClaimOnOom, Span, Talc, Talck};
+use talc::{locking::AssumeUnlockable, ClaimOnOom, Span, Talc, Talck};
 
 // one wasm page
 static mut ARENA: [u8; 65536] = [0; 65536];
 
 #[global_allocator]
-static ALLOCATOR: Talck<spin::Mutex<()>, ClaimOnOom> = Talc::new(unsafe {
+static ALLOCATOR: Talck<AssumeUnlockable, ClaimOnOom> = Talc::new(unsafe {
     //
-    ClaimOnOom::new(Span::from_array(addr_of!(ARENA) as *mut [u8; 10000]))
+    ClaimOnOom::new(Span::from_array(addr_of!(ARENA).cast_mut()))
 })
 .lock();
 
