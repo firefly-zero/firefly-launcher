@@ -10,7 +10,7 @@ firefly-rust = { version = "0.6.0", default-features = false, features = [
     "sudo",
 ] }
 firefly-types = "0.4.0"
-talc = { version = "4.4.1", default-features = false, features = ["lock_api"] }
+talc = { version = "4.4.2", default-features = false, features = ["lock_api"] }
 
 # https://github.com/johnthagen/min-sized-rust
 [profile.release]
