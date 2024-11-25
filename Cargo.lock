@@ -32,14 +32,16 @@ version = "0.2.0"
 dependencies = [
  "firefly-rust",
  "firefly-types",
- "talc",
 ]
 
 [[package]]
 name = "firefly-rust"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "223c9a466f2b9e62662caf6a4dae48a6e436ef7b4ec84ad6d656f604ee46a51f"
+checksum = "6a756ac009df3edd8d0168d93535a3deb8142f933ffbb0daa4f5c419bc0510a6"
+dependencies = [
+ "talc",
+]
 
 [[package]]
 name = "firefly-types"

@@ -30,9 +30,6 @@ use firefly_rust::add_menu_item;
 use list_scene::Command;
 use state::*;
 
-#[global_allocator]
-static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
-
 pub enum Scene {
     List,
     Info,
