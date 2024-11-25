@@ -5,12 +5,8 @@ rust-version = "1.82.0"
 edition = "2021"
 
 [dependencies]
-firefly-rust = { version = "0.6.0", default-features = false, features = [
-    "alloc",
-    "sudo",
-] }
+firefly-rust = { version = "0.7.0", features = ["talc", "sudo"] }
 firefly-types = "0.4.0"
-talc = { version = "4.4.2", default-features = false, features = ["lock_api"] }
 
 # https://github.com/johnthagen/min-sized-rust
 [profile.release]
