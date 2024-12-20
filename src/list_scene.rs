@@ -111,7 +111,7 @@ fn handle_input(state: &mut State) {
     }
 
     let released_buttons = new_buttons.just_released(&state.old_buttons);
-    let command = if released_buttons.a {
+    let command = if released_buttons.s {
         Some(Command::Launch)
     } else if state.held_for > 30 && state.held_for % 4 == 0 {
         // a button is held for 0.5s

@@ -10,7 +10,7 @@ pub fn update(state: &mut State) {
     let buttons = read_buttons(Peer::COMBINED);
     let released = buttons.just_released(&state.old_buttons);
     state.old_buttons = buttons;
-    if released.a {
+    if released.s {
         if state.dialog_yes {
             delete_app(state);
         }
