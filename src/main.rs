@@ -26,7 +26,7 @@ mod list_scene;
 mod state;
 
 use apps::*;
-use firefly_rust::add_menu_item;
+use firefly_rust::*;
 use list_scene::Command;
 use state::*;
 
@@ -71,4 +71,20 @@ extern fn render() {
         Scene::Info => info_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
+}
+
+#[no_mangle]
+extern fn cheat(cmd: i32, val: i32) -> i32 {
+    if cmd == 1 {
+        let state = get_state();
+        let Ok(index) = usize::try_from(val) else {
+            return 0;
+        };
+        if let Some(app) = state.apps.get(index) {
+            sudo::run_app(&app.author_id, &app.id);
+            return 1;
+        }
+        return 0;
+    }
+    0
 }
