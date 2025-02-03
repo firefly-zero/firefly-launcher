@@ -26,6 +26,7 @@ pub struct State {
     /// For how long up or down button (pad) is held.
     pub held_for: u32,
     pub shift: i32,
+    pub splash: Option<alloc::string::String>,
 }
 
 /// Get the global state
@@ -46,6 +47,7 @@ pub fn init_state() {
         command: None,
         held_for: 0,
         shift: 0,
+        splash: None,
     };
     unsafe { STATE.set(state) }.ok().unwrap();
 }

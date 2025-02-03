@@ -21,6 +21,13 @@ pub fn update(state: &mut State) {
 }
 
 pub fn render(state: &State) {
+    if let Some(splash_path) = &state.splash {
+        let splash = sudo::load_file_buf(splash_path);
+        if let Some(splash) = splash {
+            draw_image(&splash.as_image(), Point::MIN);
+        }
+        return;
+    }
     clear_screen(Color::White);
     if state.apps.is_empty() {
         render_empty(state);
@@ -193,9 +200,12 @@ fn apply_command(state: &mut State) {
             play_note(audio::Freq::AS4);
         }
         Command::Launch => {
-            if let Some(app) = state.apps.get(state.pos) {
-                sudo::run_app(&app.author_id, &app.id);
-            }
+            let Some(app) = state.apps.get(state.pos) else {
+                return;
+            };
+            let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
+            state.splash = Some(splash_path);
+            sudo::run_app(&app.author_id, &app.id);
         }
     }
 }
