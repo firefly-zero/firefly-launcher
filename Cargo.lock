@@ -28,7 +28,7 @@ checksum = "edd0f118536f44f5ccd48bcb8b111bdc3de888b58c74639dfb034a357d0f206d"
 
 [[package]]
 name = "firefly-launcher"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "firefly-rust",
  "firefly-types",
@@ -36,18 +36,18 @@ dependencies = [
 
 [[package]]
 name = "firefly-rust"
-version = "0.7.1"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6792911db81e64840387ae5c6e1d3f49651e5177ec11e8d244dcd4f3f8096ff"
+checksum = "d454a240311aee40526a4e249a87f7b177f4ab01ec57776e5e3d5fd4eaea6184"
 dependencies = [
  "talc",
 ]
 
 [[package]]
 name = "firefly-types"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58c687dbcc350aa2cbb9691a919e03d1949bb025d2fc76ff6515415a4f8e3cbf"
+checksum = "fc84abd0f8de79086fecf404c30fc8cd266e72bb16eb92803f3e7e2be728a223"
 dependencies = [
  "postcard",
  "serde",
