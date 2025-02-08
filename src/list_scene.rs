@@ -25,6 +25,10 @@ pub fn render(state: &State) {
         let splash = sudo::load_file_buf(splash_path);
         if let Some(splash) = splash {
             draw_image(&splash.as_image(), Point::MIN);
+        } else {
+            let mut buf = alloc::boxed::Box::new([0u8; 9607]);
+            let splash = load_file("_splash", &mut buf[..]);
+            draw_image(&splash.as_image(), Point::MIN);
         }
         return;
     }
