@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 use alloc::vec::Vec;
 use core::cell::OnceCell;
 use firefly_rust::*;
@@ -35,9 +37,13 @@ pub fn get_state() -> &'static mut State {
 }
 
 pub fn init_state() {
+    let Some(font) = load_file_buf("font") else {
+        log_error("failed to load font, ROM is corrupted");
+        panic!();
+    };
     let state = State {
         scene: Scene::List,
-        font: load_file_buf("font").unwrap(),
+        font,
         apps: read_apps(),
         pos: 0,
         dialog_yes: false,

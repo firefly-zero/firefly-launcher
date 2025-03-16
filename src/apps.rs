@@ -36,7 +36,8 @@ pub fn read_apps() -> Vec<App> {
                 continue;
             };
             // Hide the launcher itself from the list.
-            if meta.author_id == "sys" && meta.app_id == "launcher" {
+            let id = (meta.author_id, meta.app_id);
+            if id == ("sys", "launcher") || id == ("sys", "connector") {
                 continue;
             }
             apps.push(App {
