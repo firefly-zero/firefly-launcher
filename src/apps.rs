@@ -54,17 +54,29 @@ pub fn read_apps() -> Vec<App> {
     apps
 }
 
-/// Good old bubble sort. Slower but smaller than the built-in sort function.
+/// Good old bubble sort. Slower but much smaller than the built-in sort function.
 fn bubble_sort(apps: &mut [App]) {
     let len = apps.len();
     let mut sorted = false;
     while !sorted {
         sorted = true;
         for i in 0..len - 1 {
-            if apps[i].name > apps[i + 1].name {
+            if ascii_gt(&apps[i].name, &apps[i + 1].name) {
                 apps.swap(i, i + 1);
                 sorted = false;
             }
         }
     }
+}
+
+/// Case-insensitive comparison of two ASCII strings.
+fn ascii_gt(s1: &str, s2: &str) -> bool {
+    for (c1, c2) in s1.as_bytes().iter().zip(s2.as_bytes()) {
+        let c1 = c1.to_ascii_lowercase();
+        let c2 = c2.to_ascii_lowercase();
+        if c1 != c2 {
+            return c1 > c2;
+        }
+    }
+    s1.len() > s2.len()
 }
