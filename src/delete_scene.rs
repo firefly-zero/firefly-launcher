@@ -25,7 +25,7 @@ pub fn update(state: &mut State) {
         if dpad.left {
             state.dialog_yes = false;
         }
-    };
+    }
 }
 
 fn delete_app(state: &mut State) {

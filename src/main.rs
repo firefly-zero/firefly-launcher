@@ -37,7 +37,7 @@ pub enum Scene {
 }
 
 #[no_mangle]
-extern fn handle_menu(i: u32) {
+extern "C" fn handle_menu(i: u32) {
     let state = get_state();
     match i {
         1 => state.transition_to(Scene::Info),
@@ -47,14 +47,14 @@ extern fn handle_menu(i: u32) {
 }
 
 #[no_mangle]
-extern fn boot() {
+extern "C" fn boot() {
     add_menu_item(1, "app info");
     add_menu_item(2, "clear data");
     init_state();
 }
 
 #[no_mangle]
-extern fn update() {
+extern "C" fn update() {
     let state = get_state();
     match state.scene() {
         Scene::List => list_scene::update(state),
@@ -64,7 +64,7 @@ extern fn update() {
 }
 
 #[no_mangle]
-extern fn render() {
+extern "C" fn render() {
     let state = get_state();
     match state.scene() {
         Scene::List => list_scene::render(state),
@@ -74,7 +74,7 @@ extern fn render() {
 }
 
 #[no_mangle]
-extern fn cheat(cmd: i32, val: i32) -> i32 {
+extern "C" fn cheat(cmd: i32, val: i32) -> i32 {
     if cmd == 1 {
         let state = get_state();
         let Ok(index) = usize::try_from(val) else {
