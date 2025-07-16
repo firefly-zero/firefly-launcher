@@ -30,6 +30,11 @@ use firefly_rust::*;
 use list_scene::Command;
 use state::*;
 
+/// Frame number to track the loading progress.
+static mut FRAME: u8 = 0;
+/// If the state is not initialized yet.
+static mut LOADING: bool = true;
+
 pub enum Scene {
     List,
     Info,
@@ -51,14 +56,27 @@ extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
-
     add_menu_item(1, "app info");
     add_menu_item(2, "clear data");
-    init_state();
 }
 
 #[no_mangle]
 extern "C" fn update() {
+    let frame = unsafe { FRAME };
+    // On the first few updates, do nothing,
+    // let "render" to render the splash screen.
+    if frame <= 1 {
+        unsafe { FRAME += 1 };
+        return;
+    }
+    // After that, load the list of apps.
+    if frame == 2 {
+        unsafe { FRAME += 1 };
+        init_state();
+        unsafe { LOADING = false };
+        return;
+    }
+
     let state = get_state();
     match state.scene() {
         Scene::List => list_scene::update(state),
@@ -69,6 +87,11 @@ extern "C" fn update() {
 
 #[no_mangle]
 extern "C" fn render() {
+    let loading = unsafe { LOADING };
+    if loading {
+        return;
+    }
+
     let state = get_state();
     match state.scene() {
         Scene::List => list_scene::render(state),
