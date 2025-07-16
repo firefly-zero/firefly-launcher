@@ -41,6 +41,7 @@ pub fn render(state: &State) {
     draw_apps(state);
     draw_arrows(state);
     draw_scroll(state);
+    draw_online(state);
 }
 
 /// Render the list of installed apps.
@@ -167,6 +168,7 @@ fn handle_input(state: &mut State) {
     state.command = command;
 }
 
+/// Render a selection box around the currently selected app.
 fn draw_selection(state: &State) {
     const MARGIN: i32 = 3;
     let pos = state.pos.saturating_sub(state.top_pos);
@@ -185,6 +187,20 @@ fn draw_selection(state: &State) {
             ..Style::default()
         },
     );
+}
+
+/// Render a green indicator in a corner if the device is connected to other devices.
+fn draw_online(state: &State) {
+    if !state.is_online {
+        return;
+    }
+    let p = Point::new(WIDTH - 23, HEIGHT - 12);
+    let s = Style {
+        fill_color: Color::Green,
+        stroke_color: Color::None,
+        stroke_width: 0,
+    };
+    draw_circle(p, 8, s);
 }
 
 fn apply_command(state: &mut State) {

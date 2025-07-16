@@ -14,6 +14,7 @@ pub struct State {
     pub font: FileBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
+    pub is_online: bool,
     /// The currently selected app index.
     pub pos: usize,
     pub dialog_yes: bool,
@@ -41,10 +42,12 @@ pub fn init_state() {
         log_error("failed to load font, ROM is corrupted");
         panic!();
     };
+    let peers = firefly_rust::get_peers();
     let state = State {
         scene: Scene::List,
         font,
         apps: read_apps(),
+        is_online: peers.len() > 1,
         pos: 0,
         dialog_yes: false,
         top_pos: 0,
