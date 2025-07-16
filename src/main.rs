@@ -48,6 +48,10 @@ extern "C" fn handle_menu(i: u32) {
 
 #[no_mangle]
 extern "C" fn boot() {
+    let splash = load_file_buf("_splash").unwrap();
+    let splash = splash.as_image();
+    draw_image(&splash, Point::MIN);
+
     add_menu_item(1, "app info");
     add_menu_item(2, "clear data");
     init_state();
