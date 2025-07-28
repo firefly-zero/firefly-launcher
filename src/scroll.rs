@@ -70,7 +70,7 @@ impl ScrollBar {
             return;
         }
         let style = LineStyle {
-            color: Color::DarkBlue,
+            color: Color::LightGray,
             width: 1,
         };
         let a = Point::new(LEFT_X, TRACK_MARGIN_VERT);
@@ -83,15 +83,17 @@ impl ScrollBar {
     }
 
     fn draw_thumb(&self) {
-        if self.total - 1 <= self.per_page {
+        if self.total <= self.per_page {
             return;
         }
         let run_pix = (TRACK_HEIGHT - THUMB_HEIGHT) as usize;
-        let y = TRACK_MARGIN_VERT + (run_pix * self.pos / (self.total - 1)) as i32;
+        let mut y = TRACK_MARGIN_VERT + (run_pix * self.pos / (self.total - 1)) as i32;
+        if self.pos == 0 {
+            y += 1;
+        }
         draw_rect(
             Point::new(LEFT_X, y),
             Size::new(BAR_WIDTH + 1, THUMB_HEIGHT),
-            // Size::new(4, 6),
             Style {
                 fill_color: Color::DarkBlue,
                 ..Style::default()
@@ -102,7 +104,7 @@ impl ScrollBar {
 
 fn style() -> Style {
     Style {
-        fill_color: Color::DarkBlue,
+        fill_color: Color::LightGray,
         ..Style::default()
     }
 }
