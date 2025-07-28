@@ -1,9 +1,9 @@
-use crate::*;
+use crate::{scroll::ScrollBar, *};
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
-const PER_SCREEN: usize = 12;
+pub const PER_SCREEN: usize = 12;
 
 pub enum Command {
     GoDown,
@@ -39,8 +39,8 @@ pub fn render(state: &State) {
     }
     draw_selection(state);
     draw_apps(state);
-    draw_arrows(state);
-    draw_scroll(state);
+    ScrollBar::from_state(state).render();
+    // draw_scroll(state);
     draw_online(state);
 }
 
@@ -63,51 +63,6 @@ fn draw_apps(state: &State) {
         let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
         draw_text(&app.author_name, &font, point, Color::LightGray);
     }
-}
-
-/// Draw ap and/or down arrows on the right if not all apps fit on the screen.
-fn draw_arrows(state: &State) {
-    const SCROLL_WIDTH: i32 = 6;
-    let style = Style {
-        fill_color: Color::DarkBlue,
-        ..Style::default()
-    };
-    if state.top_pos > 0 {
-        draw_triangle(
-            Point::new(WIDTH - SCROLL_WIDTH - 4, 5),
-            Point::new(WIDTH - 4, 5),
-            Point::new(WIDTH - SCROLL_WIDTH / 2 - 4, 5 - SCROLL_WIDTH / 2),
-            style,
-        );
-    }
-    if state.apps.len() - 1 > state.top_pos + PER_SCREEN {
-        draw_triangle(
-            Point::new(WIDTH - SCROLL_WIDTH - 4, HEIGHT - 5 - SCROLL_WIDTH / 2),
-            Point::new(WIDTH - 4, HEIGHT - 5 - SCROLL_WIDTH / 2),
-            Point::new(WIDTH - SCROLL_WIDTH / 2 - 4, HEIGHT - 5),
-            style,
-        );
-    }
-}
-
-fn draw_scroll(state: &State) {
-    const SCROLL_WIDTH: i32 = 6;
-    const SCROLL_HEIGHT: usize = HEIGHT as usize - 4;
-    if state.apps.len() - 1 <= PER_SCREEN {
-        return;
-    }
-    draw_rounded_rect(
-        Point::new(
-            WIDTH - SCROLL_WIDTH - 4,
-            (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2,
-        ),
-        Size::new(SCROLL_WIDTH + 1, 10),
-        Size::new(4, 6),
-        Style {
-            fill_color: Color::DarkBlue,
-            ..Style::default()
-        },
-    );
 }
 
 fn handle_input(state: &mut State) {

@@ -23,6 +23,7 @@ mod apps;
 mod delete_scene;
 mod info_scene;
 mod list_scene;
+mod scroll;
 mod state;
 
 use apps::*;
