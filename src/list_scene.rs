@@ -40,7 +40,7 @@ pub fn render(state: &State) {
     draw_selection(state);
     draw_apps(state);
     ScrollBar::from_state(state).render();
-    draw_scroll(state);
+    // draw_scroll(state);
     draw_online(state);
 }
 
@@ -63,25 +63,6 @@ fn draw_apps(state: &State) {
         let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
         draw_text(&app.author_name, &font, point, Color::LightGray);
     }
-}
-
-fn draw_scroll(state: &State) {
-    const SCROLL_WIDTH: i32 = 6;
-    const SCROLL_HEIGHT: usize = HEIGHT as usize - 5;
-    if state.apps.len() - 1 <= PER_SCREEN {
-        return;
-    }
-    let y = (SCROLL_HEIGHT * state.pos / state.apps.len()) as i32 + 2;
-    let y = y.clamp(2, HEIGHT - 12);
-    draw_rounded_rect(
-        Point::new(WIDTH - SCROLL_WIDTH - 4, y),
-        Size::new(SCROLL_WIDTH + 1, 10),
-        Size::new(4, 6),
-        Style {
-            fill_color: Color::DarkBlue,
-            ..Style::default()
-        },
-    );
 }
 
 fn handle_input(state: &mut State) {

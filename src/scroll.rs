@@ -19,6 +19,7 @@ const TRACK_MARGIN_VERT: i32 = MARGIN_VERT * 2 + ARROW_HEIGHT;
 const TRACK_HEIGHT: i32 = HEIGHT - TRACK_MARGIN_VERT * 2;
 
 pub struct ScrollBar {
+    pos: usize,
     /// Index of the top item on the current page.
     top_pos: usize,
     /// How many items fit per page.
@@ -30,6 +31,7 @@ pub struct ScrollBar {
 impl ScrollBar {
     pub fn from_state(state: &State) -> Self {
         Self {
+            pos: state.pos,
             top_pos: state.top_pos,
             per_page: PER_SCREEN,
             total: state.apps.len(),
@@ -40,7 +42,7 @@ impl ScrollBar {
         self.draw_arrow_up();
         self.draw_arrow_down();
         self.draw_track();
-        // self.draw_thumb();
+        self.draw_thumb();
     }
 
     fn draw_arrow_up(&self) {
@@ -80,9 +82,22 @@ impl ScrollBar {
         draw_line(a, b, style);
     }
 
-    // fn draw_thumb(&self) {
-    //     // ...
-    // }
+    fn draw_thumb(&self) {
+        if self.total - 1 <= self.per_page {
+            return;
+        }
+        let run_pix = (TRACK_HEIGHT - THUMB_HEIGHT) as usize;
+        let y = TRACK_MARGIN_VERT + (run_pix * self.pos / (self.total - 1)) as i32;
+        draw_rect(
+            Point::new(LEFT_X, y),
+            Size::new(BAR_WIDTH + 1, THUMB_HEIGHT),
+            // Size::new(4, 6),
+            Style {
+                fill_color: Color::DarkBlue,
+                ..Style::default()
+            },
+        );
+    }
 }
 
 fn style() -> Style {
