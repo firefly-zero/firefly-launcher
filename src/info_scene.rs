@@ -20,9 +20,10 @@ pub fn init(state: &mut State) {
 pub fn update(state: &mut State) {
     let new_buttons = read_buttons(Peer::COMBINED);
     let released_buttons = new_buttons.just_released(&state.old_buttons);
-    if released_buttons.any() {
+    if released_buttons.e {
         state.transition_to(Scene::List);
-        // open_menu();
+    } else if released_buttons.s {
+        state.transition_to(Scene::ClearData);
     }
     state.old_buttons = new_buttons;
 
@@ -65,6 +66,8 @@ pub fn render(state: &State) {
     if let Some(size) = app.data_size {
         render_info(&font, 6, &format_size(size));
     }
+
+    render_button(&font, 0, "clear data");
 }
 
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
@@ -82,4 +85,19 @@ fn format_size(size: usize) -> alloc::string::String {
         return format!("{size} KB");
     }
     format!("{size} B")
+}
+
+fn render_button(font: &Font<'_>, i: i32, t: &str) {
+    let point = Point::new(6, 4 + LINE_HEIGHT * (i + 7));
+    draw_text(t, font, point, Color::DarkBlue);
+
+    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
+    let corner = Size::new(4, 4);
+    let style = Style {
+        fill_color: Color::None,
+        stroke_color: Color::DarkBlue,
+        stroke_width: 1,
+    };
+    let point = point - Point::new(2, 8);
+    draw_rounded_rect(point, size, corner, style);
 }

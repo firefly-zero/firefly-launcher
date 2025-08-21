@@ -45,10 +45,8 @@ pub enum Scene {
 #[no_mangle]
 extern "C" fn handle_menu(i: u32) {
     let state = get_state();
-    match i {
-        1 => state.transition_to(Scene::Info),
-        2 => state.transition_to(Scene::ClearData),
-        _ => unreachable!(),
+    if i == 1 {
+        state.transition_to(Scene::Info);
     }
 }
 
@@ -58,7 +56,6 @@ extern "C" fn boot() {
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
     add_menu_item(1, "app info");
-    add_menu_item(2, "clear data");
 }
 
 #[no_mangle]
