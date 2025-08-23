@@ -2,7 +2,7 @@ use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use firefly_rust::*;
-use firefly_types::{Encode, Meta};
+use firefly_types::{Encode, Meta, Stats};
 
 pub struct App {
     pub id: String,
@@ -11,6 +11,7 @@ pub struct App {
     pub author_name: String,
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
+    pub stats: Option<Stats>,
 }
 
 /// Go through all ROMs and read their metadata.
@@ -47,6 +48,7 @@ pub fn read_apps() -> Vec<App> {
                 author_name: meta.author_name.to_string(),
                 rom_size: None,
                 data_size: None,
+                stats: None,
             });
         }
     }

@@ -25,6 +25,7 @@ mod info_scene;
 mod list_scene;
 mod scroll;
 mod state;
+mod stats_scene;
 
 use apps::*;
 use firefly_rust::*;
@@ -39,6 +40,7 @@ static mut LOADING: bool = true;
 pub enum Scene {
     List,
     Info,
+    Stats,
     ClearData,
 }
 
@@ -79,6 +81,7 @@ extern "C" fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
+        Scene::Stats => stats_scene::update(state),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -94,6 +97,7 @@ extern "C" fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
+        Scene::Stats => stats_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
 }

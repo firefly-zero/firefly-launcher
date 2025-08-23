@@ -16,14 +16,14 @@ static FIELDS: &[&str] = &[
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
 }
-
 pub fn update(state: &mut State) {
     let new_buttons = read_buttons(Peer::COMBINED);
     let released_buttons = new_buttons.just_released(&state.old_buttons);
     if released_buttons.e {
         state.transition_to(Scene::List);
     } else if released_buttons.s {
-        state.transition_to(Scene::ClearData);
+        // state.transition_to(Scene::ClearData);
+        state.transition_to(Scene::Stats);
     }
     state.old_buttons = new_buttons;
 
