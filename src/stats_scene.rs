@@ -1,5 +1,5 @@
 use crate::*;
-use alloc::format;
+use alloc::{boxed::Box, format};
 use firefly_rust::*;
 use firefly_types::Encode;
 
@@ -9,17 +9,11 @@ static FIELDS: &[&str] = &["Launches:"];
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
+    let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
+    state.button_group = Some(ButtonGroup::new(items));
 }
-pub fn update(state: &mut State) {
-    let new_buttons = read_buttons(Peer::COMBINED);
-    let released_buttons = new_buttons.just_released(&state.old_buttons);
-    if released_buttons.e {
-        state.transition_to(Scene::List);
-    } else if released_buttons.s {
-        state.transition_to(Scene::Info);
-    }
-    state.old_buttons = new_buttons;
 
+pub fn update(state: &mut State) {
     let app = &mut state.apps[state.pos];
     if app.stats.is_none() {
         let stats_path = format!("data/{}/{}/stats", app.author_id, app.id);
@@ -27,6 +21,11 @@ pub fn update(state: &mut State) {
         let raw = sudo::load_file_buf(&stats_path).unwrap();
         let stats = firefly_types::Stats::decode(raw.data()).unwrap();
         app.stats = Some(stats);
+    }
+    if let Some(button_group) = state.button_group.as_mut() {
+        if let Some(scene) = button_group.update() {
+            state.transition_to(scene);
+        }
     }
 }
 
@@ -41,25 +40,12 @@ pub fn render(state: &State) {
     if let Some(stats) = &app.stats {
         render_info(&font, 1, &format!("{}", stats.launches[0]));
     }
-    render_button(&font, 0, "back");
+    if let Some(button_group) = &state.button_group {
+        button_group.render(&font);
+    }
 }
 
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
     draw_text(t, font, point, Color::Blue);
-}
-
-fn render_button(font: &Font<'_>, i: i32, t: &str) {
-    let point = Point::new(6, 4 + LINE_HEIGHT * (i + 8));
-    draw_text(t, font, point, Color::DarkBlue);
-
-    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
-    let corner = Size::new(4, 4);
-    let style = Style {
-        fill_color: Color::None,
-        stroke_color: Color::DarkBlue,
-        stroke_width: 1,
-    };
-    let point = point - Point::new(2, 8);
-    draw_rounded_rect(point, size, corner, style);
 }
