@@ -1,5 +1,5 @@
 use crate::*;
-use alloc::format;
+use alloc::{boxed::Box, format};
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
@@ -15,7 +15,14 @@ static FIELDS: &[&str] = &[
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
+    let items = Box::new([
+        ("stats", Scene::Stats),
+        ("clear data", Scene::ClearData),
+        ("back", Scene::List),
+    ]);
+    state.button_group = Some(ButtonGroup::new(items));
 }
+
 pub fn update(state: &mut State) {
     let new_buttons = read_buttons(Peer::COMBINED);
     let released_buttons = new_buttons.just_released(&state.old_buttons);
@@ -35,6 +42,11 @@ pub fn update(state: &mut State) {
     if app.data_size.is_none() {
         let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
         app.data_size = Some(get_dir_size(&data_path));
+    }
+    if let Some(button_group) = state.button_group.as_mut() {
+        if let Some(scene) = button_group.update() {
+            state.transition_to(scene);
+        }
     }
 }
 
@@ -66,8 +78,9 @@ pub fn render(state: &State) {
     if let Some(size) = app.data_size {
         render_info(&font, 6, &format_size(size));
     }
-
-    render_button(&font, 0, "clear data");
+    if let Some(button_group) = &state.button_group {
+        button_group.render(&font);
+    }
 }
 
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
@@ -85,19 +98,4 @@ fn format_size(size: usize) -> alloc::string::String {
         return format!("{size} KB");
     }
     format!("{size} B")
-}
-
-fn render_button(font: &Font<'_>, i: i32, t: &str) {
-    let point = Point::new(6, 4 + LINE_HEIGHT * (i + 7));
-    draw_text(t, font, point, Color::DarkBlue);
-
-    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
-    let corner = Size::new(4, 4);
-    let style = Style {
-        fill_color: Color::None,
-        stroke_color: Color::DarkBlue,
-        stroke_width: 1,
-    };
-    let point = point - Point::new(2, 8);
-    draw_rounded_rect(point, size, corner, style);
 }

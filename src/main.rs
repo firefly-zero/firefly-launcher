@@ -20,6 +20,7 @@
 extern crate alloc;
 
 mod apps;
+mod button_group;
 mod delete_scene;
 mod info_scene;
 mod list_scene;
@@ -28,6 +29,7 @@ mod state;
 mod stats_scene;
 
 use apps::*;
+use button_group::ButtonGroup;
 use firefly_rust::*;
 use list_scene::Command;
 use state::*;
