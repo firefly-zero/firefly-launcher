@@ -39,6 +39,7 @@ static mut FRAME: u8 = 0;
 /// If the state is not initialized yet.
 static mut LOADING: bool = true;
 
+#[derive(Clone, Copy)]
 pub enum Scene {
     List,
     Info,

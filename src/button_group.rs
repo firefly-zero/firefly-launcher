@@ -5,9 +5,10 @@ use firefly_rust::*;
 const LINE_HEIGHT: i32 = 12;
 
 pub struct ButtonGroup {
+    pub items: Box<[(&'static str, Scene)]>,
     pub cursor: usize,
     pub old_buttons: Buttons,
-    pub items: Box<[(&'static str, Scene)]>,
+    pub old_dpad: DPad,
 }
 
 impl ButtonGroup {
@@ -15,6 +16,7 @@ impl ButtonGroup {
         Self {
             cursor: 0,
             old_buttons: Buttons::default(),
+            old_dpad: DPad::default(),
             items,
         }
     }
@@ -25,10 +27,21 @@ impl ButtonGroup {
         if released_buttons.e {
             return Some(Scene::List);
         } else if released_buttons.s {
-            // state.transition_to(Scene::ClearData);
-            return Some(Scene::Stats);
+            let selected = self.items[self.cursor];
+            return Some(selected.1);
         }
         self.old_buttons = new_buttons;
+
+        let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
+        let dpad_pressed = new_dpad.just_pressed(&self.old_dpad);
+        if dpad_pressed.down && self.cursor < self.items.len() - 1 {
+            self.cursor += 1;
+        }
+        if dpad_pressed.up && self.cursor > 0 {
+            self.cursor -= 1;
+        }
+        self.old_dpad = new_dpad;
+
         None
     }
 
