@@ -22,6 +22,7 @@ extern crate alloc;
 mod apps;
 mod button_group;
 mod delete_scene;
+mod formatting;
 mod info_scene;
 mod list_scene;
 mod scroll;
@@ -31,6 +32,7 @@ mod stats_scene;
 use apps::*;
 use button_group::ButtonGroup;
 use firefly_rust::*;
+use formatting::*;
 use list_scene::Command;
 use state::*;
 

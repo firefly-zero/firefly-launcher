@@ -52,11 +52,6 @@ pub fn render(state: &State) {
     }
 }
 
-fn format_date(date: (u16, u8, u8)) -> alloc::string::String {
-    let (y, m, d) = date;
-    format!("{y}-{m:0>2}-{d:0>2}")
-}
-
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
     draw_text(t, font, point, Color::Blue);
