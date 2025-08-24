@@ -5,12 +5,12 @@ use firefly_rust::*;
 const LINE_HEIGHT: i32 = 12;
 
 static FIELDS: &[&str] = &[
-    "author ID:",
-    "app ID:",
-    "author name:",
-    "app name:",
-    "ROM size:",
-    "data size:",
+    "author ID",
+    "app ID",
+    "author name",
+    "app name",
+    "ROM size",
+    "data size",
 ];
 
 pub fn init(state: &mut State) {
