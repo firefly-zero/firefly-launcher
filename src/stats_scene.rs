@@ -6,7 +6,7 @@ use firefly_types::Encode;
 const LINE_HEIGHT: i32 = 12;
 
 static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
-static FIELDS: &[&str] = &["launches", "", "installed", "updated"];
+static FIELDS: &[&str] = &["launches", "installed", "updated"];
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
@@ -47,9 +47,9 @@ pub fn render(state: &State) {
             render_info(&font, 2, i, &format!("{n}"));
         }
         let installed_on = format_date(stats.installed_on);
-        render_info(&font, 4, 0, &installed_on);
+        render_info(&font, 3, 0, &installed_on);
         let updated_on = format_date(stats.updated_on);
-        render_info(&font, 5, 0, &updated_on);
+        render_info(&font, 4, 0, &updated_on);
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(&font);
