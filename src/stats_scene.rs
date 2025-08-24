@@ -6,7 +6,7 @@ use firefly_types::Encode;
 const LINE_HEIGHT: i32 = 12;
 
 static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
-static FIELDS: &[&str] = &["launches", "play time", "installed", "updated"];
+static FIELDS: &[&str] = &["launches", "", "installed", "updated"];
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
