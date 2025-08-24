@@ -17,6 +17,7 @@ pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
     let items = Box::new([
         ("stats", Scene::Stats),
+        ("achievements", Scene::Badges),
         ("clear data", Scene::ClearData),
         ("back", Scene::List),
     ]);

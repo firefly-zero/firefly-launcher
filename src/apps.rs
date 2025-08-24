@@ -1,3 +1,4 @@
+use crate::*;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -12,6 +13,7 @@ pub struct App {
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
+    pub badges: Option<Vec<BadgeInfo>>,
 }
 
 /// Go through all ROMs and read their metadata.
@@ -49,6 +51,7 @@ pub fn read_apps() -> Vec<App> {
                 rom_size: None,
                 data_size: None,
                 stats: None,
+                badges: None,
             });
         }
     }
