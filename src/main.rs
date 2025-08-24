@@ -20,14 +20,19 @@
 extern crate alloc;
 
 mod apps;
+mod button_group;
 mod delete_scene;
+mod formatting;
 mod info_scene;
 mod list_scene;
 mod scroll;
 mod state;
+mod stats_scene;
 
 use apps::*;
+use button_group::ButtonGroup;
 use firefly_rust::*;
+use formatting::*;
 use list_scene::Command;
 use state::*;
 
@@ -36,19 +41,19 @@ static mut FRAME: u8 = 0;
 /// If the state is not initialized yet.
 static mut LOADING: bool = true;
 
+#[derive(Clone, Copy)]
 pub enum Scene {
     List,
     Info,
+    Stats,
     ClearData,
 }
 
 #[no_mangle]
 extern "C" fn handle_menu(i: u32) {
     let state = get_state();
-    match i {
-        1 => state.transition_to(Scene::Info),
-        2 => state.transition_to(Scene::ClearData),
-        _ => unreachable!(),
+    if i == 1 {
+        state.transition_to(Scene::Info);
     }
 }
 
@@ -58,7 +63,6 @@ extern "C" fn boot() {
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
     add_menu_item(1, "app info");
-    add_menu_item(2, "clear data");
 }
 
 #[no_mangle]
@@ -82,6 +86,7 @@ extern "C" fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
+        Scene::Stats => stats_scene::update(state),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -97,6 +102,7 @@ extern "C" fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
+        Scene::Stats => stats_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
 }

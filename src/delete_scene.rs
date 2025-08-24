@@ -13,8 +13,10 @@ pub fn update(state: &mut State) {
     if released.s {
         if state.dialog_yes {
             delete_app(state);
+            state.transition_to(Scene::List);
+        } else {
+            state.transition_to(Scene::Info);
         }
-        state.transition_to(Scene::List);
     }
 
     if let Some(pad) = read_pad(Peer::COMBINED) {

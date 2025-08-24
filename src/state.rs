@@ -1,10 +1,9 @@
 #![allow(static_mut_refs)]
 
+use crate::*;
 use alloc::vec::Vec;
 use core::cell::OnceCell;
 use firefly_rust::*;
-
-use crate::*;
 
 static mut STATE: OnceCell<State> = OnceCell::new();
 
@@ -22,6 +21,7 @@ pub struct State {
     pub top_pos: usize,
     /// The state of buttons on the previous frame.
     pub old_buttons: Buttons,
+    pub button_group: Option<ButtonGroup>,
     /// The state of direction buttons on the previous frame.
     pub old_dpad: DPad,
     /// The next command to run when rendering.
@@ -52,6 +52,7 @@ pub fn init_state() {
         dialog_yes: false,
         top_pos: 0,
         old_buttons: Buttons::default(),
+        button_group: None,
         old_dpad: DPad::default(),
         command: None,
         held_for: 0,
@@ -71,6 +72,7 @@ impl State {
         match self.scene {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),
+            Scene::Stats => stats_scene::init(self),
             Scene::ClearData => delete_scene::init(self),
         }
     }

@@ -1,31 +1,29 @@
 use crate::*;
-use alloc::format;
+use alloc::{boxed::Box, format};
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
 
 static FIELDS: &[&str] = &[
-    "Author ID:",
-    "App ID:",
-    "Author name:",
-    "App name:",
-    "ROM size:",
-    "Data size:",
+    "author ID",
+    "app ID",
+    "author name",
+    "app name",
+    "ROM size",
+    "data size",
 ];
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
+    let items = Box::new([
+        ("stats", Scene::Stats),
+        ("clear data", Scene::ClearData),
+        ("back", Scene::List),
+    ]);
+    state.button_group = Some(ButtonGroup::new(items));
 }
 
 pub fn update(state: &mut State) {
-    let new_buttons = read_buttons(Peer::COMBINED);
-    let released_buttons = new_buttons.just_released(&state.old_buttons);
-    if released_buttons.any() {
-        state.transition_to(Scene::List);
-        // open_menu();
-    }
-    state.old_buttons = new_buttons;
-
     let app = &mut state.apps[state.pos];
     if app.rom_size.is_none() {
         let app_path = format!("roms/{}/{}", app.author_id, app.id);
@@ -34,6 +32,11 @@ pub fn update(state: &mut State) {
     if app.data_size.is_none() {
         let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
         app.data_size = Some(get_dir_size(&data_path));
+    }
+    if let Some(button_group) = state.button_group.as_mut() {
+        if let Some(scene) = button_group.update() {
+            state.transition_to(scene);
+        }
     }
 }
 
@@ -64,6 +67,9 @@ pub fn render(state: &State) {
     }
     if let Some(size) = app.data_size {
         render_info(&font, 6, &format_size(size));
+    }
+    if let Some(button_group) = &state.button_group {
+        button_group.render(&font);
     }
 }
 
