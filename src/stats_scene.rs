@@ -5,7 +5,8 @@ use firefly_types::Encode;
 
 const LINE_HEIGHT: i32 = 12;
 
-static FIELDS: &[&str] = &["Launches:"];
+static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
+static FIELDS: &[&str] = &["launches:", "play time:", "installed:"];
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
@@ -32,17 +33,28 @@ pub fn update(state: &mut State) {
 pub fn render(state: &State) {
     clear_screen(Color::White);
     let font = state.font.as_font();
-    for (text, i) in FIELDS.iter().zip(1..) {
+    for (text, i) in COLUMNS.iter().zip(0..) {
+        let point = Point::new(100 + 18 * i, LINE_HEIGHT);
+        draw_text(text, &font, point, Color::DarkBlue);
+    }
+    for (text, i) in FIELDS.iter().zip(2..) {
         let point = Point::new(6, LINE_HEIGHT * i);
         draw_text(text, &font, point, Color::DarkBlue);
     }
     let app = &state.apps[state.pos];
     if let Some(stats) = &app.stats {
-        render_info(&font, 1, &format!("{}", stats.launches[0]));
+        render_info(&font, 2, &format!("{}", stats.launches[0]));
+        let installed_on = format_date(stats.installed_on);
+        render_info(&font, 4, &installed_on);
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(&font);
     }
+}
+
+fn format_date(date: (u16, u8, u8)) -> alloc::string::String {
+    let (y, m, d) = date;
+    format!("{y}-{m:0>2}-{d:0>2}")
 }
 
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
