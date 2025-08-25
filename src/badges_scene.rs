@@ -46,9 +46,9 @@ pub fn render(state: &State) {
     let font = state.font.as_font();
     if let Some(badges) = &app.badges {
         // for (badge, i) in stats.badges.iter().zip(0..) {
-        // for (badge, i) in badges.iter().zip(0..) {
-        //     render_badge(&font, i, badge);
-        // }
+        for (badge, i) in badges.iter().zip(1..) {
+            render_badge(&font, i, badge);
+        }
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(&font);
@@ -56,6 +56,6 @@ pub fn render(state: &State) {
 }
 
 fn render_badge(font: &Font<'_>, i: i32, b: &BadgeInfo) {
-    let point = Point::new(100, LINE_HEIGHT * i);
-    draw_text(&b.name, font, point, Color::Blue);
+    let point = Point::new(6, LINE_HEIGHT * i);
+    draw_text(&b.name, font, point, Color::DarkBlue);
 }
