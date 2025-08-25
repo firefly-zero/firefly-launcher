@@ -16,6 +16,22 @@ pub struct App {
     pub badges: Option<Vec<BadgeInfo>>,
 }
 
+impl App {
+    pub fn try_load_stats(&mut self) {
+        if self.stats.is_some() {
+            return;
+        }
+        let stats_path = format!("data/{}/{}/stats", self.author_id, self.id);
+        let Some(raw) = sudo::load_file_buf(&stats_path) else {
+            return;
+        };
+        let Ok(stats) = firefly_types::Stats::decode(raw.data()) else {
+            return;
+        };
+        self.stats = Some(stats);
+    }
+}
+
 /// Go through all ROMs and read their metadata.
 pub fn read_apps() -> Vec<App> {
     let author_dirs = sudo::DirBuf::list_dirs("roms");

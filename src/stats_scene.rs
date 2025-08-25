@@ -1,7 +1,6 @@
 use crate::*;
 use alloc::{boxed::Box, format};
 use firefly_rust::*;
-use firefly_types::Encode;
 
 const LINE_HEIGHT: i32 = 12;
 
@@ -14,13 +13,7 @@ pub fn init(state: &mut State) {
     state.button_group = Some(ButtonGroup::new(items));
 
     let app = &mut state.apps[state.pos];
-    if app.stats.is_none() {
-        let stats_path = format!("data/{}/{}/stats", app.author_id, app.id);
-        // TODO: don't unwrap
-        let raw = sudo::load_file_buf(&stats_path).unwrap();
-        let stats = firefly_types::Stats::decode(raw.data()).unwrap();
-        app.stats = Some(stats);
-    }
+    app.try_load_stats();
 }
 
 pub fn update(state: &mut State) {
