@@ -18,9 +18,7 @@ pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
-}
 
-pub fn update(state: &mut State) {
     let app = &mut state.apps[state.pos];
     if app.stats.is_none() {
         let stats_path = format!("data/{}/{}/stats", app.author_id, app.id);
@@ -49,6 +47,9 @@ pub fn update(state: &mut State) {
         // TODO: sort badges
         app.badges = Some(badges);
     }
+}
+
+pub fn update(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
         if let Some(scene) = button_group.update() {
             state.transition_to(scene);

@@ -22,9 +22,7 @@ pub fn init(state: &mut State) {
         ("back", Scene::List),
     ]);
     state.button_group = Some(ButtonGroup::new(items));
-}
 
-pub fn update(state: &mut State) {
     let app = &mut state.apps[state.pos];
     if app.rom_size.is_none() {
         let app_path = format!("roms/{}/{}", app.author_id, app.id);
@@ -34,6 +32,9 @@ pub fn update(state: &mut State) {
         let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
         app.data_size = Some(get_dir_size(&data_path));
     }
+}
+
+pub fn update(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
         if let Some(scene) = button_group.update() {
             state.transition_to(scene);
