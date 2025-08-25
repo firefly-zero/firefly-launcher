@@ -10,6 +10,8 @@ const LINE_HEIGHT: i32 = 12;
 
 pub struct BadgeInfo {
     name: String,
+    done: u16,
+    goal: u16,
 }
 
 pub fn init(state: &mut State) {
@@ -20,17 +22,31 @@ pub fn init(state: &mut State) {
 
 pub fn update(state: &mut State) {
     let app = &mut state.apps[state.pos];
+    if app.stats.is_none() {
+        let stats_path = format!("data/{}/{}/stats", app.author_id, app.id);
+        // TODO: don't unwrap
+        let raw = sudo::load_file_buf(&stats_path).unwrap();
+        let stats = firefly_types::Stats::decode(raw.data()).unwrap();
+        app.stats = Some(stats);
+    }
+    let stats = app.stats.as_ref().unwrap();
     if app.badges.is_none() {
         let badges_path = format!("roms/{}/{}/_badges", app.author_id, app.id);
         // TODO: don't unwrap
         let raw = sudo::load_file_buf(&badges_path).unwrap();
         let raw_badges = firefly_types::Badges::decode(raw.data()).unwrap();
         let mut badges = Vec::with_capacity(raw_badges.badges.len());
-        for badge in raw_badges.badges.iter() {
+        for (info, progress) in raw_badges.badges.iter().zip(&stats.badges) {
+            if progress.done < info.hidden {
+                continue;
+            }
             badges.push(BadgeInfo {
-                name: badge.name.to_owned(),
+                name: info.name.to_owned(),
+                done: progress.done,
+                goal: progress.goal,
             });
         }
+        // TODO: sort badges
         app.badges = Some(badges);
     }
     if let Some(button_group) = state.button_group.as_mut() {
@@ -57,5 +73,32 @@ pub fn render(state: &State) {
 
 fn render_badge(font: &Font<'_>, i: i32, b: &BadgeInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
-    draw_text(&b.name, font, point, Color::DarkBlue);
+    let color = if b.done >= b.goal {
+        Color::DarkBlue
+    } else if b.done > 0 {
+        Color::Gray
+    } else {
+        Color::LightGray
+    };
+    draw_text(&b.name, font, point, color);
+
+    let point = Point::new(100, point.y - LINE_HEIGHT + 4);
+    let style = Style {
+        fill_color: Color::None,
+        stroke_color: color,
+        stroke_width: 1,
+    };
+    let size = Size::new(WIDTH - 106, LINE_HEIGHT - 2);
+    draw_rect(point, size, style);
+
+    let style = Style {
+        fill_color: color,
+        stroke_color: Color::None,
+        stroke_width: 0,
+    };
+    let ratio = (f32::from(b.done) / f32::from(b.goal)).clamp(0., 1.);
+    #[expect(clippy::cast_precision_loss)]
+    let width = (size.width as f32 * ratio) as i32;
+    let size = Size::new(width, size.height);
+    draw_rect(point, size, style);
 }
