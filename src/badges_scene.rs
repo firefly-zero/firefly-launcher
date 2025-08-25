@@ -21,26 +21,36 @@ pub fn init(state: &mut State) {
 
     let app = &mut state.apps[state.pos];
     app.try_load_stats();
-    let stats = app.stats.as_ref().unwrap();
-    if app.badges.is_none() {
-        let badges_path = format!("roms/{}/{}/_badges", app.author_id, app.id);
-        // TODO: don't unwrap
-        let raw = sudo::load_file_buf(&badges_path).unwrap();
-        let raw_badges = firefly_types::Badges::decode(raw.data()).unwrap();
-        let mut badges = Vec::with_capacity(raw_badges.badges.len());
-        for (info, progress) in raw_badges.badges.iter().zip(&stats.badges) {
-            if progress.done < info.hidden {
-                continue;
-            }
-            badges.push(BadgeInfo {
-                name: info.name.to_owned(),
-                done: progress.done,
-                goal: progress.goal,
-            });
-        }
-        // TODO: sort badges
-        app.badges = Some(badges);
+    try_load_badges(app);
+}
+
+fn try_load_badges(app: &mut App) {
+    let Some(stats) = app.stats.as_ref() else {
+        return;
+    };
+    if app.badges.is_some() {
+        return;
     }
+    let badges_path = format!("roms/{}/{}/_badges", app.author_id, app.id);
+    let Some(raw) = sudo::load_file_buf(&badges_path) else {
+        return;
+    };
+    let Ok(raw_badges) = firefly_types::Badges::decode(raw.data()) else {
+        return;
+    };
+    let mut badges = Vec::with_capacity(raw_badges.badges.len());
+    for (info, progress) in raw_badges.badges.iter().zip(&stats.badges) {
+        if progress.done < info.hidden {
+            continue;
+        }
+        badges.push(BadgeInfo {
+            name: info.name.to_owned(),
+            done: progress.done,
+            goal: progress.goal,
+        });
+    }
+    // TODO: sort badges
+    app.badges = Some(badges);
 }
 
 pub fn update(state: &mut State) {
