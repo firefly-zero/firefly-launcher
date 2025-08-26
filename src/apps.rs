@@ -1,3 +1,4 @@
+use crate::*;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -12,6 +13,23 @@ pub struct App {
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
+    pub badges: Option<Vec<BadgeInfo>>,
+}
+
+impl App {
+    pub fn try_load_stats(&mut self) {
+        if self.stats.is_some() {
+            return;
+        }
+        let stats_path = format!("data/{}/{}/stats", self.author_id, self.id);
+        let Some(raw) = sudo::load_file_buf(&stats_path) else {
+            return;
+        };
+        let Ok(stats) = firefly_types::Stats::decode(raw.data()) else {
+            return;
+        };
+        self.stats = Some(stats);
+    }
 }
 
 /// Go through all ROMs and read their metadata.
@@ -49,6 +67,7 @@ pub fn read_apps() -> Vec<App> {
                 rom_size: None,
                 data_size: None,
                 stats: None,
+                badges: None,
             });
         }
     }
