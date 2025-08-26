@@ -46,22 +46,23 @@ impl ButtonGroup {
     }
 
     pub fn render(&self, font: &Font<'_>) {
-        for (i, (item, _)) in self.items.iter().enumerate() {
-            render_button(font, i as i32, item);
-            if i == self.cursor {
-                render_cursor(i as i32);
+        let n = self.items.len() as i32;
+        for ((item, _), i) in self.items.iter().zip(0..) {
+            render_button(font, n - i, item);
+            if i == self.cursor as _ {
+                render_cursor(n - i);
             }
         }
     }
 }
 
 fn render_button(font: &Font<'_>, i: i32, t: &str) {
-    let point = Point::new(6, 4 + LINE_HEIGHT * (i + 7));
+    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
     draw_text(t, font, point, Color::DarkBlue);
 }
 
 fn render_cursor(i: i32) {
-    let point = Point::new(6, 4 + LINE_HEIGHT * (i + 7));
+    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
     let size = Size::new(WIDTH - 8, LINE_HEIGHT);
     let corner = Size::new(4, 4);
     let style = Style {
