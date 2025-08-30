@@ -47,16 +47,18 @@ impl ButtonGroup {
 
     pub fn render(&self, font: &Font<'_>) {
         let n = self.items.len() as i32;
+        {
+            let i = n - self.cursor as i32;
+            let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
+            draw_cursor(y, false);
+        }
         for ((item, _), i) in self.items.iter().zip(0..) {
             render_button(font, n - i, item);
         }
-        let i = n - self.cursor as i32;
-        let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
-        draw_cursor(y, false);
     }
 }
 
 fn render_button(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
-    draw_text(t, font, point, Color::DarkBlue);
+    draw_text(t, font, point, Color::Black);
 }

@@ -70,15 +70,16 @@ impl ScrollBar {
             return;
         }
         let style = LineStyle {
-            color: Color::LightGray,
+            color: Color::Black,
             width: 1,
         };
-        let a = Point::new(LEFT_X, TRACK_MARGIN_VERT);
-        let b = Point::new(RIGHT_X, TRACK_MARGIN_VERT);
+
+        let a = Point::new(LEFT_X, TRACK_MARGIN_VERT + 1);
+        let b = Point::new(RIGHT_X, TRACK_MARGIN_VERT + 1);
         draw_line(a, b, style);
 
-        let a = Point::new(LEFT_X, TRACK_HEIGHT + TRACK_MARGIN_VERT);
-        let b = Point::new(RIGHT_X, TRACK_HEIGHT + TRACK_MARGIN_VERT);
+        let a = Point::new(LEFT_X, TRACK_HEIGHT + TRACK_MARGIN_VERT - 1);
+        let b = Point::new(RIGHT_X, TRACK_HEIGHT + TRACK_MARGIN_VERT - 1);
         draw_line(a, b, style);
     }
 
@@ -95,8 +96,9 @@ impl ScrollBar {
             Point::new(LEFT_X, y),
             Size::new(BAR_WIDTH + 1, THUMB_HEIGHT),
             Style {
-                fill_color: Color::DarkBlue,
-                ..Style::default()
+                fill_color: Color::White,
+                stroke_color: Color::Black,
+                stroke_width: 1,
             },
         );
     }
@@ -104,7 +106,7 @@ impl ScrollBar {
 
 fn style() -> Style {
     Style {
-        fill_color: Color::LightGray,
+        fill_color: Color::Black,
         ..Style::default()
     }
 }
