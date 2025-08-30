@@ -22,6 +22,10 @@ pub fn update(state: &mut State) {
     } else {
         0
     };
+    // Control the scroll speed when the up.down button is held.
+    if state.input.held_for > 30 && state.input.held_for % 4 != 0 {
+        return;
+    }
 
     match state.input.get() {
         Input::Down => {

@@ -72,7 +72,7 @@ impl InputManager {
         } else {
             self.held_for = 0;
         }
-        if self.held_for > 30 && self.held_for % 4 == 0 {
+        if self.held_for > 30 {
             dpad_pressed = new_dpad;
         }
 
