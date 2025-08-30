@@ -50,24 +50,13 @@ impl ButtonGroup {
         for ((item, _), i) in self.items.iter().zip(0..) {
             render_button(font, n - i, item);
         }
-        render_cursor(n - self.cursor as i32);
+        let i = n - self.cursor as i32;
+        let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
+        draw_cursor(y, false);
     }
 }
 
 fn render_button(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
     draw_text(t, font, point, Color::DarkBlue);
-}
-
-fn render_cursor(i: i32) {
-    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
-    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
-    let corner = Size::new(4, 4);
-    let style = Style {
-        fill_color: Color::None,
-        stroke_color: Color::DarkBlue,
-        stroke_width: 1,
-    };
-    let point = point - Point::new(2, 8);
-    draw_rounded_rect(point, size, corner, style);
 }

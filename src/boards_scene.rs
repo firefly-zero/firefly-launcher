@@ -16,7 +16,6 @@ pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
     state.board_pos = 0;
     let app = &mut state.apps[state.pos];
-    app.try_load_stats();
     try_load_boards(app);
 }
 
@@ -67,24 +66,12 @@ pub fn render(state: &State) {
     for (board, i) in boards.iter().zip(1..) {
         render_board(&font, i, board);
     }
-    render_cursor(state.board_pos as _);
+    let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
+    draw_cursor(y, false);
 }
 
 fn render_board(font: &Font<'_>, i: i32, b: &BoardInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
     let color = Color::DarkBlue;
     draw_text(&b.name, font, point, color);
-}
-
-fn render_cursor(i: i32) {
-    let point = Point::new(6, LINE_HEIGHT * (i + 1) + 1);
-    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
-    let corner = Size::new(4, 4);
-    let style = Style {
-        fill_color: Color::None,
-        stroke_color: Color::DarkBlue,
-        stroke_width: 1,
-    };
-    let point = point - Point::new(2, 8);
-    draw_rounded_rect(point, size, corner, style);
 }

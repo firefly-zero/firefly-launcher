@@ -125,23 +125,10 @@ fn handle_input(state: &mut State) {
 
 /// Render a selection box around the currently selected app.
 fn draw_selection(state: &State) {
-    const MARGIN: i32 = 3;
     let pos = state.pos.saturating_sub(state.top_pos);
-    let mut width = WIDTH - MARGIN * 2;
-    // If not all apps fit on the screen, give some space on the right
-    // for the scroll bar.
-    if state.apps.len() - 1 > PER_SCREEN {
-        width -= 10;
-    }
-    draw_rounded_rect(
-        Point::new(MARGIN, 2 + pos as i32 * LINE_HEIGHT + state.shift),
-        Size::new(width, LINE_HEIGHT),
-        Size::new(4, 4),
-        Style {
-            stroke_color: Color::DarkBlue,
-            ..Style::default()
-        },
-    );
+    let has_scroll = state.apps.len() - 1 > PER_SCREEN;
+    let y = 2 + pos as i32 * LINE_HEIGHT + state.shift;
+    draw_cursor(y, has_scroll);
 }
 
 /// Render a green indicator in a corner if the device is connected to other devices.
