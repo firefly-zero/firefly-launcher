@@ -7,26 +7,23 @@ pub fn init(state: &mut State) {
 }
 
 pub fn update(state: &mut State) {
-    let buttons = read_buttons(Peer::COMBINED);
-    let released = buttons.just_released(&state.old_buttons);
-    state.old_buttons = buttons;
-    if released.s {
-        if state.dialog_yes {
-            delete_app(state);
-            state.transition_to(Scene::List);
-        } else {
-            state.transition_to(Scene::Info);
+    let input = state.input.get();
+    match input {
+        Input::Select => {
+            if state.dialog_yes {
+                delete_app(state);
+                state.transition_to(Scene::List);
+            } else {
+                state.transition_to(Scene::Info);
+            }
         }
-    }
-
-    if let Some(pad) = read_pad(Peer::COMBINED) {
-        let dpad = pad.as_dpad();
-        if dpad.right {
+        Input::Right => {
             state.dialog_yes = true;
         }
-        if dpad.left {
+        Input::Left => {
             state.dialog_yes = false;
         }
+        _ => (),
     }
 }
 

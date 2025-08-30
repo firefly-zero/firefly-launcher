@@ -15,7 +15,6 @@ pub struct BadgeInfo {
 }
 
 pub fn init(state: &mut State) {
-    state.old_buttons = Buttons::default();
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
 

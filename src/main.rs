@@ -27,6 +27,7 @@ mod components;
 mod delete_scene;
 mod formatting;
 mod info_scene;
+mod input;
 mod list_scene;
 mod scroll;
 mod state;
@@ -39,7 +40,7 @@ use button_group::ButtonGroup;
 use components::*;
 use firefly_rust::*;
 use formatting::*;
-use list_scene::Command;
+use input::{Input, InputManager};
 use state::*;
 
 /// Frame number to track the loading progress.
@@ -91,6 +92,7 @@ extern "C" fn update() {
     }
 
     let state = get_state();
+    state.input.update();
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
@@ -109,6 +111,14 @@ extern "C" fn render() {
     }
 
     let state = get_state();
+    // TODO(@orsinium): enable when we have support for menu_closed callback.
+    // When menu is opened and closed, we have to mark input as dirty
+    // to re-render the frame.
+    //
+    // if !state.input.dirty {
+    //     return;
+    // }
+    state.input.dirty = false;
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),

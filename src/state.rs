@@ -20,15 +20,8 @@ pub struct State {
     pub dialog_yes: bool,
     /// The index of the firs app on the screen.
     pub top_pos: usize,
-    /// The state of buttons on the previous frame.
-    pub old_buttons: Buttons,
     pub button_group: Option<ButtonGroup>,
-    /// The state of direction buttons on the previous frame.
-    pub old_dpad: DPad,
-    /// The next command to run when rendering.
-    pub command: Option<Command>,
-    /// For how long up or down button (pad) is held.
-    pub held_for: u32,
+    pub input: InputManager,
     pub shift: i32,
     pub splash: Option<alloc::string::String>,
 }
@@ -53,11 +46,8 @@ pub fn init_state() {
         board_pos: 0,
         dialog_yes: false,
         top_pos: 0,
-        old_buttons: Buttons::default(),
         button_group: None,
-        old_dpad: DPad::default(),
-        command: None,
-        held_for: 0,
+        input: InputManager::new(),
         shift: 0,
         splash: None,
     };
@@ -71,6 +61,7 @@ impl State {
 
     pub fn transition_to(&mut self, scene: Scene) {
         self.scene = scene;
+        self.input.dirty = true;
         match self.scene {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),

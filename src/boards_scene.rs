@@ -13,7 +13,6 @@ pub struct BoardInfo {
 }
 
 pub fn init(state: &mut State) {
-    state.old_buttons = Buttons::default();
     state.board_pos = 0;
     let app = &mut state.apps[state.pos];
     try_load_boards(app);
@@ -45,15 +44,13 @@ pub fn update(state: &mut State) {
     let Some(boards) = &app.boards else {
         return;
     };
-    let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
-    let dpad_pressed = new_dpad.just_pressed(&state.old_dpad);
-    if dpad_pressed.down && state.board_pos < boards.len() - 1 {
+    let input = state.input.get();
+    if input == Input::Down && state.board_pos < boards.len() - 1 {
         state.board_pos += 1;
     }
-    if dpad_pressed.up && state.board_pos > 0 {
+    if input == Input::Up && state.board_pos > 0 {
         state.board_pos -= 1;
     }
-    state.old_dpad = new_dpad;
 }
 
 pub fn render(state: &State) {

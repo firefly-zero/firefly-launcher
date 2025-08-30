@@ -5,19 +5,54 @@ const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
 pub const PER_SCREEN: usize = 12;
 
-pub enum Command {
-    GoDown,
-    GoUp,
-    Launch,
-}
-
 pub fn init(state: &mut State) {
     state.apps = read_apps();
 }
 
 pub fn update(state: &mut State) {
-    handle_input(state);
-    apply_command(state);
+    let input = state.input.get();
+    // Shift and stutter the selection when the first or the last app
+    // is selected to indicate that there are no more items on the list.
+    state.shift = if state.input.held_for % 30 >= 25 {
+        0
+    } else if input == Input::Down && state.pos + 1 == state.apps.len() {
+        1
+    } else if input == Input::Up && state.pos == 0 {
+        -1
+    } else {
+        0
+    };
+
+    match state.input.get() {
+        Input::Down => {
+            let apps_count = state.apps.len();
+            if state.pos + 1 < apps_count {
+                state.pos += 1;
+            }
+            play_note(audio::Freq::A4);
+        }
+        Input::Up => {
+            state.pos = state.pos.saturating_sub(1);
+            play_note(audio::Freq::AS4);
+        }
+        Input::Select => {
+            let Some(app) = state.apps.get(state.pos) else {
+                return;
+            };
+            let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
+            state.splash = Some(splash_path);
+            sudo::run_app(&app.author_id, &app.id);
+        }
+        _ => {}
+    }
+
+    // If the selection cursor tries to go out of screen,
+    // scroll the list to keep the selection on the screen.
+    if state.pos > state.top_pos + PER_SCREEN {
+        state.top_pos = state.pos - PER_SCREEN;
+    } else if state.pos < state.top_pos {
+        state.top_pos = state.pos;
+    }
 }
 
 pub fn render(state: &State) {
@@ -65,64 +100,6 @@ fn draw_apps(state: &State) {
     }
 }
 
-fn handle_input(state: &mut State) {
-    let new_buttons = read_buttons(Peer::COMBINED);
-    let new_pad = read_pad(Peer::COMBINED).unwrap_or_default();
-    let new_dpad = new_pad.as_dpad();
-
-    // If a direction button is held, track for how long.
-    if new_dpad.up || new_dpad.down {
-        state.held_for += 1;
-    } else {
-        state.held_for = 0;
-    }
-
-    let released_buttons = new_buttons.just_released(&state.old_buttons);
-    let command = if released_buttons.s {
-        Some(Command::Launch)
-    } else if state.held_for > 30 && state.held_for % 4 == 0 {
-        // a button is held for 0.5s
-        Some(if new_dpad.up {
-            Command::GoUp
-        } else {
-            Command::GoDown
-        })
-    } else {
-        let pressed_dpad = new_dpad.just_pressed(&state.old_dpad);
-        if pressed_dpad.up {
-            Some(Command::GoUp)
-        } else if pressed_dpad.down {
-            Some(Command::GoDown)
-        } else {
-            None
-        }
-    };
-
-    // Shift and stutter the selection when the first or the last app
-    // is selected to indicate that there are no more items on the list.
-    if state.held_for % 30 >= 25 {
-        state.shift = 0;
-    } else if new_dpad.down && state.pos + 1 == state.apps.len() {
-        state.shift = 1;
-    } else if new_dpad.up && state.pos == 0 {
-        state.shift = -1;
-    } else {
-        state.shift = 0;
-    }
-
-    // If the selection cursor tries to go out of screen,
-    // scroll the list to keep the selection on the screen.
-    if state.pos > state.top_pos + PER_SCREEN {
-        state.top_pos = state.pos - PER_SCREEN;
-    } else if state.pos < state.top_pos {
-        state.top_pos = state.pos;
-    }
-
-    state.old_buttons = new_buttons;
-    state.old_dpad = new_dpad;
-    state.command = command;
-}
-
 /// Render a selection box around the currently selected app.
 fn draw_selection(state: &State) {
     let pos = state.pos.saturating_sub(state.top_pos);
@@ -143,33 +120,6 @@ fn draw_online(state: &State) {
         stroke_width: 0,
     };
     draw_circle(p, 8, s);
-}
-
-fn apply_command(state: &mut State) {
-    let Some(command) = &state.command else {
-        return;
-    };
-    match command {
-        Command::GoDown => {
-            let apps_count = state.apps.len();
-            if state.pos + 1 < apps_count {
-                state.pos += 1;
-            }
-            play_note(audio::Freq::A4);
-        }
-        Command::GoUp => {
-            state.pos = state.pos.saturating_sub(1);
-            play_note(audio::Freq::AS4);
-        }
-        Command::Launch => {
-            let Some(app) = state.apps.get(state.pos) else {
-                return;
-            };
-            let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
-            state.splash = Some(splash_path);
-            sudo::run_app(&app.author_id, &app.id);
-        }
-    }
 }
 
 /// Show message about no apps (except launcher itself) installed.

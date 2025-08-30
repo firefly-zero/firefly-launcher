@@ -8,7 +8,6 @@ static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
 static FIELDS: &[&str] = &["launches", "installed", "updated"];
 
 pub fn init(state: &mut State) {
-    state.old_buttons = Buttons::default();
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
 
