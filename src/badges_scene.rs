@@ -54,7 +54,7 @@ fn try_load_badges(app: &mut App) {
 
 pub fn update(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
-        if let Some(scene) = button_group.update() {
+        if let Some(scene) = button_group.update(&state.input) {
             state.transition_to(scene);
         }
     }

@@ -7,41 +7,25 @@ const LINE_HEIGHT: i32 = 12;
 pub struct ButtonGroup {
     pub items: Box<[(&'static str, Scene)]>,
     pub cursor: usize,
-    pub old_buttons: Buttons,
-    pub old_dpad: DPad,
 }
 
 impl ButtonGroup {
-    pub fn new(items: Box<[(&'static str, Scene)]>) -> Self {
-        Self {
-            cursor: 0,
-            old_buttons: Buttons::default(),
-            old_dpad: DPad::default(),
-            items,
-        }
+    pub const fn new(items: Box<[(&'static str, Scene)]>) -> Self {
+        Self { cursor: 0, items }
     }
 
-    pub fn update(&mut self) -> Option<Scene> {
-        let new_buttons = read_buttons(Peer::COMBINED);
-        let released_buttons = new_buttons.just_released(&self.old_buttons);
-        if released_buttons.e {
+    pub fn update(&mut self, input: &InputManager) -> Option<Scene> {
+        let input = input.get();
+        if input == Input::Back {
             return Some(Scene::List);
-        } else if released_buttons.s {
+        } else if input == Input::Select {
             let selected = self.items[self.cursor];
             return Some(selected.1);
-        }
-        self.old_buttons = new_buttons;
-
-        let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
-        let dpad_pressed = new_dpad.just_pressed(&self.old_dpad);
-        if dpad_pressed.down && self.cursor < self.items.len() - 1 {
+        } else if input == Input::Down && self.cursor < self.items.len() - 1 {
             self.cursor += 1;
-        }
-        if dpad_pressed.up && self.cursor > 0 {
+        } else if input == Input::Up && self.cursor > 0 {
             self.cursor -= 1;
         }
-        self.old_dpad = new_dpad;
-
         None
     }
 

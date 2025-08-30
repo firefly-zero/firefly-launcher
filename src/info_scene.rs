@@ -36,7 +36,7 @@ pub fn init(state: &mut State) {
 
 pub fn update(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
-        if let Some(scene) = button_group.update() {
+        if let Some(scene) = button_group.update(&state.input) {
             state.transition_to(scene);
         }
     }
