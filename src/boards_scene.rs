@@ -63,15 +63,16 @@ pub fn render(state: &State) {
     let Some(boards) = &app.boards else {
         return;
     };
+    {
+        let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
+        draw_cursor(y, false);
+    }
     for (board, i) in boards.iter().zip(1..) {
         render_board(&font, i, board);
     }
-    let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
-    draw_cursor(y, false);
 }
 
 fn render_board(font: &Font<'_>, i: i32, b: &BoardInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
-    let color = Color::DarkBlue;
-    draw_text(&b.name, font, point, color);
+    draw_text(&b.name, font, point, Color::Black);
 }

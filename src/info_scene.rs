@@ -58,7 +58,7 @@ pub fn render(state: &State) {
     let font = state.font.as_font();
     for (text, i) in FIELDS.iter().zip(1..) {
         let point = Point::new(6, LINE_HEIGHT * i);
-        draw_text(text, &font, point, Color::DarkBlue);
+        draw_text(text, &font, point, Color::Black);
     }
     let app = &state.apps[state.pos];
     render_info(&font, 1, &app.author_id);
@@ -78,7 +78,7 @@ pub fn render(state: &State) {
 
 fn render_info(font: &Font<'_>, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
-    draw_text(t, font, point, Color::Blue);
+    draw_text(t, font, point, Color::DarkBlue);
 }
 
 fn format_size(size: usize) -> alloc::string::String {

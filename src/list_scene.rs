@@ -50,7 +50,7 @@ fn draw_apps(state: &State) {
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
         let point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
-        draw_text(&app.name, &font, point, Color::DarkBlue);
+        draw_text(&app.name, &font, point, Color::Black);
         // Don't show the author name
         // if the app name takes more than half of the screen.
         if app.name.len() > 19 {
@@ -61,7 +61,7 @@ fn draw_apps(state: &State) {
             continue;
         }
         let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
-        draw_text(&app.author_name, &font, point, Color::LightGray);
+        draw_text(&app.author_name, &font, point, Color::Gray);
     }
 }
 
