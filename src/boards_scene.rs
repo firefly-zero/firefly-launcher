@@ -1,8 +1,8 @@
 use crate::*;
 use alloc::borrow::ToOwned;
+use alloc::format;
 use alloc::string::String;
 use alloc::vec::Vec;
-use alloc::{boxed::Box, format};
 use firefly_rust::*;
 use firefly_types::Encode;
 
@@ -14,8 +14,6 @@ pub struct BoardInfo {
 
 pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
-    let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
-    state.button_group = Some(ButtonGroup::new(items));
     state.board_pos = 0;
     let app = &mut state.apps[state.pos];
     app.try_load_stats();
@@ -45,49 +43,31 @@ fn try_load_boards(app: &mut App) {
 
 pub fn update(state: &mut State) {
     let app = &state.apps[state.pos];
-    if let Some(boards) = &app.boards {
-        if state.board_pos < boards.len() {
-            let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
-            let dpad_pressed = new_dpad.just_pressed(&state.old_dpad);
-            if dpad_pressed.down {
-                state.board_pos += 1;
-            }
-            if dpad_pressed.up && state.board_pos > 0 {
-                state.board_pos -= 1;
-            }
-            state.old_dpad = new_dpad;
-        } else {
-            update_buttons(state);
-        }
-    } else {
-        update_buttons(state);
+    let Some(boards) = &app.boards else {
+        return;
+    };
+    let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
+    let dpad_pressed = new_dpad.just_pressed(&state.old_dpad);
+    if dpad_pressed.down && state.board_pos < boards.len() - 1 {
+        state.board_pos += 1;
     }
-}
-
-pub fn update_buttons(state: &mut State) {
-    if let Some(button_group) = state.button_group.as_mut() {
-        if let Some(scene) = button_group.update() {
-            state.transition_to(scene);
-        }
+    if dpad_pressed.up && state.board_pos > 0 {
+        state.board_pos -= 1;
     }
+    state.old_dpad = new_dpad;
 }
 
 pub fn render(state: &State) {
     clear_screen(Color::White);
     let app = &state.apps[state.pos];
     let font = state.font.as_font();
-    if let Some(boards) = &app.boards {
-        for (board, i) in boards.iter().zip(1..) {
-            render_board(&font, i, board);
-        }
-        if state.board_pos < boards.len() {
-            render_cursor(state.board_pos as _);
-        } else if let Some(button_group) = &state.button_group {
-            button_group.render(&font);
-        }
-    } else if let Some(button_group) = &state.button_group {
-        button_group.render(&font);
+    let Some(boards) = &app.boards else {
+        return;
+    };
+    for (board, i) in boards.iter().zip(1..) {
+        render_board(&font, i, board);
     }
+    render_cursor(state.board_pos as _);
 }
 
 fn render_board(font: &Font<'_>, i: i32, b: &BoardInfo) {
