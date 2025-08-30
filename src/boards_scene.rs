@@ -16,7 +16,7 @@ pub fn init(state: &mut State) {
     state.old_buttons = Buttons::default();
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
-
+    state.board_pos = 0;
     let app = &mut state.apps[state.pos];
     app.try_load_stats();
     try_load_boards(app);
@@ -44,6 +44,27 @@ fn try_load_boards(app: &mut App) {
 }
 
 pub fn update(state: &mut State) {
+    let app = &state.apps[state.pos];
+    if let Some(boards) = &app.boards {
+        if state.board_pos < boards.len() {
+            let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
+            let dpad_pressed = new_dpad.just_pressed(&state.old_dpad);
+            if dpad_pressed.down {
+                state.board_pos += 1;
+            }
+            if dpad_pressed.up && state.board_pos > 0 {
+                state.board_pos -= 1;
+            }
+            state.old_dpad = new_dpad;
+        } else {
+            update_buttons(state);
+        }
+    } else {
+        update_buttons(state);
+    }
+}
+
+pub fn update_buttons(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
         if let Some(scene) = button_group.update() {
             state.transition_to(scene);
@@ -59,8 +80,12 @@ pub fn render(state: &State) {
         for (board, i) in boards.iter().zip(1..) {
             render_board(&font, i, board);
         }
-    }
-    if let Some(button_group) = &state.button_group {
+        if state.board_pos < boards.len() {
+            render_cursor(state.board_pos as _);
+        } else if let Some(button_group) = &state.button_group {
+            button_group.render(&font);
+        }
+    } else if let Some(button_group) = &state.button_group {
         button_group.render(&font);
     }
 }
@@ -69,4 +94,17 @@ fn render_board(font: &Font<'_>, i: i32, b: &BoardInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
     let color = Color::DarkBlue;
     draw_text(&b.name, font, point, color);
+}
+
+fn render_cursor(i: i32) {
+    let point = Point::new(6, LINE_HEIGHT * (i + 1) + 1);
+    let size = Size::new(WIDTH - 8, LINE_HEIGHT);
+    let corner = Size::new(4, 4);
+    let style = Style {
+        fill_color: Color::None,
+        stroke_color: Color::DarkBlue,
+        stroke_width: 1,
+    };
+    let point = point - Point::new(2, 8);
+    draw_rounded_rect(point, size, corner, style);
 }

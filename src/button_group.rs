@@ -49,10 +49,8 @@ impl ButtonGroup {
         let n = self.items.len() as i32;
         for ((item, _), i) in self.items.iter().zip(0..) {
             render_button(font, n - i, item);
-            if i == self.cursor as _ {
-                render_cursor(n - i);
-            }
         }
+        render_cursor(n - self.cursor as i32);
     }
 }
 
