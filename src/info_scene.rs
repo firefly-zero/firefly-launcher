@@ -18,6 +18,7 @@ pub fn init(state: &mut State) {
     let items = Box::new([
         ("stats", Scene::Stats),
         ("achievements", Scene::Badges),
+        ("scoreboards", Scene::Boards),
         ("clear data", Scene::ClearData),
         ("back", Scene::List),
     ]);

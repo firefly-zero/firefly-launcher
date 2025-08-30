@@ -16,6 +16,7 @@ pub struct State {
     pub is_online: bool,
     /// The currently selected app index.
     pub pos: usize,
+    pub board_pos: usize,
     pub dialog_yes: bool,
     /// The index of the firs app on the screen.
     pub top_pos: usize,
@@ -49,6 +50,7 @@ pub fn init_state() {
         apps: read_apps(),
         is_online: peers.len() > 1,
         pos: 0,
+        board_pos: 0,
         dialog_yes: false,
         top_pos: 0,
         old_buttons: Buttons::default(),
@@ -74,6 +76,7 @@ impl State {
             Scene::Info => info_scene::init(self),
             Scene::Stats => stats_scene::init(self),
             Scene::Badges => badges_scene::init(self),
+            Scene::Boards => boards_scene::init(self),
             Scene::ClearData => delete_scene::init(self),
         }
     }

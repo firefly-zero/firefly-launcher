@@ -21,7 +21,9 @@ extern crate alloc;
 
 mod apps;
 mod badges_scene;
+mod boards_scene;
 mod button_group;
+mod components;
 mod delete_scene;
 mod formatting;
 mod info_scene;
@@ -32,7 +34,9 @@ mod stats_scene;
 
 use apps::*;
 use badges_scene::BadgeInfo;
+use boards_scene::BoardInfo;
 use button_group::ButtonGroup;
+use components::*;
 use firefly_rust::*;
 use formatting::*;
 use list_scene::Command;
@@ -49,6 +53,7 @@ pub enum Scene {
     Info,
     Stats,
     Badges,
+    Boards,
     ClearData,
 }
 
@@ -91,6 +96,7 @@ extern "C" fn update() {
         Scene::Info => info_scene::update(state),
         Scene::Stats => stats_scene::update(state),
         Scene::Badges => badges_scene::update(state),
+        Scene::Boards => boards_scene::update(state),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -108,6 +114,7 @@ extern "C" fn render() {
         Scene::Info => info_scene::render(state),
         Scene::Stats => stats_scene::render(state),
         Scene::Badges => badges_scene::render(state),
+        Scene::Boards => boards_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
 }
