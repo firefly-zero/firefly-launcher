@@ -59,6 +59,6 @@ impl ButtonGroup {
 }
 
 fn render_button(font: &Font<'_>, i: i32, t: &str) {
-    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2);
+    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 1);
     draw_text(t, font, point, Color::Black);
 }
