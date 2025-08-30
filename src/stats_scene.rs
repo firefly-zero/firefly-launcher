@@ -29,11 +29,11 @@ pub fn render(state: &State) {
     let font = state.font.as_font();
     for (text, i) in COLUMNS.iter().zip(0..) {
         let point = Point::new(100 + 30 * i, LINE_HEIGHT);
-        draw_text(text, &font, point, Color::DarkBlue);
+        draw_text(text, &font, point, Color::Black);
     }
     for (text, i) in FIELDS.iter().zip(2..) {
         let point = Point::new(6, LINE_HEIGHT * i);
-        draw_text(text, &font, point, Color::DarkBlue);
+        draw_text(text, &font, point, Color::Black);
     }
     let app = &state.apps[state.pos];
     if let Some(stats) = &app.stats {
@@ -52,5 +52,5 @@ pub fn render(state: &State) {
 
 fn render_info(font: &Font<'_>, i: i32, j: i32, t: &str) {
     let point = Point::new(100 + j * 30, LINE_HEIGHT * i);
-    draw_text(t, font, point, Color::Blue);
+    draw_text(t, font, point, Color::DarkBlue);
 }

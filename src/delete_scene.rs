@@ -50,7 +50,7 @@ pub fn render(state: &State) {
     let font = state.font.as_font();
     let corner = Size::new(4, 4);
     let box_style = Style {
-        stroke_color: Color::DarkBlue,
+        stroke_color: Color::Black,
         ..Style::default()
     };
 
@@ -60,7 +60,7 @@ pub fn render(state: &State) {
             app.name
         );
         let point = Point::new(MARGIN + 6, MARGIN + 16);
-        draw_text(&text, &font, point, Color::DarkBlue);
+        draw_text(&text, &font, point, Color::Black);
         draw_rounded_rect(
             Point::new(MARGIN, MARGIN),
             Size::new(WIDTH - MARGIN * 2, HEIGHT - MARGIN * 2),
@@ -75,7 +75,7 @@ pub fn render(state: &State) {
     {
         let x = MARGIN + box_width / 2 - (btn_width + btn_width / 2);
         let point = Point::new(x + 3, y + 7);
-        draw_text("nuh", &font, point, Color::DarkBlue);
+        draw_text("nuh", &font, point, Color::Black);
         if !state.dialog_yes {
             draw_rounded_rect(
                 Point::new(x, y),
@@ -89,7 +89,7 @@ pub fn render(state: &State) {
     {
         let x = MARGIN + box_width / 2 + btn_width / 2;
         let point = Point::new(x + 3, y + 7);
-        draw_text("yep", &font, point, Color::DarkBlue);
+        draw_text("yep", &font, point, Color::Black);
         if state.dialog_yes {
             draw_rounded_rect(
                 Point::new(x, y),

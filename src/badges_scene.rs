@@ -79,7 +79,7 @@ pub fn render(state: &State) {
 fn render_badge(font: &Font<'_>, i: i32, b: &BadgeInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
     let color = if b.done >= b.goal {
-        Color::DarkBlue
+        Color::Black
     } else if b.done > 0 {
         Color::Gray
     } else {
