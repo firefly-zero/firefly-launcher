@@ -14,6 +14,7 @@ pub struct App {
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
     pub badges: Option<Vec<BadgeInfo>>,
+    pub boards: Option<Vec<BoardInfo>>,
 }
 
 impl App {
@@ -68,6 +69,7 @@ pub fn read_apps() -> Vec<App> {
                 data_size: None,
                 stats: None,
                 badges: None,
+                boards: None,
             });
         }
     }
