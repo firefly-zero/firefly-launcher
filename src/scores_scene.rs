@@ -98,6 +98,13 @@ fn format_time(mut v: u16) -> String {
         parts.push(format!("{:02}", v % 60));
         v /= 60;
     }
-    parts.reverse();
+    reverse(&mut parts);
     parts.join(":")
+}
+
+fn reverse(parts: &mut [String]) {
+    let size = parts.len();
+    for i in 0..(size / 2) {
+        parts.swap(i, size - i - 1);
+    }
 }
