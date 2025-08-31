@@ -1,5 +1,4 @@
 use crate::*;
-use alloc::borrow::ToOwned;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -10,6 +9,7 @@ const LINE_HEIGHT: i32 = 12;
 pub struct ScoreInfo {
     name: String,
     value: String,
+    me: bool,
 }
 
 pub fn init(state: &mut State, i: u8) {
@@ -36,31 +36,20 @@ pub fn load_scores(app: &mut App, i: u8) {
     };
 
     let mut scores = Vec::new();
-    let my_name = "me";
+    let my_name = get_name_buf(get_me());
     for score in raw_scores.me.iter() {
         let score = *score;
-        if score == 0 {
+        if !valid_score(board, score) {
             continue;
         }
-        if score < board.min {
-            continue;
-        }
-        if score > board.max {
-            continue;
-        }
-        let val = score.unsigned_abs();
-        let value: String = if board.time {
-            format_time(val)
-        } else if board.decimals > 0 {
-            format_decimal(val, board.decimals)
-        } else {
-            val.to_string()
-        };
+        let value: String = format_score(board, score);
         scores.push(ScoreInfo {
-            name: my_name.to_owned(),
+            name: my_name.clone(),
             value,
+            me: true,
         });
     }
+    // TODO: sort scores
     app.scores = Some(scores);
 }
 
@@ -78,10 +67,26 @@ pub fn render(state: &State, _: u8) {
     let mut i = 0;
     for score in scores {
         i += 1;
+        let color = if score.me { Color::Green } else { Color::Black };
         let point = Point::new(6, LINE_HEIGHT * i);
-        draw_text(&score.name, &font, point, Color::Black);
+        draw_text(&score.name, &font, point, color);
         let point = Point::new(140, LINE_HEIGHT * i);
-        draw_text(&score.value, &font, point, Color::Black);
+        draw_text(&score.value, &font, point, color);
+    }
+}
+
+const fn valid_score(board: &BoardInfo, score: i16) -> bool {
+    score != 0 && score >= board.min && score <= board.max
+}
+
+fn format_score(board: &BoardInfo, score: i16) -> String {
+    let val = score.unsigned_abs();
+    if board.time {
+        format_time(val)
+    } else if board.decimals > 0 {
+        format_decimal(val, board.decimals)
+    } else {
+        val.to_string()
     }
 }
 
