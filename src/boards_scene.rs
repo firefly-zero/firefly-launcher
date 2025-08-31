@@ -12,6 +12,8 @@ pub struct BoardInfo {
     pub name: String,
     pub min: i16,
     pub max: i16,
+    pub time: bool,
+    pub decimals: u8,
 }
 
 pub fn init(state: &mut State) {
@@ -37,6 +39,8 @@ fn try_load_boards(app: &mut App) {
             name: info.name.to_owned(),
             min: info.min,
             max: info.max,
+            time: info.time,
+            decimals: info.decimals,
         });
     }
     // TODO: sort boards

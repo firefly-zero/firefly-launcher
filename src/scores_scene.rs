@@ -1,7 +1,7 @@
 use crate::*;
 use alloc::borrow::ToOwned;
 use alloc::format;
-use alloc::string::String;
+use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use firefly_rust::*;
 
@@ -39,15 +39,26 @@ pub fn load_scores(app: &mut App, i: u8) {
     let my_name = "me";
     for score in raw_scores.me.iter() {
         let score = *score;
+        if score == 0 {
+            continue;
+        }
         if score < board.min {
             continue;
         }
-        if score < board.max {
+        if score > board.max {
             continue;
         }
+        let val = score.unsigned_abs();
+        let value: String = if board.time {
+            format_time(val)
+        } else if board.decimals > 0 {
+            format_decimal(val, board.decimals)
+        } else {
+            val.to_string()
+        };
         scores.push(ScoreInfo {
             name: my_name.to_owned(),
-            value: format_value(score, board),
+            value,
         });
     }
     app.scores = Some(scores);
@@ -69,11 +80,24 @@ pub fn render(state: &State, _: u8) {
         i += 1;
         let point = Point::new(6, LINE_HEIGHT * i);
         draw_text(&score.name, &font, point, Color::Black);
-        let point = Point::new(100, LINE_HEIGHT * i);
+        let point = Point::new(140, LINE_HEIGHT * i);
         draw_text(&score.value, &font, point, Color::Black);
     }
 }
 
-fn format_value(value: i16, _board: &BoardInfo) -> String {
-    format!("{value}")
+fn format_decimal(v: u16, prec: u8) -> String {
+    let sep = (10u32).pow(u32::from(prec));
+    let right = u32::from(v) % sep;
+    let left = u32::from(v) / sep;
+    format!("{left}.{right:00$}", usize::from(prec))
+}
+
+fn format_time(mut v: u16) -> String {
+    let mut parts = Vec::new();
+    while v > 0 {
+        parts.push(format!("{:02}", v % 60));
+        v /= 60;
+    }
+    parts.reverse();
+    parts.join(":")
 }
