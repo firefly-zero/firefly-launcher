@@ -49,6 +49,10 @@ pub fn update(state: &mut State) {
         return;
     };
     let input = state.input.get();
+    if input == Input::Select {
+        state.transition_to(Scene::Scores(state.board_pos as _));
+        return;
+    }
     if input == Input::Down && state.board_pos < boards.len() - 1 {
         state.board_pos += 1;
     }

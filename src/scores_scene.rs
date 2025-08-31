@@ -20,17 +20,18 @@ pub fn init(state: &mut State, i: u8) {
 }
 
 pub fn load_scores(app: &mut App, i: u8) {
+    let i = usize::from(i);
     app.scores = None;
     let Some(stats) = &app.stats else {
         return;
     };
-    let Some(raw_scores) = stats.scores.get(usize::from(i)) else {
+    let Some(raw_scores) = stats.scores.get(i) else {
         return;
     };
     let Some(boards) = &app.boards else {
         return;
     };
-    let Some(board) = boards.get(usize::from(i)) else {
+    let Some(board) = boards.get(i) else {
         return;
     };
 
