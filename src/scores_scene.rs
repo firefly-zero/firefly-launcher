@@ -63,7 +63,9 @@ pub fn render(state: &State, _: u8) {
     let Some(scores) = &app.scores else {
         return;
     };
-    for (score, i) in scores.iter().zip(1..) {
+    let mut i = 0;
+    for score in scores {
+        i += 1;
         let point = Point::new(6, LINE_HEIGHT * i);
         draw_text(&score.name, &font, point, Color::Black);
         let point = Point::new(100, LINE_HEIGHT * i);
