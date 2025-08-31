@@ -87,19 +87,11 @@ fn render_badge(font: &Font<'_>, i: i32, b: &BadgeInfo) {
     draw_text(&b.name, font, point, color);
 
     let point = Point::new(100, point.y - LINE_HEIGHT + 4);
-    let style = Style {
-        fill_color: Color::None,
-        stroke_color: color,
-        stroke_width: 1,
-    };
+    let style = Style::outlined(color, 1);
     let size = Size::new(WIDTH - 106, LINE_HEIGHT - 2);
     draw_rect(point, size, style);
 
-    let style = Style {
-        fill_color: color,
-        stroke_color: Color::None,
-        stroke_width: 0,
-    };
+    let style = Style::solid(color);
     let ratio = (f32::from(b.done) / f32::from(b.goal)).clamp(0., 1.);
     #[expect(clippy::cast_precision_loss)]
     let width = (size.width as f32 * ratio) as i32;

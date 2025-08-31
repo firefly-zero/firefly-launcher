@@ -14,11 +14,7 @@ pub fn draw_cursor(y: i32, has_scroll: bool) {
     // draw shadow
     {
         let point = point + Point::new(1, 1);
-        let style = Style {
-            fill_color: Color::Black,
-            stroke_color: Color::None,
-            stroke_width: 0,
-        };
+        let style = Style::solid(Color::Black);
         draw_rounded_rect(point, size, corner, style);
     }
 

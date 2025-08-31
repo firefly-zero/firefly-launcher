@@ -46,10 +46,7 @@ pub fn render(state: &State) {
 
     let font = state.font.as_font();
     let corner = Size::new(4, 4);
-    let box_style = Style {
-        stroke_color: Color::Black,
-        ..Style::default()
-    };
+    let box_style = Style::outlined(Color::Black, 1);
 
     {
         let text = format!(
