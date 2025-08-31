@@ -9,7 +9,9 @@ use firefly_types::Encode;
 const LINE_HEIGHT: i32 = 12;
 
 pub struct BoardInfo {
-    name: String,
+    pub name: String,
+    pub min: i16,
+    pub max: i16,
 }
 
 pub fn init(state: &mut State) {
@@ -33,6 +35,8 @@ fn try_load_boards(app: &mut App) {
     for info in raw_boards.boards.iter() {
         boards.push(BoardInfo {
             name: info.name.to_owned(),
+            min: info.min,
+            max: info.max,
         });
     }
     // TODO: sort boards

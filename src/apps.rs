@@ -15,6 +15,7 @@ pub struct App {
     pub stats: Option<Stats>,
     pub badges: Option<Vec<BadgeInfo>>,
     pub boards: Option<Vec<BoardInfo>>,
+    pub scores: Option<Vec<ScoreInfo>>,
 }
 
 impl App {
@@ -70,6 +71,7 @@ pub fn read_apps() -> Vec<App> {
                 stats: None,
                 badges: None,
                 boards: None,
+                scores: None,
             });
         }
     }

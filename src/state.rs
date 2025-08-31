@@ -68,6 +68,7 @@ impl State {
             Scene::Stats => stats_scene::init(self),
             Scene::Badges => badges_scene::init(self),
             Scene::Boards => boards_scene::init(self),
+            Scene::Scores(i) => scores_scene::init(self, i),
             Scene::ClearData => delete_scene::init(self),
         }
     }
