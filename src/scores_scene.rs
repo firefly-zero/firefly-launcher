@@ -15,6 +15,7 @@ pub struct ScoreInfo {
 
 impl Gt for ScoreInfo {
     fn gt(&self, other: &Self) -> bool {
+        // We use lt instead of gt to make sure high scores go first.
         self.raw_value.lt(&other.raw_value)
     }
 }
