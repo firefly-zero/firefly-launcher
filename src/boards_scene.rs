@@ -10,10 +10,17 @@ const LINE_HEIGHT: i32 = 12;
 
 pub struct BoardInfo {
     pub name: String,
+    pos: u16,
     pub min: i16,
     pub max: i16,
     pub time: bool,
     pub decimals: u8,
+}
+
+impl Gt for BoardInfo {
+    fn gt(&self, other: &Self) -> bool {
+        self.pos.gt(&other.pos)
+    }
 }
 
 pub fn init(state: &mut State) {
@@ -37,13 +44,14 @@ fn try_load_boards(app: &mut App) {
     for info in raw_boards.boards.iter() {
         boards.push(BoardInfo {
             name: info.name.to_owned(),
+            pos: info.position,
             min: info.min,
             max: info.max,
             time: info.time,
             decimals: info.decimals,
         });
     }
-    // TODO: sort boards
+    bubble_sort(&mut boards);
     app.boards = Some(boards);
 }
 

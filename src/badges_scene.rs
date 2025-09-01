@@ -14,6 +14,19 @@ pub struct BadgeInfo {
     goal: u16,
 }
 
+impl Gt for BadgeInfo {
+    fn gt(&self, other: &Self) -> bool {
+        let self_done = self.done >= self.goal;
+        let other_done = other.done >= other.goal;
+        // If one is done and the other is not,
+        // put the done one first.
+        if self_done != other_done {
+            return other_done;
+        }
+        ascii_gt(&self.name, &other.name)
+    }
+}
+
 pub fn init(state: &mut State) {
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
@@ -48,7 +61,7 @@ fn try_load_badges(app: &mut App) {
             goal: progress.goal,
         });
     }
-    // TODO: sort badges
+    bubble_sort(&mut badges);
     app.badges = Some(badges);
 }
 

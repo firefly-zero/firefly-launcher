@@ -94,7 +94,7 @@ pub fn render(state: &State, _: u8) {
         return;
     };
     let mut i = 0;
-    for score in scores {
+    for score in scores.iter().take(8) {
         i += 1;
         let color = if score.me { Color::Green } else { Color::Black };
         let point = Point::new(6, LINE_HEIGHT * i);
