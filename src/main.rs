@@ -14,6 +14,7 @@
     clippy::cast_possible_wrap,
     clippy::wildcard_imports,
     clippy::similar_names,
+    clippy::option_if_let_else,
     clippy::module_name_repetitions
 )]
 

@@ -49,6 +49,25 @@ pub fn load_scores(app: &mut App, i: u8) {
             me: true,
         });
     }
+    let friend_names = load_friend_names();
+    let default_name = "anonymous";
+    for friend in raw_scores.friends.iter() {
+        let score = friend.score;
+        if !valid_score(board, score) {
+            continue;
+        }
+        let value: String = format_score(board, score);
+        let friend_name = friend_names.get(usize::from(friend.index));
+        let friend_name = match friend_name {
+            Some(friend_name) => friend_name.to_string(),
+            None => default_name.to_string(),
+        };
+        scores.push(ScoreInfo {
+            name: friend_name,
+            value,
+            me: true,
+        });
+    }
     // TODO: sort scores
     app.scores = Some(scores);
 }
@@ -73,6 +92,19 @@ pub fn render(state: &State, _: u8) {
         let point = Point::new(140, LINE_HEIGHT * i);
         draw_text(&score.value, &font, point, color);
     }
+}
+
+fn load_friend_names() -> Vec<String> {
+    let Some(raw) = sudo::load_file_buf("friends") else {
+        return Vec::new();
+    };
+    let raw = raw.into_vec();
+    let raw = unsafe { String::from_utf8_unchecked(raw) };
+    let mut names = Vec::new();
+    for name in raw.split('\n') {
+        names.push(name.to_string());
+    }
+    names
 }
 
 const fn valid_score(board: &BoardInfo, score: i16) -> bool {
