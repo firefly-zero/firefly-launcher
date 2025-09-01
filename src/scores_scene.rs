@@ -9,7 +9,14 @@ const LINE_HEIGHT: i32 = 12;
 pub struct ScoreInfo {
     name: String,
     value: String,
+    raw_value: i16,
     me: bool,
+}
+
+impl Gt for ScoreInfo {
+    fn gt(&self, other: &Self) -> bool {
+        self.raw_value.lt(&other.raw_value)
+    }
 }
 
 pub fn init(state: &mut State, i: u8) {
@@ -46,6 +53,7 @@ pub fn load_scores(app: &mut App, i: u8) {
         scores.push(ScoreInfo {
             name: my_name.clone(),
             value,
+            raw_value: score,
             me: true,
         });
     }
@@ -65,10 +73,11 @@ pub fn load_scores(app: &mut App, i: u8) {
         scores.push(ScoreInfo {
             name: friend_name,
             value,
-            me: true,
+            raw_value: score,
+            me: false,
         });
     }
-    // TODO: sort scores
+    bubble_sort(&mut scores);
     app.scores = Some(scores);
 }
 

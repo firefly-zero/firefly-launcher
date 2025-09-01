@@ -34,6 +34,7 @@ mod scores_scene;
 mod scroll;
 mod state;
 mod stats_scene;
+mod utils;
 
 use apps::*;
 use badges_scene::BadgeInfo;
@@ -45,6 +46,7 @@ use formatting::*;
 use input::{Input, InputManager};
 use scores_scene::ScoreInfo;
 use state::*;
+use utils::*;
 
 /// Frame number to track the loading progress.
 static mut FRAME: u8 = 0;
