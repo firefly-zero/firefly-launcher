@@ -1,4 +1,5 @@
 use crate::*;
+use alloc::boxed::Box;
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -21,6 +22,9 @@ impl Gt for ScoreInfo {
 }
 
 pub fn init(state: &mut State, i: u8) {
+    let items = Box::new([("back", Scene::Boards), ("exit", Scene::List)]);
+    state.button_group = Some(ButtonGroup::new(items));
+
     state.board_pos = 0;
     let app = &mut state.apps[state.pos];
     app.try_load_stats();
@@ -82,8 +86,12 @@ pub fn load_scores(app: &mut App, i: u8) {
     app.scores = Some(scores);
 }
 
-pub fn update(_state: &mut State, _i: u8) {
-    // ...
+pub fn update(state: &mut State, _i: u8) {
+    if let Some(button_group) = state.button_group.as_mut() {
+        if let Some(scene) = button_group.update(&state.input) {
+            state.transition_to(scene);
+        }
+    }
 }
 
 pub fn render(state: &State, _: u8) {
@@ -101,6 +109,9 @@ pub fn render(state: &State, _: u8) {
         draw_text(&score.name, &font, point, color);
         let point = Point::new(140, LINE_HEIGHT * i);
         draw_text(&score.value, &font, point, color);
+    }
+    if let Some(button_group) = &state.button_group {
+        button_group.render(&font);
     }
 }
 
