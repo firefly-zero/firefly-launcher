@@ -65,6 +65,10 @@ pub fn update(state: &mut State) {
         state.transition_to(Scene::Scores(state.board_pos as _));
         return;
     }
+    if input == Input::Back {
+        state.transition_to(Scene::Info);
+        return;
+    }
     if input == Input::Down && state.board_pos < boards.len() - 1 {
         state.board_pos += 1;
     }

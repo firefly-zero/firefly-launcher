@@ -8,14 +8,17 @@ pub trait Gt {
 }
 
 /// Good old bubble sort. Slower but much smaller than the built-in sort function.
-pub fn bubble_sort<T: Gt>(apps: &mut [T]) {
-    let len = apps.len();
+pub fn bubble_sort<T: Gt>(items: &mut [T]) {
+    let len = items.len();
+    if len <= 1 {
+        return;
+    }
     let mut sorted = false;
     while !sorted {
         sorted = true;
         for i in 0..len - 1 {
-            if apps[i].gt(&apps[i + 1]) {
-                apps.swap(i, i + 1);
+            if items[i].gt(&items[i + 1]) {
+                items.swap(i, i + 1);
                 sorted = false;
             }
         }
