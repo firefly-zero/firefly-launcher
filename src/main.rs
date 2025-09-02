@@ -14,6 +14,7 @@
     clippy::cast_possible_wrap,
     clippy::wildcard_imports,
     clippy::similar_names,
+    clippy::option_if_let_else,
     clippy::module_name_repetitions
 )]
 
@@ -25,13 +26,14 @@ mod boards_scene;
 mod button_group;
 mod components;
 mod delete_scene;
-mod formatting;
 mod info_scene;
 mod input;
 mod list_scene;
+mod scores_scene;
 mod scroll;
 mod state;
 mod stats_scene;
+mod utils;
 
 use apps::*;
 use badges_scene::BadgeInfo;
@@ -39,9 +41,10 @@ use boards_scene::BoardInfo;
 use button_group::ButtonGroup;
 use components::*;
 use firefly_rust::*;
-use formatting::*;
 use input::{Input, InputManager};
+use scores_scene::ScoreInfo;
 use state::*;
+use utils::*;
 
 /// Frame number to track the loading progress.
 static mut FRAME: u8 = 0;
@@ -55,6 +58,7 @@ pub enum Scene {
     Stats,
     Badges,
     Boards,
+    Scores(u8),
     ClearData,
 }
 
@@ -99,6 +103,7 @@ extern "C" fn update() {
         Scene::Stats => stats_scene::update(state),
         Scene::Badges => badges_scene::update(state),
         Scene::Boards => boards_scene::update(state),
+        Scene::Scores(i) => scores_scene::update(state, *i),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -125,6 +130,7 @@ extern "C" fn render() {
         Scene::Stats => stats_scene::render(state),
         Scene::Badges => badges_scene::render(state),
         Scene::Boards => boards_scene::render(state),
+        Scene::Scores(i) => scores_scene::render(state, *i),
         Scene::ClearData => delete_scene::render(state),
     }
 }

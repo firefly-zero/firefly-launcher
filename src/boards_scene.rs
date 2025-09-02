@@ -9,7 +9,18 @@ use firefly_types::Encode;
 const LINE_HEIGHT: i32 = 12;
 
 pub struct BoardInfo {
-    name: String,
+    pub name: String,
+    pos: u16,
+    pub min: i16,
+    pub max: i16,
+    pub time: bool,
+    pub decimals: u8,
+}
+
+impl Gt for BoardInfo {
+    fn gt(&self, other: &Self) -> bool {
+        self.pos.gt(&other.pos)
+    }
 }
 
 pub fn init(state: &mut State) {
@@ -33,9 +44,14 @@ fn try_load_boards(app: &mut App) {
     for info in raw_boards.boards.iter() {
         boards.push(BoardInfo {
             name: info.name.to_owned(),
+            pos: info.position,
+            min: info.min,
+            max: info.max,
+            time: info.time,
+            decimals: info.decimals,
         });
     }
-    // TODO: sort boards
+    bubble_sort(&mut boards);
     app.boards = Some(boards);
 }
 
@@ -45,6 +61,14 @@ pub fn update(state: &mut State) {
         return;
     };
     let input = state.input.get();
+    if input == Input::Select {
+        state.transition_to(Scene::Scores(state.board_pos as _));
+        return;
+    }
+    if input == Input::Back {
+        state.transition_to(Scene::Info);
+        return;
+    }
     if input == Input::Down && state.board_pos < boards.len() - 1 {
         state.board_pos += 1;
     }

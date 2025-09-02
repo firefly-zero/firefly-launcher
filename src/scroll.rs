@@ -52,7 +52,8 @@ impl ScrollBar {
         let left = Point::new(LEFT_X, MARGIN_VERT + ARROW_HEIGHT);
         let right = Point::new(RIGHT_X, MARGIN_VERT + ARROW_HEIGHT);
         let top = Point::new(MIDDLE_X, MARGIN_VERT);
-        draw_triangle(left, top, right, style());
+        let style = Style::solid(Color::Black);
+        draw_triangle(left, top, right, style);
     }
 
     fn draw_arrow_down(&self) {
@@ -62,7 +63,8 @@ impl ScrollBar {
         let left = Point::new(LEFT_X, HEIGHT - MARGIN_VERT - ARROW_HEIGHT);
         let right = Point::new(RIGHT_X, HEIGHT - MARGIN_VERT - ARROW_HEIGHT);
         let bottom = Point::new(MIDDLE_X, HEIGHT - MARGIN_VERT);
-        draw_triangle(left, bottom, right, style());
+        let style = Style::solid(Color::Black);
+        draw_triangle(left, bottom, right, style);
     }
 
     fn draw_track(&self) {
@@ -72,20 +74,12 @@ impl ScrollBar {
         let point = Point::new(LEFT_X + 1, TRACK_MARGIN_VERT + 1);
         let width = RIGHT_X - LEFT_X - 1;
 
-        let style = Style {
-            fill_color: Color::LightGreen,
-            stroke_color: Color::None,
-            stroke_width: 0,
-        };
+        let style = Style::solid(Color::LightGreen);
         let run_pix = (TRACK_HEIGHT - THUMB_HEIGHT) as usize;
         let height = (run_pix * self.pos / (self.total - 1)) as i32;
         draw_rect(point, Size::new(width, height), style);
 
-        let style = Style {
-            fill_color: Color::None,
-            stroke_color: Color::Black,
-            stroke_width: 1,
-        };
+        let style = Style::outlined(Color::Black, 1);
         draw_rect(point, Size::new(width, TRACK_HEIGHT - 1), style);
     }
 
@@ -107,12 +101,5 @@ impl ScrollBar {
                 stroke_width: 1,
             },
         );
-    }
-}
-
-fn style() -> Style {
-    Style {
-        fill_color: Color::Black,
-        ..Style::default()
     }
 }

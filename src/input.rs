@@ -14,13 +14,13 @@ pub enum Input {
 pub struct InputManager {
     // If there is a new input on this frame.
     pub dirty: bool,
+    /// For how long up or down button (pad) is held.
+    pub held_for: u32,
 
     /// The state of buttons on the previous frame.
     old_buttons: Buttons,
     /// The state of direction buttons on the previous frame.
     old_dpad: DPad,
-    /// For how long up or down button (pad) is held.
-    pub held_for: u32,
     cached: Input,
 }
 

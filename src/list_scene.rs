@@ -118,11 +118,7 @@ fn draw_online(state: &State) {
         return;
     }
     let p = Point::new(WIDTH - 23, HEIGHT - 12);
-    let s = Style {
-        fill_color: Color::Green,
-        stroke_color: Color::None,
-        stroke_width: 0,
-    };
+    let s = Style::solid(Color::Green);
     draw_circle(p, 8, s);
 }
 
