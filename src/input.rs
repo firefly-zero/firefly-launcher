@@ -53,9 +53,9 @@ impl InputManager {
         let new_buttons = read_buttons(Peer::COMBINED);
         let released = new_buttons.just_released(&self.old_buttons);
         self.old_buttons = new_buttons;
-        if released.s || released.w {
+        if released.s || released.e {
             Input::Select
-        } else if released.e {
+        } else if released.w {
             Input::Back
         } else {
             Input::None

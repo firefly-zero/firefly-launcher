@@ -47,6 +47,9 @@ pub fn update(state: &mut State) {
             state.splash = Some(splash_path);
             sudo::run_app(&app.author_id, &app.id);
         }
+        Input::Back => {
+            state.transition_to(Scene::Info);
+        }
         _ => {}
     }
 
