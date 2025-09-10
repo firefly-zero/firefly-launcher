@@ -63,19 +63,10 @@ pub enum Scene {
 }
 
 #[no_mangle]
-extern "C" fn handle_menu(i: u32) {
-    let state = get_state();
-    if i == 1 {
-        state.transition_to(Scene::Info);
-    }
-}
-
-#[no_mangle]
 extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
-    add_menu_item(1, "app info");
 }
 
 #[no_mangle]

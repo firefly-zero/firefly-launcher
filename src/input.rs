@@ -55,7 +55,7 @@ impl InputManager {
         self.old_buttons = new_buttons;
         if released.s || released.e {
             Input::Select
-        } else if released.w {
+        } else if released.w || released.menu {
             Input::Back
         } else {
             Input::None
