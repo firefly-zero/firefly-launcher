@@ -62,6 +62,13 @@ pub enum Scene {
     ClearData,
 }
 
+// We don't need "handle_menu" anymore because we removed menu from launcher.
+// However, if I remove it, Rust compiler builds invalid binary.
+#[no_mangle]
+extern "C" fn handle_menu(_i: u32) {
+    get_state();
+}
+
 #[no_mangle]
 extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
