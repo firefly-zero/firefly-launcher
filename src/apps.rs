@@ -81,8 +81,6 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
                     if is_online {
                         app_id = "disconnector";
                         app_name = "Disconnect";
-                    } else {
-                        app_name = "Start multiplayer";
                     }
                 }
             }
