@@ -5,8 +5,8 @@ const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
 pub const PER_SCREEN: usize = 12;
 
-pub fn init(state: &mut State) {
-    state.apps = read_apps();
+pub fn init(_state: &mut State) {
+    // state.apps = read_apps(state.is_online);
 }
 
 pub fn update(state: &mut State) {

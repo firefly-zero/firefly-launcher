@@ -10,6 +10,8 @@ pub struct App {
     pub author_id: String,
     pub name: String,
     pub author_name: String,
+    pub priority: u8,
+
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
@@ -20,6 +22,9 @@ pub struct App {
 
 impl Gt for App {
     fn gt(&self, other: &Self) -> bool {
+        if self.priority != other.priority {
+            return self.priority > other.priority;
+        }
         ascii_gt(&self.name, &other.name)
     }
 }
@@ -41,7 +46,7 @@ impl App {
 }
 
 /// Go through all ROMs and read their metadata.
-pub fn read_apps() -> Vec<App> {
+pub fn read_apps(is_online: bool) -> Vec<App> {
     let author_dirs = sudo::DirBuf::list_dirs("roms");
     let mut apps: Vec<App> = Vec::new();
     for author_dir in author_dirs.iter() {
@@ -63,15 +68,30 @@ pub fn read_apps() -> Vec<App> {
                 continue;
             };
             // Hide the launcher itself from the list.
-            let id = (meta.author_id, meta.app_id);
-            if id == ("sys", "launcher") || id == ("sys", "connector") {
-                continue;
+            let mut app_id = meta.app_id;
+            let mut app_name = meta.app_name;
+            let mut priority = 10;
+            if meta.author_id == "sys" {
+                priority = 5;
+                if meta.app_id == "launcher" {
+                    app_name = "Refresh app list";
+                }
+                if meta.app_id == "connector" {
+                    priority = 1;
+                    if is_online {
+                        app_id = "disconnector";
+                        app_name = "Disconnect";
+                    } else {
+                        app_name = "Start multiplayer";
+                    }
+                }
             }
             apps.push(App {
-                id: meta.app_id.to_string(),
+                id: app_id.to_string(),
                 author_id: meta.author_id.to_string(),
-                name: meta.app_name.to_string(),
+                name: app_name.to_string(),
                 author_name: meta.author_name.to_string(),
+                priority,
                 rom_size: None,
                 data_size: None,
                 stats: None,

@@ -37,11 +37,12 @@ pub fn init_state() {
         panic!();
     };
     let peers = firefly_rust::get_peers();
+    let is_online = peers.len() > 1;
     let state = State {
         scene: Scene::List,
         font,
-        apps: read_apps(),
-        is_online: peers.len() > 1,
+        apps: read_apps(is_online),
+        is_online,
         pos: 0,
         board_pos: 0,
         dialog_yes: false,
