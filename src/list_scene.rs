@@ -13,7 +13,8 @@ pub fn update(state: &mut State) {
     let input = state.input.get();
     // Shift and stutter the selection when the first or the last app
     // is selected to indicate that there are no more items on the list.
-    state.shift = if state.input.held_for % 30 >= 25 {
+    let held_for = state.input.held_for;
+    state.shift = if held_for < 30 || held_for % 30 <= 5 {
         0
     } else if input == Input::Down && state.pos + 1 == state.apps.len() {
         1
@@ -23,7 +24,7 @@ pub fn update(state: &mut State) {
         0
     };
     // Control the scroll speed when the up.down button is held.
-    if state.input.held_for > 30 && state.input.held_for % 4 != 0 {
+    if held_for > 30 && held_for % 4 != 0 {
         return;
     }
 
