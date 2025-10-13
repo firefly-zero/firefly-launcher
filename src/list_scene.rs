@@ -82,7 +82,6 @@ pub fn render(state: &State) {
     draw_selection(state);
     draw_apps(state);
     ScrollBar::from_state(state).render();
-    // draw_scroll(state);
     draw_online(state);
 }
 
@@ -112,7 +111,7 @@ fn draw_selection(state: &State) {
     let pos = state.pos.saturating_sub(state.top_pos);
     let has_scroll = state.apps.len() - 1 > PER_SCREEN;
     let y = 2 + pos as i32 * LINE_HEIGHT + state.shift;
-    draw_cursor(y, has_scroll);
+    draw_cursor(y, has_scroll, state.input.pressed());
 }
 
 /// Render a green indicator in a corner if the device is connected to other devices.

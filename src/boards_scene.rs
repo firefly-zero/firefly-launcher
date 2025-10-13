@@ -84,10 +84,8 @@ pub fn render(state: &State) {
     let Some(boards) = &app.boards else {
         return;
     };
-    {
-        let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
-        draw_cursor(y, false);
-    }
+    let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
+    draw_cursor(y, false, state.input.pressed());
     for (board, i) in boards.iter().zip(1..) {
         render_board(&font, i, board);
     }

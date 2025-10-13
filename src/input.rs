@@ -22,6 +22,7 @@ pub struct InputManager {
     /// The state of direction buttons on the previous frame.
     old_dpad: DPad,
     cached: Input,
+    pressed: bool,
 }
 
 impl InputManager {
@@ -32,11 +33,16 @@ impl InputManager {
             dirty: true,
             held_for: 0,
             cached: Input::None,
+            pressed: false,
         }
     }
 
     pub const fn get(&self) -> Input {
         self.cached
+    }
+
+    pub const fn pressed(&self) -> bool {
+        self.pressed
     }
 
     pub fn update(&mut self) {
@@ -51,6 +57,7 @@ impl InputManager {
 
     fn update_buttons(&mut self) -> Input {
         let new_buttons = read_buttons(Peer::COMBINED);
+        self.pressed = new_buttons.s || new_buttons.e;
         let released = new_buttons.just_released(&self.old_buttons);
         self.old_buttons = new_buttons;
         if released.s || released.e {
