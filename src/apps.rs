@@ -58,7 +58,8 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
     let mut raw_slice = &raw_vec[..];
     let mut apps: Vec<App> = Vec::new();
     while !raw_slice.is_empty() {
-        let meta: Meta<'_> = match postcard::take_from_bytes::<Meta<'_>>(raw_slice) {
+        let res = postcard::take_from_bytes::<Meta<'_>>(raw_slice);
+        let meta: Meta<'_> = match res {
             Ok((meta, unused)) => {
                 raw_slice = unused;
                 meta
@@ -119,7 +120,7 @@ pub fn read_metas() -> Vec<u8> {
 
 /// Go through all ROMs, read their metadata, and save it in cache.
 pub fn refresh_metas() -> Vec<u8> {
-    let mut serialized = Vec::<u8>::new();
+    let mut joined = Vec::<u8>::new();
     let author_dirs = sudo::DirBuf::list_dirs("roms");
     for author_dir in author_dirs.iter() {
         let author_path = format!("roms/{author_dir}");
@@ -127,11 +128,11 @@ pub fn refresh_metas() -> Vec<u8> {
         for app_dir in app_dirs.iter() {
             let meta_path = format!("{author_path}/{app_dir}/_meta");
             let meta_size = sudo::get_file_size(&meta_path);
-            let old_size = serialized.len();
-            serialized.resize(old_size + meta_size, 0);
-            sudo::load_file(&meta_path, &mut serialized[old_size..]);
+            let old_size = joined.len();
+            joined.resize(old_size + meta_size, 0);
+            sudo::load_file(&meta_path, &mut joined[old_size..]);
         }
     }
-    dump_file("metas", &serialized);
-    serialized
+    dump_file("metas", &joined);
+    joined
 }
