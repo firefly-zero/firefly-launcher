@@ -101,7 +101,7 @@ extern "C" fn update() {
         Scene::Stats => stats_scene::update(state),
         Scene::Badges => badges_scene::update(state),
         Scene::Boards => boards_scene::update(state),
-        Scene::Scores(i) => scores_scene::update(state, *i),
+        Scene::Scores(_) => scores_scene::update(state),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -128,7 +128,7 @@ extern "C" fn render() {
         Scene::Stats => stats_scene::render(state),
         Scene::Badges => badges_scene::render(state),
         Scene::Boards => boards_scene::render(state),
-        Scene::Scores(i) => scores_scene::render(state, *i),
+        Scene::Scores(_) => scores_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
 }

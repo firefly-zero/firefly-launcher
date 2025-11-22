@@ -72,7 +72,7 @@ pub fn load_scores(app: &mut App, i: u8) {
         let value: String = format_score(board, score);
         let friend_name = friend_names.get(usize::from(friend.index));
         let friend_name = match friend_name {
-            Some(friend_name) => friend_name.to_string(),
+            Some(friend_name) => friend_name.clone(),
             None => default_name.to_string(),
         };
         scores.push(ScoreInfo {
@@ -86,7 +86,7 @@ pub fn load_scores(app: &mut App, i: u8) {
     app.scores = Some(scores);
 }
 
-pub fn update(state: &mut State, _i: u8) {
+pub fn update(state: &mut State) {
     if let Some(button_group) = state.button_group.as_mut() {
         if let Some(scene) = button_group.update(&state.input) {
             state.transition_to(scene);
@@ -94,7 +94,7 @@ pub fn update(state: &mut State, _i: u8) {
     }
 }
 
-pub fn render(state: &State, _: u8) {
+pub fn render(state: &State) {
     clear_screen(Color::White);
     let font = state.font.as_font();
     let app = &state.apps[state.pos];
