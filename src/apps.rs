@@ -109,6 +109,7 @@ pub fn read_metas() -> Vec<u8> {
     let name = "metas";
     let size = get_file_size(name);
     if size == 0 {
+        log_debug("apps are not cached, traversing...");
         return refresh_metas();
     }
     let mut buf = vec![0; size];
@@ -124,8 +125,7 @@ pub fn refresh_metas() -> Vec<u8> {
         let author_path = format!("roms/{author_dir}");
         let app_dirs = sudo::DirBuf::list_dirs(&author_path);
         for app_dir in app_dirs.iter() {
-            let app_path = format!("{author_path}/{app_dir}");
-            let meta_path = format!("{app_path}/_meta");
+            let meta_path = format!("{author_path}/{app_dir}/_meta");
             let meta_size = sudo::get_file_size(&meta_path);
             let old_size = serialized.len();
             serialized.resize(old_size + meta_size, 0);
