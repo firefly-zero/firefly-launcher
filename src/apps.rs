@@ -128,9 +128,11 @@ pub fn refresh_metas() -> Vec<u8> {
         for app_dir in app_dirs.iter() {
             let meta_path = format!("{author_path}/{app_dir}/_meta");
             let meta_size = sudo::get_file_size(&meta_path);
-            let old_size = joined.len();
-            joined.resize(old_size + meta_size, 0);
-            sudo::load_file(&meta_path, &mut joined[old_size..]);
+            if meta_size != 0 {
+                let old_size = joined.len();
+                joined.resize(old_size + meta_size, 0);
+                sudo::load_file(&meta_path, &mut joined[old_size..]);
+            }
         }
     }
     dump_file("metas", &joined);
