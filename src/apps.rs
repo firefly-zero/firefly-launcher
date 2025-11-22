@@ -6,10 +6,17 @@ use firefly_rust::*;
 use firefly_types::{Encode, Meta, Stats};
 
 pub struct App {
-    pub id: String,
+    /// The first part of the full app ID.
     pub author_id: String,
+    /// The second part of the full app ID.
+    pub id: String,
+    /// The human-readable app name. Shown in the list of apps.
     pub name: String,
+    /// The human-readable author name. Shown in the list of apps.
     pub author_name: String,
+    /// The app order on the screen.
+    ///
+    /// First we show system apps, then favorites, and then the rest.
     pub priority: u8,
 
     pub rom_size: Option<usize>,
