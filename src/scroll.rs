@@ -1,6 +1,6 @@
+use crate::list_scene::PER_SCREEN;
+use crate::state::State;
 use firefly_rust::*;
-
-use crate::{list_scene::PER_SCREEN, state::State};
 
 /// The distance on top and bottom between scrollbar and screen boundaries.
 const MARGIN_VERT: i32 = 3;

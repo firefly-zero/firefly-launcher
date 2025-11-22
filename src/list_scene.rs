@@ -1,4 +1,5 @@
-use crate::{scroll::ScrollBar, *};
+use crate::scroll::ScrollBar;
+use crate::*;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;

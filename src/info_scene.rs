@@ -1,5 +1,6 @@
 use crate::*;
-use alloc::{boxed::Box, format};
+use alloc::boxed::Box;
+use alloc::format;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
