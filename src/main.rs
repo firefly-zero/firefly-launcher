@@ -46,8 +46,8 @@ use scores_scene::ScoreInfo;
 use state::*;
 use utils::*;
 
-/// Frame number to track the loading progress.
-static mut FRAME: u8 = 0;
+/// If the splash screen was rendered on the screen.
+static mut RENDERED: bool = false;
 /// If the state is not initialized yet.
 static mut LOADING: bool = true;
 
@@ -71,16 +71,11 @@ extern "C" fn boot() {
 
 #[no_mangle]
 extern "C" fn update() {
-    let frame = unsafe { FRAME };
-    // On the first few updates, do nothing,
-    // let "render" to render the splash screen.
-    if frame <= 1 {
-        unsafe { FRAME += 1 };
+    // Wait for the splash screen to be rendered.
+    if !unsafe { RENDERED } {
         return;
     }
-    // After that, load the list of apps.
-    if frame == 2 {
-        unsafe { FRAME += 1 };
+    if unsafe { LOADING } {
         init_state();
         unsafe { LOADING = false };
         return;
@@ -101,8 +96,16 @@ extern "C" fn update() {
 
 #[no_mangle]
 extern "C" fn render() {
-    let loading = unsafe { LOADING };
-    if loading {
+    // During the first rendering iteration,
+    // we don't render anything from the "render" callback.
+    // Instead, we let the runtime to display the splash screen
+    // rendered earlier from "boot".
+    if !unsafe { RENDERED } {
+        unsafe { RENDERED = true };
+        return;
+    }
+    // Don't render until the list of apps is loaded.
+    if unsafe { LOADING } {
         return;
     }
 
