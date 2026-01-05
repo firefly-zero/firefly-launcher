@@ -77,7 +77,7 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
         if meta.author_id == "sys" {
             priority = 5;
             if meta.app_id == "launcher" {
-                app_name = "Refresh app list";
+                continue;
             }
             if meta.app_id == "connector" {
                 priority = 1;
@@ -110,7 +110,6 @@ pub fn read_metas() -> Vec<u8> {
     let name = "metas";
     let size = get_file_size(name);
     if size == 0 {
-        log_debug("apps are not cached, traversing...");
         return refresh_metas();
     }
     let mut buf = vec![0; size];
