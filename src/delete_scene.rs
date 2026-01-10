@@ -2,7 +2,7 @@ use crate::*;
 use alloc::format;
 use firefly_rust::*;
 
-pub fn init(state: &mut State) {
+pub const fn init(state: &mut State) {
     state.dialog_yes = false;
 }
 

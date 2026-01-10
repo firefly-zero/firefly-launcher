@@ -6,7 +6,7 @@ const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
 pub const PER_SCREEN: usize = 12;
 
-pub fn init(_state: &mut State) {
+pub const fn init(_state: &mut State) {
     // state.apps = read_apps(state.is_online);
 }
 
@@ -25,7 +25,7 @@ pub fn update(state: &mut State) {
         0
     };
     // Control the scroll speed when the up.down button is held.
-    if held_for > 30 && held_for % 4 != 0 {
+    if held_for > 30 && !held_for.is_multiple_of(4) {
         return;
     }
 

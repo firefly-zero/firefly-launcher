@@ -60,14 +60,14 @@ pub enum Scene {
     ClearData,
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn update() {
     // Wait for the splash screen to be rendered.
     if !unsafe { RENDERED } {
@@ -92,7 +92,7 @@ extern "C" fn update() {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn render() {
     // During the first rendering iteration,
     // we don't render anything from the "render" callback.
@@ -127,7 +127,7 @@ extern "C" fn render() {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn cheat(cmd: i32, val: i32) -> i32 {
     if cmd == 1 {
         let state = get_state();

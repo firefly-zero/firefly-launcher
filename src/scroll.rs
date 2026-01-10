@@ -29,7 +29,7 @@ pub struct ScrollBar {
 }
 
 impl ScrollBar {
-    pub fn from_state(state: &State) -> Self {
+    pub const fn from_state(state: &State) -> Self {
         Self {
             pos: state.pos,
             top_pos: state.top_pos,
