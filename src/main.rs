@@ -9,13 +9,11 @@
     clippy::nursery,
     clippy::allow_attributes
 )]
-#![allow(
+#![expect(
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
     clippy::wildcard_imports,
-    clippy::similar_names,
-    clippy::option_if_let_else,
-    clippy::module_name_repetitions
+    clippy::option_if_let_else
 )]
 
 extern crate alloc;
@@ -46,8 +44,8 @@ use scores_scene::ScoreInfo;
 use state::*;
 use utils::*;
 
-/// Frame number to track the loading progress.
-static mut FRAME: u8 = 0;
+/// If the splash screen was rendered on the screen.
+static mut RENDERED: bool = false;
 /// If the state is not initialized yet.
 static mut LOADING: bool = true;
 
@@ -62,13 +60,6 @@ pub enum Scene {
     ClearData,
 }
 
-// We don't need "handle_menu" anymore because we removed menu from launcher.
-// However, if I remove it, Rust compiler builds invalid binary.
-#[no_mangle]
-extern "C" fn handle_menu(_i: u32) {
-    get_state();
-}
-
 #[no_mangle]
 extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
@@ -78,16 +69,11 @@ extern "C" fn boot() {
 
 #[no_mangle]
 extern "C" fn update() {
-    let frame = unsafe { FRAME };
-    // On the first few updates, do nothing,
-    // let "render" to render the splash screen.
-    if frame <= 1 {
-        unsafe { FRAME += 1 };
+    // Wait for the splash screen to be rendered.
+    if !unsafe { RENDERED } {
         return;
     }
-    // After that, load the list of apps.
-    if frame == 2 {
-        unsafe { FRAME += 1 };
+    if unsafe { LOADING } {
         init_state();
         unsafe { LOADING = false };
         return;
@@ -108,8 +94,16 @@ extern "C" fn update() {
 
 #[no_mangle]
 extern "C" fn render() {
-    let loading = unsafe { LOADING };
-    if loading {
+    // During the first rendering iteration,
+    // we don't render anything from the "render" callback.
+    // Instead, we let the runtime to display the splash screen
+    // rendered earlier from "boot".
+    if !unsafe { RENDERED } {
+        unsafe { RENDERED = true };
+        return;
+    }
+    // Don't render until the list of apps is loaded.
+    if unsafe { LOADING } {
         return;
     }
 
