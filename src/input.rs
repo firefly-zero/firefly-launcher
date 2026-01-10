@@ -20,7 +20,7 @@ pub struct InputManager {
     /// The state of buttons on the previous frame.
     old_buttons: Buttons,
     /// The state of direction buttons on the previous frame.
-    old_dpad: DPad,
+    old_dpad: DPad4,
     cached: Input,
     pressed: bool,
 }
@@ -29,7 +29,7 @@ impl InputManager {
     pub fn new() -> Self {
         Self {
             old_buttons: Buttons::default(),
-            old_dpad: DPad::default(),
+            old_dpad: DPad4::default(),
             dirty: true,
             held_for: 0,
             cached: Input::None,
@@ -70,11 +70,11 @@ impl InputManager {
     }
 
     fn update_dpad(&mut self) -> Input {
-        let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad();
-        let mut dpad_pressed = new_dpad.just_pressed(&self.old_dpad);
+        let new_dpad = read_pad(Peer::COMBINED).unwrap_or_default().as_dpad4();
+        let mut dpad_pressed = new_dpad.just_pressed(self.old_dpad);
 
         // If a direction button is held, track for how long.
-        if new_dpad.up || new_dpad.down {
+        if new_dpad == DPad4::Up || new_dpad == DPad4::Down {
             self.held_for += 1;
         } else {
             self.held_for = 0;
@@ -84,16 +84,12 @@ impl InputManager {
         }
 
         self.old_dpad = new_dpad;
-        if dpad_pressed.down {
-            Input::Down
-        } else if dpad_pressed.up {
-            Input::Up
-        } else if dpad_pressed.left {
-            Input::Left
-        } else if dpad_pressed.right {
-            Input::Right
-        } else {
-            Input::None
+        match dpad_pressed {
+            DPad4::None => Input::None,
+            DPad4::Left => Input::Left,
+            DPad4::Right => Input::Right,
+            DPad4::Up => Input::Up,
+            DPad4::Down => Input::Down,
         }
     }
 }

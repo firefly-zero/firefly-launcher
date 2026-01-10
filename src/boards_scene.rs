@@ -57,16 +57,16 @@ fn try_load_boards(app: &mut App) {
 
 pub fn update(state: &mut State) {
     let app = &state.apps[state.pos];
+    let input = state.input.get();
+    if input == Input::Back {
+        state.transition_to(Scene::Info);
+        return;
+    }
     let Some(boards) = &app.boards else {
         return;
     };
-    let input = state.input.get();
     if input == Input::Select {
         state.transition_to(Scene::Scores(state.board_pos as _));
-        return;
-    }
-    if input == Input::Back {
-        state.transition_to(Scene::Info);
         return;
     }
     if input == Input::Down && state.board_pos < boards.len() - 1 {
@@ -82,6 +82,8 @@ pub fn render(state: &State) {
     let app = &state.apps[state.pos];
     let font = state.font.as_font();
     let Some(boards) = &app.boards else {
+        let point = Point::new(6, LINE_HEIGHT);
+        draw_text("the app has no scoreboards", &font, point, Color::Black);
         return;
     };
     let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
