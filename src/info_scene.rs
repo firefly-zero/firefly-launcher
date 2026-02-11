@@ -1,6 +1,8 @@
 use crate::*;
-use alloc::boxed::Box;
 use alloc::format;
+use alloc::vec::Vec;
+use badges_scene::try_load_badges;
+use boards_scene::try_load_boards;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
@@ -15,16 +17,6 @@ static FIELDS: &[&str] = &[
 ];
 
 pub fn init(state: &mut State) {
-    let items = Box::new([
-        ("stats", Scene::Stats),
-        ("achievements", Scene::Badges),
-        ("scoreboards", Scene::Boards),
-        ("view in catalog", Scene::Catalog),
-        ("clear data", Scene::ClearData),
-        ("back", Scene::List),
-    ]);
-    state.button_group = Some(ButtonGroup::new(items));
-
     let app = &mut state.apps[state.pos];
     if app.rom_size.is_none() {
         let app_path = format!("roms/{}/{}", app.author_id, app.id);
@@ -34,6 +26,28 @@ pub fn init(state: &mut State) {
         let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
         app.data_size = Some(get_dir_size(&data_path));
     }
+    app.try_load_stats();
+    try_load_boards(app);
+    try_load_badges(app);
+
+    let mut items = Vec::new();
+    if app.stats.is_some() {
+        items.push(("stats", Scene::Stats));
+    }
+    if let Some(badges) = &app.badges {
+        if !badges.is_empty() {
+            items.push(("achievements", Scene::Badges));
+        }
+    }
+    if let Some(boards) = &app.boards {
+        if !boards.is_empty() {
+            items.push(("scoreboards", Scene::Boards));
+        }
+    }
+    items.push(("view in catalog", Scene::Catalog));
+    items.push(("clear data", Scene::ClearData));
+    items.push(("back", Scene::List));
+    state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
 }
 
 pub fn update(state: &mut State) {

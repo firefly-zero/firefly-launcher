@@ -31,13 +31,9 @@ impl Gt for BadgeInfo {
 pub fn init(state: &mut State) {
     let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
     state.button_group = Some(ButtonGroup::new(items));
-
-    let app = &mut state.apps[state.pos];
-    app.try_load_stats();
-    try_load_badges(app);
 }
 
-fn try_load_badges(app: &mut App) {
+pub fn try_load_badges(app: &mut App) {
     let Some(stats) = app.stats.as_ref() else {
         return;
     };

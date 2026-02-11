@@ -23,13 +23,11 @@ impl Gt for BoardInfo {
     }
 }
 
-pub fn init(state: &mut State) {
+pub const fn init(state: &mut State) {
     state.board_pos = 0;
-    let app = &mut state.apps[state.pos];
-    try_load_boards(app);
 }
 
-fn try_load_boards(app: &mut App) {
+pub fn try_load_boards(app: &mut App) {
     if app.boards.is_some() {
         return;
     }
