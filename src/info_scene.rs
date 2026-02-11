@@ -59,7 +59,7 @@ pub fn update(state: &mut State) {
 }
 
 fn get_dir_size(dir_path: &str) -> usize {
-    let files = sudo::DirBuf::list_dirs(dir_path);
+    let files = sudo::DirBuf::list_files(dir_path);
     let mut size = 0;
     for file in files.iter() {
         let file_path = format!("{dir_path}/{file}");
