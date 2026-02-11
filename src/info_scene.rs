@@ -19,6 +19,7 @@ pub fn init(state: &mut State) {
         ("stats", Scene::Stats),
         ("achievements", Scene::Badges),
         ("scoreboards", Scene::Boards),
+        ("view in catalog", Scene::Catalog),
         ("clear data", Scene::ClearData),
         ("back", Scene::List),
     ]);

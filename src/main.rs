@@ -22,6 +22,7 @@ mod apps;
 mod badges_scene;
 mod boards_scene;
 mod button_group;
+mod catalog_scene;
 mod components;
 mod delete_scene;
 mod info_scene;
@@ -56,6 +57,7 @@ pub enum Scene {
     Stats,
     Badges,
     Boards,
+    Catalog,
     Scores(u8),
     ClearData,
 }
@@ -88,6 +90,7 @@ extern "C" fn update() {
         Scene::Badges => badges_scene::update(state),
         Scene::Boards => boards_scene::update(state),
         Scene::Scores(_) => scores_scene::update(state),
+        Scene::Catalog => catalog_scene::update(state),
         Scene::ClearData => delete_scene::update(state),
     }
 }
@@ -123,6 +126,7 @@ extern "C" fn render() {
         Scene::Badges => badges_scene::render(state),
         Scene::Boards => boards_scene::render(state),
         Scene::Scores(_) => scores_scene::render(state),
+        Scene::Catalog => catalog_scene::render(state),
         Scene::ClearData => delete_scene::render(state),
     }
 }
