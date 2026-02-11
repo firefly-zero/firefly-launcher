@@ -1,24 +1,33 @@
 use crate::*;
+use alloc::boxed::Box;
 
 const BASE_URL: &str = "https://catalog.fireflyzero.com/";
 const QR_WIDTH: i32 = 33;
 
-pub const fn init(_state: &State) {}
+pub fn init(state: &mut State) {
+    let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
+    state.button_group = Some(ButtonGroup::new(items));
+}
 
 pub fn update(state: &mut State) {
-    let input = state.input.get();
-    if input != Input::None {
-        state.transition_to(Scene::Info);
+    if let Some(button_group) = state.button_group.as_mut() {
+        if let Some(scene) = button_group.update(&state.input) {
+            state.transition_to(scene);
+        }
     }
 }
 
 pub fn render(state: &State) {
     clear_screen(Color::White);
+    let font = state.font.as_font();
+    if let Some(button_group) = &state.button_group {
+        button_group.render(&font);
+    }
+
     let app = &state.apps[state.pos];
     let url = alloc::format!("{BASE_URL}{}.{}", app.author_id, app.id);
     let point = Point::new((WIDTH - QR_WIDTH) / 2, HEIGHT / 2 - QR_WIDTH);
     draw_qr(&url, point, Color::Black, Color::White);
-    let font = state.font.as_font();
 
     let y = point.y + QR_WIDTH + i32::from(font.char_height()) + 2;
     draw_centered_text(&font, "catalog.fireflyzero.com/", y);
