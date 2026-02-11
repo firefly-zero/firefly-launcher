@@ -17,9 +17,9 @@ pub fn update(state: &mut State) {
     let held_for = state.input.held_for;
     state.shift = if held_for < 30 || held_for % 30 <= 5 {
         0
-    } else if input == Input::Down && state.pos + 1 == state.apps.len() {
+    } else if (input == Input::Down || input == Input::Right) && state.pos + 1 == state.apps.len() {
         1
-    } else if input == Input::Up && state.pos == 0 {
+    } else if (input == Input::Up || input == Input::Left) && state.pos == 0 {
         -1
     } else {
         0
@@ -41,6 +41,22 @@ pub fn update(state: &mut State) {
             state.pos = state.pos.saturating_sub(1);
             play_note(audio::Freq::AS4);
         }
+        Input::Left => {
+            if state.pos == state.top_pos {
+                state.pos = state.pos.saturating_sub(PER_SCREEN);
+            } else {
+                state.pos = state.top_pos;
+            }
+            play_note(audio::Freq::AS4);
+        }
+        Input::Right => {
+            if state.pos == state.top_pos + PER_SCREEN {
+                state.pos = usize::min(state.pos + PER_SCREEN, state.apps.len() - 1);
+            } else {
+                state.pos = state.top_pos + PER_SCREEN;
+            }
+            play_note(audio::Freq::A4);
+        }
         Input::Select => {
             let Some(app) = state.apps.get(state.pos) else {
                 return;
@@ -52,7 +68,7 @@ pub fn update(state: &mut State) {
         Input::Back => {
             state.transition_to(Scene::Info);
         }
-        _ => {}
+        Input::None => {}
     }
 
     // If the selection cursor tries to go out of screen,
@@ -66,14 +82,7 @@ pub fn update(state: &mut State) {
 
 pub fn render(state: &State) {
     if let Some(splash_path) = &state.splash {
-        let splash = sudo::load_file_buf(splash_path);
-        if let Some(splash) = splash {
-            draw_image(&splash.as_image(), Point::MIN);
-        } else {
-            let mut buf = alloc::boxed::Box::new([0u8; 9607]);
-            let splash = load_file("_splash", &mut buf[..]);
-            draw_image(&splash.as_image(), Point::MIN);
-        }
+        draw_splash(splash_path);
         return;
     }
     clear_screen(Color::White);
@@ -85,6 +94,17 @@ pub fn render(state: &State) {
     draw_apps(state);
     ScrollBar::from_state(state).render();
     draw_online(state);
+}
+
+fn draw_splash(splash_path: &str) {
+    let splash = sudo::load_file_buf(splash_path);
+    if let Some(splash) = splash {
+        draw_image(&splash.as_image(), Point::MIN);
+    } else {
+        let mut buf = alloc::boxed::Box::new([0u8; 9607]);
+        let splash = load_file("_splash", &mut buf[..]);
+        draw_image(&splash.as_image(), Point::MIN);
+    }
 }
 
 /// Render the list of installed apps.

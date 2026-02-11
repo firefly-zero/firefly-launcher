@@ -74,10 +74,10 @@ impl InputManager {
         let mut dpad_pressed = new_dpad.just_pressed(self.old_dpad);
 
         // If a direction button is held, track for how long.
-        if new_dpad == DPad4::Up || new_dpad == DPad4::Down {
-            self.held_for += 1;
-        } else {
+        if new_dpad == DPad4::None {
             self.held_for = 0;
+        } else {
+            self.held_for += 1;
         }
         if self.held_for > 30 {
             dpad_pressed = new_dpad;
