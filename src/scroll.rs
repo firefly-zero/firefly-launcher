@@ -68,7 +68,7 @@ impl ScrollBar {
     }
 
     fn draw_track(&self) {
-        if self.total <= self.per_page {
+        if self.total - 1 <= self.per_page {
             return;
         }
         let point = Point::new(LEFT_X + 1, TRACK_MARGIN_VERT + 1);
