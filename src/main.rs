@@ -12,8 +12,9 @@
 #![expect(
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
-    clippy::wildcard_imports,
-    clippy::option_if_let_else
+    clippy::collapsible_if,
+    clippy::option_if_let_else,
+    clippy::wildcard_imports
 )]
 
 extern crate alloc;

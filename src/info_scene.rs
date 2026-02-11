@@ -34,15 +34,15 @@ pub fn init(state: &mut State) {
     if app.stats.is_some() {
         items.push(("stats", Scene::Stats));
     }
-    if let Some(badges) = &app.badges {
-        if !badges.is_empty() {
-            items.push(("achievements", Scene::Badges));
-        }
+    if let Some(badges) = &app.badges
+        && !badges.is_empty()
+    {
+        items.push(("achievements", Scene::Badges));
     }
-    if let Some(boards) = &app.boards {
-        if !boards.is_empty() {
-            items.push(("scoreboards", Scene::Boards));
-        }
+    if let Some(boards) = &app.boards
+        && !boards.is_empty()
+    {
+        items.push(("scoreboards", Scene::Boards));
     }
     items.push(("view in catalog", Scene::Catalog));
     items.push(("clear data", Scene::ClearData));
