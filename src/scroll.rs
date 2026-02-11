@@ -19,6 +19,7 @@ const TRACK_MARGIN_VERT: i32 = MARGIN_VERT * 2 + ARROW_HEIGHT;
 const TRACK_HEIGHT: i32 = HEIGHT - TRACK_MARGIN_VERT * 2;
 
 pub struct ScrollBar {
+    theme: Theme,
     pos: usize,
     /// Index of the top item on the current page.
     top_pos: usize,
@@ -31,6 +32,7 @@ pub struct ScrollBar {
 impl ScrollBar {
     pub const fn from_state(state: &State) -> Self {
         Self {
+            theme: state.settings.theme,
             pos: state.pos,
             top_pos: state.top_pos,
             per_page: PER_SCREEN,
@@ -52,7 +54,7 @@ impl ScrollBar {
         let left = Point::new(LEFT_X, MARGIN_VERT + ARROW_HEIGHT);
         let right = Point::new(RIGHT_X, MARGIN_VERT + ARROW_HEIGHT);
         let top = Point::new(MIDDLE_X, MARGIN_VERT);
-        let style = Style::solid(Color::Black);
+        let style = Style::solid(self.theme.primary);
         draw_triangle(left, top, right, style);
     }
 
@@ -63,7 +65,7 @@ impl ScrollBar {
         let left = Point::new(LEFT_X, HEIGHT - MARGIN_VERT - ARROW_HEIGHT);
         let right = Point::new(RIGHT_X, HEIGHT - MARGIN_VERT - ARROW_HEIGHT);
         let bottom = Point::new(MIDDLE_X, HEIGHT - MARGIN_VERT);
-        let style = Style::solid(Color::Black);
+        let style = Style::solid(self.theme.primary);
         draw_triangle(left, bottom, right, style);
     }
 
@@ -74,12 +76,12 @@ impl ScrollBar {
         let point = Point::new(LEFT_X + 1, TRACK_MARGIN_VERT + 1);
         let width = RIGHT_X - LEFT_X - 1;
 
-        let style = Style::solid(Color::LightGreen);
+        let style = Style::solid(self.theme.accent);
         let run_pix = (TRACK_HEIGHT - THUMB_HEIGHT) as usize;
         let height = (run_pix * self.pos / (self.total - 1)) as i32;
         draw_rect(point, Size::new(width, height), style);
 
-        let style = Style::outlined(Color::Black, 1);
+        let style = Style::outlined(self.theme.primary, 1);
         draw_rect(point, Size::new(width, TRACK_HEIGHT - 1), style);
     }
 
@@ -96,8 +98,8 @@ impl ScrollBar {
             Point::new(LEFT_X, y),
             Size::new(BAR_WIDTH + 1, THUMB_HEIGHT),
             Style {
-                fill_color: Color::White,
-                stroke_color: Color::Black,
+                fill_color: self.theme.bg,
+                stroke_color: self.theme.primary,
                 stroke_width: 1,
             },
         );

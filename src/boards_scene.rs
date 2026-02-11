@@ -76,22 +76,24 @@ pub fn update(state: &mut State) {
 }
 
 pub fn render(state: &State) {
-    clear_screen(Color::White);
+    clear_screen(state.settings.theme.bg);
     let app = &state.apps[state.pos];
     let font = state.font.as_font();
     let Some(boards) = &app.boards else {
         let point = Point::new(6, LINE_HEIGHT);
-        draw_text("the app has no scoreboards", &font, point, Color::Black);
+        let color = state.settings.theme.primary;
+        draw_text("the app has no scoreboards", &font, point, color);
         return;
     };
     let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
-    draw_cursor(y, false, state.input.pressed());
+    draw_cursor(y, false, state.input.pressed(), &state.settings.theme);
+    let theme = state.settings.theme;
     for (board, i) in boards.iter().zip(1..) {
-        render_board(&font, i, board);
+        render_board(&font, &theme, i, board);
     }
 }
 
-fn render_board(font: &Font<'_>, i: i32, b: &BoardInfo) {
+fn render_board(font: &Font<'_>, theme: &Theme, i: i32, b: &BoardInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
-    draw_text(&b.name, font, point, Color::Black);
+    draw_text(&b.name, font, point, theme.primary);
 }

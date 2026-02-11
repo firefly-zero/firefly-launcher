@@ -71,28 +71,29 @@ pub fn update(state: &mut State) {
 }
 
 pub fn render(state: &State) {
-    clear_screen(Color::White);
+    clear_screen(state.settings.theme.bg);
     let app = &state.apps[state.pos];
     let font = state.font.as_font();
     if let Some(badges) = &app.badges {
+        let theme = state.settings.theme;
         // for (badge, i) in stats.badges.iter().zip(0..) {
         for (badge, i) in badges.iter().zip(1..) {
-            render_badge(&font, i, badge);
+            render_badge(&font, &theme, i, badge);
         }
     }
     if let Some(button_group) = &state.button_group {
-        button_group.render(&font);
+        button_group.render(&font, &state.settings.theme);
     }
 }
 
-fn render_badge(font: &Font<'_>, i: i32, b: &BadgeInfo) {
+fn render_badge(font: &Font<'_>, theme: &Theme, i: i32, b: &BadgeInfo) {
     let point = Point::new(6, LINE_HEIGHT * i);
     let color = if b.done >= b.goal {
-        Color::Black
+        theme.accent
     } else if b.done > 0 {
-        Color::Gray
+        theme.primary
     } else {
-        Color::LightGray
+        theme.secondary
     };
     draw_text(&b.name, font, point, color);
 

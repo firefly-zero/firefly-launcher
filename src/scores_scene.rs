@@ -95,7 +95,8 @@ pub fn update(state: &mut State) {
 }
 
 pub fn render(state: &State) {
-    clear_screen(Color::White);
+    let theme = state.settings.theme;
+    clear_screen(theme.bg);
     let font = state.font.as_font();
     let app = &state.apps[state.pos];
     let Some(scores) = &app.scores else {
@@ -104,14 +105,18 @@ pub fn render(state: &State) {
     let mut i = 0;
     for score in scores.iter().take(8) {
         i += 1;
-        let color = if score.me { Color::Green } else { Color::Black };
+        let color = if score.me {
+            theme.accent
+        } else {
+            theme.primary
+        };
         let point = Point::new(6, LINE_HEIGHT * i);
         draw_text(&score.name, &font, point, color);
         let point = Point::new(140, LINE_HEIGHT * i);
         draw_text(&score.value, &font, point, color);
     }
     if let Some(button_group) = &state.button_group {
-        button_group.render(&font);
+        button_group.render(&font, &state.settings.theme);
     }
 }
 

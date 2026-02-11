@@ -41,12 +41,14 @@ fn delete_app(state: &mut State) {
 
 pub fn render(state: &State) {
     const MARGIN: i32 = 46;
-    clear_screen(Color::White);
+
+    let theme = state.settings.theme;
+    clear_screen(theme.bg);
     let app = &state.apps[state.pos];
 
     let font = state.font.as_font();
     let corner = Size::new(4, 4);
-    let box_style = Style::outlined(Color::Black, 1);
+    let box_style = Style::outlined(theme.primary, 1);
 
     {
         let text = format!(
@@ -54,7 +56,7 @@ pub fn render(state: &State) {
             app.name
         );
         let point = Point::new(MARGIN + 6, MARGIN + 16);
-        draw_text(&text, &font, point, Color::Black);
+        draw_text(&text, &font, point, theme.primary);
         draw_rounded_rect(
             Point::new(MARGIN, MARGIN),
             Size::new(WIDTH - MARGIN * 2, HEIGHT - MARGIN * 2),
@@ -69,7 +71,7 @@ pub fn render(state: &State) {
     {
         let x = MARGIN + box_width / 2 - (btn_width + btn_width / 2);
         let point = Point::new(x + 3, y + 7);
-        draw_text("nuh", &font, point, Color::Black);
+        draw_text("nuh", &font, point, theme.primary);
         if !state.dialog_yes {
             draw_rounded_rect(
                 Point::new(x, y),
@@ -83,7 +85,7 @@ pub fn render(state: &State) {
     {
         let x = MARGIN + box_width / 2 + btn_width / 2;
         let point = Point::new(x + 3, y + 7);
-        draw_text("yep", &font, point, Color::Black);
+        draw_text("yep", &font, point, theme.primary);
         if state.dialog_yes {
             draw_rounded_rect(
                 Point::new(x, y),

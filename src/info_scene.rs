@@ -69,31 +69,32 @@ fn get_dir_size(dir_path: &str) -> usize {
 }
 
 pub fn render(state: &State) {
-    clear_screen(Color::White);
+    clear_screen(state.settings.theme.bg);
     let font = state.font.as_font();
     for (text, i) in FIELDS.iter().zip(1..) {
         let point = Point::new(6, LINE_HEIGHT * i);
-        draw_text(text, &font, point, Color::Black);
+        draw_text(text, &font, point, state.settings.theme.primary);
     }
+    let theme = state.settings.theme;
     let app = &state.apps[state.pos];
-    render_info(&font, 1, &app.author_id);
-    render_info(&font, 2, &app.id);
-    render_info(&font, 3, &app.author_name);
-    render_info(&font, 4, &app.name);
+    render_info(&font, &theme, 1, &app.author_id);
+    render_info(&font, &theme, 2, &app.id);
+    render_info(&font, &theme, 3, &app.author_name);
+    render_info(&font, &theme, 4, &app.name);
     if let Some(size) = app.rom_size {
-        render_info(&font, 5, &format_size(size));
+        render_info(&font, &theme, 5, &format_size(size));
     }
     if let Some(size) = app.data_size {
-        render_info(&font, 6, &format_size(size));
+        render_info(&font, &theme, 6, &format_size(size));
     }
     if let Some(button_group) = &state.button_group {
-        button_group.render(&font);
+        button_group.render(&font, &state.settings.theme);
     }
 }
 
-fn render_info(font: &Font<'_>, i: i32, t: &str) {
+fn render_info(font: &Font<'_>, theme: &Theme, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
-    draw_text(t, font, point, Color::DarkBlue);
+    draw_text(t, font, point, theme.accent);
 }
 
 fn format_size(size: usize) -> alloc::string::String {

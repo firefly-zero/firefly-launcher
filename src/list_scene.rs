@@ -85,7 +85,7 @@ pub fn render(state: &State) {
         draw_splash(splash_path);
         return;
     }
-    clear_screen(Color::White);
+    clear_screen(state.settings.theme.bg);
     if state.apps.is_empty() {
         render_empty(state);
         return;
@@ -113,7 +113,7 @@ fn draw_apps(state: &State) {
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
         let point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
-        draw_text(&app.name, &font, point, Color::Black);
+        draw_text(&app.name, &font, point, state.settings.theme.primary);
         // Don't show the author name
         // if the app name takes more than half of the screen.
         if app.name.len() > 19 {
@@ -124,7 +124,8 @@ fn draw_apps(state: &State) {
             continue;
         }
         let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
-        draw_text(&app.author_name, &font, point, Color::Gray);
+        let color = state.settings.theme.secondary;
+        draw_text(&app.author_name, &font, point, color);
     }
 }
 
@@ -133,7 +134,7 @@ fn draw_selection(state: &State) {
     let pos = state.pos.saturating_sub(state.top_pos);
     let has_scroll = state.apps.len() - 1 > PER_SCREEN;
     let y = 2 + pos as i32 * LINE_HEIGHT + state.shift;
-    draw_cursor(y, has_scroll, state.input.pressed());
+    draw_cursor(y, has_scroll, state.input.pressed(), &state.settings.theme);
 }
 
 /// Render a green indicator in a corner if the device is connected to other devices.
@@ -142,7 +143,7 @@ fn draw_online(state: &State) {
         return;
     }
     let p = Point::new(WIDTH - 23, HEIGHT - 12);
-    let s = Style::solid(Color::Green);
+    let s = Style::solid(state.settings.theme.accent);
     draw_circle(p, 8, s);
 }
 
@@ -150,7 +151,8 @@ fn draw_online(state: &State) {
 fn render_empty(state: &State) {
     let font = state.font.as_font();
     let point = Point::new(62, HEIGHT / 2 - LINE_HEIGHT / 2);
-    draw_text("No apps installed", &font, point, Color::DarkBlue);
+    let color = state.settings.theme.primary;
+    draw_text("No apps installed", &font, point, color);
 }
 
 fn play_note(f: audio::Freq) {

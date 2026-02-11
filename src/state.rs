@@ -10,6 +10,7 @@ static mut STATE: OnceCell<State> = OnceCell::new();
 /// All the global state. Created in [`boot`], updated in [`update`] and [`render`].
 pub struct State {
     scene: Scene,
+    pub settings: Settings,
     pub font: FileBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
@@ -40,6 +41,7 @@ pub fn init_state() {
     let is_online = peers.len() > 1;
     let state = State {
         scene: Scene::List,
+        settings: get_settings(get_me()),
         font,
         apps: read_apps(is_online),
         is_online,
