@@ -126,8 +126,26 @@ impl Message {
     }
 
     const fn translate_ukrainian(&self) -> &'static str {
-        // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "ID автора",
+            Self::AppID => "ID програми",
+            Self::AuthorName => "ім'я автора",
+            Self::AppName => "ім'я програми",
+            Self::RomSize => "розмір ROMа",
+            Self::DataSize => "розмір даних",
+
+            Self::Launches => "запусків",
+            Self::Installed => "встановлено",
+            Self::Updated => "оновлено",
+
+            Self::Back => "тому",
+            Self::Exit => "вийти",
+            Self::Stats => "статистика",
+            Self::Achievements => "досягнення",
+            Self::Scoreboards => "найкращі результати",
+            Self::ViewInCatalog => "відкрити у каталозі",
+            Self::Remove => "видалити",
+        }
     }
 
     const fn translate_toki_pona(&self) -> &'static str {
