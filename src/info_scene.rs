@@ -46,7 +46,9 @@ pub fn init(state: &mut State) {
         items.push((Message::Scoreboards.translate(lang), Scene::Boards));
     }
     items.push((Message::ViewInCatalog.translate(lang), Scene::Catalog));
-    items.push((Message::Remove.translate(lang), Scene::ClearData));
+    if app.author_id != "sys" {
+        items.push((Message::Remove.translate(lang), Scene::ClearData));
+    }
     items.push((Message::Back.translate(lang), Scene::List));
     state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
 }

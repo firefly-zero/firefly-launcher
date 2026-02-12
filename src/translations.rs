@@ -8,6 +8,10 @@ pub enum Message {
     RomSize,
     DataSize,
 
+    Launches,
+    Installed,
+    Updated,
+
     Back,
     Exit,
     Stats,
@@ -43,6 +47,11 @@ impl Message {
             Self::AppName => "app name",
             Self::RomSize => "ROM size",
             Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
             Self::Back => "back",
             Self::Exit => "exit",
             Self::Stats => "stats",
@@ -86,6 +95,10 @@ impl Message {
             Self::AppName => "имя приложения",
             Self::RomSize => "размер ROMа",
             Self::DataSize => "размер данных",
+
+            Self::Launches => "запусков",
+            Self::Installed => "установлен",
+            Self::Updated => "обновлён",
 
             Self::Back => "назад",
             Self::Exit => "выйти",

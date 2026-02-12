@@ -80,6 +80,8 @@ pub fn render(state: &State) {
     let app = &state.apps[state.pos];
     let font = state.font.as_font();
     let Some(boards) = &app.boards else {
+        // Should be unreachable since we don't the "scoreboards"
+        // button on the Info page if the app has no scoreboards.
         let point = Point::new(6, LINE_HEIGHT);
         let color = state.settings.theme.primary;
         draw_text("the app has no scoreboards", &font, point, color);

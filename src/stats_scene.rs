@@ -6,7 +6,7 @@ use firefly_rust::*;
 const LINE_HEIGHT: i32 = 12;
 
 static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
-static FIELDS: &[&str] = &["launches", "installed", "updated"];
+static FIELDS: &[Message] = &[Message::Launches, Message::Installed, Message::Updated];
 
 pub fn init(state: &mut State) {
     let lang = state.settings.language;
@@ -36,8 +36,9 @@ pub fn render(state: &State) {
         let point = Point::new(100 + 30 * i, LINE_HEIGHT);
         draw_text(text, &font, point, theme.primary);
     }
-    for (text, i) in FIELDS.iter().zip(2..) {
+    for (msg, i) in FIELDS.iter().zip(2..) {
         let point = Point::new(6, LINE_HEIGHT * i);
+        let text = msg.translate(state.settings.language);
         draw_text(text, &font, point, theme.primary);
     }
     let app = &state.apps[state.pos];

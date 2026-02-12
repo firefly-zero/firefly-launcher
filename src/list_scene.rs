@@ -148,6 +148,9 @@ fn draw_online(state: &State) {
 }
 
 /// Show message about no apps (except launcher itself) installed.
+///
+/// Shouldn't be reachable on a normal installation (but can be hit on dev
+/// environments) because we pre-install sys apps and don't let them be removed.
 fn render_empty(state: &State) {
     let font = state.font.as_font();
     let point = Point::new(62, HEIGHT / 2 - LINE_HEIGHT / 2);

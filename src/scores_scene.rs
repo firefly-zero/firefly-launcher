@@ -22,7 +22,11 @@ impl Gt for ScoreInfo {
 }
 
 pub fn init(state: &mut State, i: u8) {
-    let items = Box::new([("back", Scene::Boards), ("exit", Scene::List)]);
+    let lang = state.settings.language;
+    let items = Box::new([
+        (Message::Back.translate(lang), Scene::Boards),
+        (Message::Exit.translate(lang), Scene::List),
+    ]);
     state.button_group = Some(ButtonGroup::new(items));
 
     state.board_pos = 0;
