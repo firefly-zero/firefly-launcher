@@ -33,6 +33,7 @@ mod scores_scene;
 mod scroll;
 mod state;
 mod stats_scene;
+mod translations;
 mod utils;
 
 use apps::*;
@@ -44,6 +45,7 @@ use firefly_rust::*;
 use input::{Input, InputManager};
 use scores_scene::ScoreInfo;
 use state::*;
+use translations::Message;
 use utils::*;
 
 /// If the splash screen was rendered on the screen.

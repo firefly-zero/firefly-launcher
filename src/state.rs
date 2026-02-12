@@ -33,7 +33,9 @@ pub fn get_state() -> &'static mut State {
 }
 
 pub fn init_state() {
-    let Some(font) = load_file_buf("font") else {
+    let settings = get_settings(get_me());
+    let encoding = settings.language.encoding();
+    let Some(font) = load_file_buf(encoding) else {
         log_error("failed to load font, ROM is corrupted");
         panic!();
     };
@@ -41,7 +43,7 @@ pub fn init_state() {
     let is_online = peers.len() > 1;
     let state = State {
         scene: Scene::List,
-        settings: get_settings(get_me()),
+        settings,
         font,
         apps: read_apps(is_online),
         is_online,

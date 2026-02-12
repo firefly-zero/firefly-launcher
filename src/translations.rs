@@ -1,0 +1,124 @@
+use firefly_rust::Language;
+
+pub enum Message {
+    AuthorID,
+    AppID,
+    AuthorName,
+    AppName,
+    RomSize,
+    DataSize,
+
+    Back,
+    Exit,
+    Stats,
+    Achievements,
+    Scoreboards,
+    ViewInCatalog,
+    Remove,
+}
+
+impl Message {
+    pub const fn translate(&self, lang: Language) -> &'static str {
+        match lang {
+            Language::English => self.translate_english(),
+            Language::Dutch => self.translate_dutch(),
+            Language::French => self.translate_french(),
+            Language::German => self.translate_german(),
+            Language::Italian => self.translate_italian(),
+            Language::Polish => self.translate_polish(),
+            Language::Russian => self.translate_russian(),
+            Language::Spanish => self.translate_spanish(),
+            Language::Swedish => self.translate_swedish(),
+            Language::Turkish => self.translate_turkish(),
+            Language::Ukrainian => self.translate_ukrainian(),
+            Language::TokiPona => self.translate_toki_pona(),
+        }
+    }
+
+    const fn translate_english(&self) -> &'static str {
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
+    }
+
+    const fn translate_dutch(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_french(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_german(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_italian(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_polish(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_russian(&self) -> &'static str {
+        match self {
+            Self::AuthorID => "ID автора",
+            Self::AppID => "ID приложения",
+            Self::AuthorName => "имя автора",
+            Self::AppName => "имя приложения",
+            Self::RomSize => "размер ROMа",
+            Self::DataSize => "размер данных",
+
+            Self::Back => "назад",
+            Self::Exit => "выйти",
+            Self::Stats => "статистика",
+            Self::Achievements => "достижения",
+            Self::Scoreboards => "лучшие результаты",
+            Self::ViewInCatalog => "открыть в каталоге",
+            Self::Remove => "удалить",
+        }
+    }
+
+    const fn translate_spanish(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_swedish(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_turkish(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_ukrainian(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+
+    const fn translate_toki_pona(&self) -> &'static str {
+        // TODO: translate
+        self.translate_english()
+    }
+}

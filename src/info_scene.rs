@@ -7,13 +7,13 @@ use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
 
-static FIELDS: &[&str] = &[
-    "author ID",
-    "app ID",
-    "author name",
-    "app name",
-    "ROM size",
-    "data size",
+static FIELDS: &[Message] = &[
+    Message::AuthorID,
+    Message::AppID,
+    Message::AuthorName,
+    Message::AppName,
+    Message::RomSize,
+    Message::DataSize,
 ];
 
 pub fn init(state: &mut State) {
@@ -30,23 +30,24 @@ pub fn init(state: &mut State) {
     try_load_boards(app);
     try_load_badges(app);
 
+    let lang = state.settings.language;
     let mut items = Vec::new();
     if app.stats.is_some() {
-        items.push(("stats", Scene::Stats));
+        items.push((Message::Stats.translate(lang), Scene::Stats));
     }
     if let Some(badges) = &app.badges
         && !badges.is_empty()
     {
-        items.push(("achievements", Scene::Badges));
+        items.push((Message::Achievements.translate(lang), Scene::Badges));
     }
     if let Some(boards) = &app.boards
         && !boards.is_empty()
     {
-        items.push(("scoreboards", Scene::Boards));
+        items.push((Message::Scoreboards.translate(lang), Scene::Boards));
     }
-    items.push(("view in catalog", Scene::Catalog));
-    items.push(("clear data", Scene::ClearData));
-    items.push(("back", Scene::List));
+    items.push((Message::ViewInCatalog.translate(lang), Scene::Catalog));
+    items.push((Message::Remove.translate(lang), Scene::ClearData));
+    items.push((Message::Back.translate(lang), Scene::List));
     state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
 }
 
@@ -71,8 +72,9 @@ fn get_dir_size(dir_path: &str) -> usize {
 pub fn render(state: &State) {
     clear_screen(state.settings.theme.bg);
     let font = state.font.as_font();
-    for (text, i) in FIELDS.iter().zip(1..) {
+    for (message, i) in FIELDS.iter().zip(1..) {
         let point = Point::new(6, LINE_HEIGHT * i);
+        let text = message.translate(state.settings.language);
         draw_text(text, &font, point, state.settings.theme.primary);
     }
     let theme = state.settings.theme;

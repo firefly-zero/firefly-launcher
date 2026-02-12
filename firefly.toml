@@ -6,8 +6,13 @@ launcher = true
 sudo = true
 
 [files]
-font = { path = "eg_6x9.fff", url = "https://fonts.fireflyzero.com/fonts/ascii/eg_6x9.fff", sha256 = "b07e868a74a070efcf4ca65d18839da883d1e273b646d8c54261fadec638c77" }
 _splash = { path = "splash.png" }
+ascii = { path = "ascii.fff", url = "https://fonts.fireflyzero.com/fonts/ascii/eg_6x9.fff", sha256 = "b07e868a74a070efcf4ca65d18839da883d1e273b646d8c54261fadec638c77" }
+iso_8859_1 = { path = "iso_8859_1.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_1/eg_6x9.fff" }
+iso_8859_2 = { path = "iso_8859_2.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_1/eg_6x9.fff" }
+iso_8859_5 = { path = "iso_8859_5.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_5/eg_6x9.fff", sha256 = "7ac2ffb6922980c37391d4a3593d87965ac935d5359fa873691abeee2a72ea" }
+iso_8859_9 = { path = "iso_8859_9.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_9/eg_6x9.fff" }
+iso_8859_13 = { path = "iso_8859_13.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_13/eg_6x9.fff" }
 
 [cheats]
 launch = 1

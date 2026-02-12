@@ -9,7 +9,11 @@ static COLUMNS: &[&str] = &["1p", "2p", "3p", "4p"];
 static FIELDS: &[&str] = &["launches", "installed", "updated"];
 
 pub fn init(state: &mut State) {
-    let items = Box::new([("back", Scene::Info), ("exit", Scene::List)]);
+    let lang = state.settings.language;
+    let items = Box::new([
+        (Message::Back.translate(lang), Scene::Info),
+        (Message::Exit.translate(lang), Scene::List),
+    ]);
     state.button_group = Some(ButtonGroup::new(items));
 
     let app = &mut state.apps[state.pos];
