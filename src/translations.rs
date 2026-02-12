@@ -227,26 +227,25 @@ impl Message {
     }
 
     const fn translate_swedish(&self) -> &'static str {
-        // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
+            Self::AuthorID => "skapare ID",
             Self::AppID => "app ID",
-            Self::AuthorName => "author name",
-            Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::AuthorName => "skaparens namn",
+            Self::AppName => "appnamn",
+            Self::RomSize => "ROM storlek",
+            Self::DataSize => "filstorlek",
 
-            Self::Launches => "launches",
-            Self::Installed => "installed",
-            Self::Updated => "updated",
+            Self::Launches => "startar",
+            Self::Installed => "installerad",
+            Self::Updated => "uppdaterad",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
-            Self::Stats => "stats",
-            Self::Achievements => "achievements",
-            Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
-            Self::Remove => "remove",
+            Self::Back => "backa",
+            Self::Exit => "stäng",
+            Self::Stats => "statistik",
+            Self::Achievements => "utmärkelser",
+            Self::Scoreboards => "topplistor",
+            Self::ViewInCatalog => "visa i katalogen",
+            Self::Remove => "ta bort",
         }
     }
 
