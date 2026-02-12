@@ -87,22 +87,98 @@ impl Message {
 
     const fn translate_french(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_german(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_italian(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_polish(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_russian(&self) -> &'static str {
@@ -130,17 +206,74 @@ impl Message {
 
     const fn translate_spanish(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_swedish(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_turkish(&self) -> &'static str {
         // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
+        }
     }
 
     const fn translate_ukrainian(&self) -> &'static str {
