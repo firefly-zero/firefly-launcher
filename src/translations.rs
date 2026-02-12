@@ -157,26 +157,25 @@ impl Message {
     }
 
     const fn translate_polish(&self) -> &'static str {
-        // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
-            Self::AuthorName => "author name",
-            Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::AuthorID => "ID autora",
+            Self::AppID => "ID aplikacji",
+            Self::AuthorName => "nazwa autora",
+            Self::AppName => "nazwa aplikacji",
+            Self::RomSize => "rozmiar ROM",
+            Self::DataSize => "rozmiar danych",
 
-            Self::Launches => "launches",
-            Self::Installed => "installed",
-            Self::Updated => "updated",
+            Self::Launches => "uruchomienia",
+            Self::Installed => "zainstalowano",
+            Self::Updated => "zaktualizowano",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
-            Self::Stats => "stats",
-            Self::Achievements => "achievements",
-            Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
-            Self::Remove => "remove",
+            Self::Back => "powrót",
+            Self::Exit => "wyjdź",
+            Self::Stats => "statystyki",
+            Self::Achievements => "osiągnięcia",
+            Self::Scoreboards => "tabele wyników",
+            Self::ViewInCatalog => "wyświetl w katalogu",
+            Self::Remove => "usuń",
         }
     }
 
