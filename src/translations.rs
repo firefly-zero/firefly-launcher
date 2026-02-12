@@ -232,8 +232,8 @@ impl Message {
             Self::AppID => "app ID",
             Self::AuthorName => "skaparens namn",
             Self::AppName => "appnamn",
-            Self::RomSize => "ROM storlek",
-            Self::DataSize => "filstorlek",
+            Self::RomSize => "ROM-storlek",
+            Self::DataSize => "datastorlek",
 
             Self::Launches => "startar",
             Self::Installed => "installerad",
