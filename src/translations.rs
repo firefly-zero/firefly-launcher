@@ -63,8 +63,26 @@ impl Message {
     }
 
     const fn translate_dutch(&self) -> &'static str {
-        // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "auteur ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "auteurnaam",
+            Self::AppName => "appnaam",
+            Self::RomSize => "ROM-grootte",
+            Self::DataSize => "gegevensgrootte",
+
+            Self::Launches => "starts",
+            Self::Installed => "geinstalleerd",
+            Self::Updated => "bijgewerkt",
+
+            Self::Back => "terug",
+            Self::Exit => "afsluiten",
+            Self::Stats => "statistieken",
+            Self::Achievements => "prestaties",
+            Self::Scoreboards => "scoreborden",
+            Self::ViewInCatalog => "bekijken in catalogus",
+            Self::Remove => "verwijderen",
+        }
     }
 
     const fn translate_french(&self) -> &'static str {
