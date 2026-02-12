@@ -131,7 +131,25 @@ impl Message {
     }
 
     const fn translate_toki_pona(&self) -> &'static str {
-        // TODO: translate
-        self.translate_english()
+        match self {
+            Self::AuthorID => "jan pali nimi",
+            Self::AppID => "musi nimi",
+            Self::AuthorName => "jan pali",
+            Self::AppName => "musi",
+            Self::RomSize => "musi suli",
+            Self::DataSize => "sona suli",
+
+            Self::Launches => "namba kepeken",
+            Self::Installed => "sin",
+            Self::Updated => "sin sike",
+
+            Self::Back => "monsi",
+            Self::Exit => "tawa",
+            Self::Stats => "sona",
+            Self::Achievements => "sitelen pali",
+            Self::Scoreboards => "nanpa pali",
+            Self::ViewInCatalog => "lukin e lipu",
+            Self::Remove => "weka",
+        }
     }
 }
