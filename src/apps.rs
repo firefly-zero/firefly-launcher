@@ -125,6 +125,9 @@ pub fn refresh_metas() -> Vec<u8> {
         let author_path = format!("roms/{author_dir}");
         let app_dirs = sudo::DirBuf::list_dirs(&author_path);
         for app_dir in app_dirs.iter() {
+            if author_dir == "sys" && app_dir == "remover" {
+                continue;
+            }
             let meta_path = format!("{author_path}/{app_dir}/_meta");
             let meta_size = sudo::get_file_size(&meta_path);
             if meta_size != 0 {
