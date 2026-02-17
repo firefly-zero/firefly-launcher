@@ -18,7 +18,6 @@ pub struct State {
     /// The currently selected app index.
     pub pos: usize,
     pub board_pos: usize,
-    pub dialog_yes: bool,
     /// The index of the firs app on the screen.
     pub top_pos: usize,
     pub button_group: Option<ButtonGroup>,
@@ -49,7 +48,6 @@ pub fn init_state() {
         is_online,
         pos: 0,
         board_pos: 0,
-        dialog_yes: false,
         top_pos: 0,
         button_group: None,
         input: InputManager::new(),

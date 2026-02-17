@@ -10,6 +10,7 @@
     clippy::allow_attributes
 )]
 #![expect(
+    clippy::missing_const_for_fn,
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
     clippy::collapsible_if,
