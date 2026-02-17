@@ -111,24 +111,24 @@ impl Message {
 
     const fn translate_german(&self) -> &'static str {
         match self {
-            Self::AuthorID => "Autor ID",
-            Self::AppID => "App ID",
-            Self::AuthorName => "Autorname",
-            Self::AppName => "Appname",
-            Self::RomSize => "ROM Größe",
-            Self::DataSize => "Datengröße",
+            Self::AuthorID => "autor ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "autorname",
+            Self::AppName => "appname",
+            Self::RomSize => "ROM größe",
+            Self::DataSize => "datengröße",
 
             Self::Launches => "startet",
             Self::Installed => "installiert",
             Self::Updated => "aktualisiert",
 
-            Self::Back => "Zurück",
-            Self::Exit => "Beenden",
-            Self::Stats => "Statistik",
-            Self::Achievements => "Errungenschaften",
-            Self::Scoreboards => "Punktetafel",
-            Self::ViewInCatalog => "Im Katalog anzeigen",
-            Self::Remove => "Entfernen",
+            Self::Back => "zurück",
+            Self::Exit => "beenden",
+            Self::Stats => "statistik",
+            Self::Achievements => "errungenschaften",
+            Self::Scoreboards => "punktetafel",
+            Self::ViewInCatalog => "im Katalog anzeigen",
+            Self::Remove => "entfernen",
         }
     }
 
