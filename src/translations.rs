@@ -30,6 +30,7 @@ impl Message {
             Language::German => self.translate_german(),
             Language::Italian => self.translate_italian(),
             Language::Polish => self.translate_polish(),
+            Language::Romanian => self.translate_romanian(),
             Language::Russian => self.translate_russian(),
             Language::Spanish => self.translate_spanish(),
             Language::Swedish => self.translate_swedish(),
@@ -176,6 +177,30 @@ impl Message {
             Self::Scoreboards => "tabele wyników",
             Self::ViewInCatalog => "wyświetl w katalogu",
             Self::Remove => "usuń",
+        }
+    }
+
+    const fn translate_romanian(&self) -> &'static str {
+        // TODO: translate
+        match self {
+            Self::AuthorID => "author ID",
+            Self::AppID => "app ID",
+            Self::AuthorName => "author name",
+            Self::AppName => "app name",
+            Self::RomSize => "ROM size",
+            Self::DataSize => "data size",
+
+            Self::Launches => "launches",
+            Self::Installed => "installed",
+            Self::Updated => "updated",
+
+            Self::Back => "back",
+            Self::Exit => "exit",
+            Self::Stats => "stats",
+            Self::Achievements => "achievements",
+            Self::Scoreboards => "scoreboards",
+            Self::ViewInCatalog => "view in catalog",
+            Self::Remove => "remove",
         }
     }
 
