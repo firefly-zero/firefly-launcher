@@ -87,26 +87,25 @@ impl Message {
     }
 
     const fn translate_french(&self) -> &'static str {
-        // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
-            Self::AuthorName => "author name",
-            Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
-
-            Self::Launches => "launches",
-            Self::Installed => "installed",
-            Self::Updated => "updated",
-
-            Self::Back => "back",
-            Self::Exit => "exit",
-            Self::Stats => "stats",
-            Self::Achievements => "achievements",
-            Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
-            Self::Remove => "remove",
+            Self::AuthorID => "ID de l’auteur",
+            Self::AppID => "ID de l’application",
+            Self::AuthorName => "nom de l’auteur",
+            Self::AppName => "nom de l’application",
+            Self::RomSize => "taille de la ROM",
+            Self::DataSize => "taille des données",
+        
+            Self::Launches => "lancements",
+            Self::Installed => "installé",
+            Self::Updated => "mis à jour",
+        
+            Self::Back => "retour",
+            Self::Exit => "quitter",
+            Self::Stats => "statistiques",
+            Self::Achievements => "succès",
+            Self::Scoreboards => "classements",
+            Self::ViewInCatalog => "voir dans le catalogue",
+            Self::Remove => "supprimer",
         }
     }
 
@@ -183,24 +182,24 @@ impl Message {
     const fn translate_romanian(&self) -> &'static str {
         // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
-            Self::AuthorName => "author name",
-            Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::AuthorID => "ID-ul autorului",
+            Self::AppID => "ID-ul aplicației",
+            Self::AuthorName => "numele autorului",
+            Self::AppName => "numele aplicației",
+            Self::RomSize => "dimensiune ROM",
+            Self::DataSize => "dimensiunea datei",
 
-            Self::Launches => "launches",
-            Self::Installed => "installed",
-            Self::Updated => "updated",
+            Self::Launches => "lansări",
+            Self::Installed => "instalat",
+            Self::Updated => "actualizat",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
-            Self::Stats => "stats",
-            Self::Achievements => "achievements",
-            Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
-            Self::Remove => "remove",
+            Self::Back => "înapoi",
+            Self::Exit => "ieșire",
+            Self::Stats => "statistici",
+            Self::Achievements => "realizări",
+            Self::Scoreboards => "scoruri",
+            Self::ViewInCatalog => "vezi în catalog",
+            Self::Remove => "elimină",
         }
     }
 
