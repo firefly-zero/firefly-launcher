@@ -111,6 +111,7 @@ fn draw_splash(splash_path: &str) {
 fn draw_apps(state: &State) {
     let font = state.font.as_font();
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
+    let theme = state.settings.theme;
     for (i, app) in apps.enumerate() {
         let mut point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
         let selected = state.top_pos + i == state.pos;
@@ -118,7 +119,7 @@ fn draw_apps(state: &State) {
             point.x += 1;
             point.y += 1;
         }
-        draw_text(&app.name, &font, point, state.settings.theme.primary);
+        draw_text(&app.name, &font, point, theme.primary);
         // Don't show the author name
         // if the app name takes more than half of the screen.
         if app.name.len() > 19 {
@@ -129,7 +130,11 @@ fn draw_apps(state: &State) {
             continue;
         }
         point.x += WIDTH / 2;
-        let color = state.settings.theme.secondary;
+        let color = if state.settings.contrast {
+            theme.accent
+        } else {
+            theme.secondary
+        };
         draw_text(&app.author_name, &font, point, color);
     }
 }

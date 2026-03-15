@@ -42,21 +42,26 @@ pub fn render(state: &State) {
         draw_text(text, &font, point, theme.primary);
     }
     let app = &state.apps[state.pos];
+    let color = if state.settings.contrast {
+        theme.primary
+    } else {
+        theme.accent
+    };
     if let Some(stats) = &app.stats {
         for (n, i) in stats.launches.iter().zip(0..) {
-            render_info(&font, &theme, 2, i, &format!("{n}"));
+            render_info(&font, color, 2, i, &format!("{n}"));
         }
         let installed_on = format_date(stats.installed_on);
-        render_info(&font, &theme, 3, 0, &installed_on);
+        render_info(&font, color, 3, 0, &installed_on);
         let updated_on = format_date(stats.updated_on);
-        render_info(&font, &theme, 4, 0, &updated_on);
+        render_info(&font, color, 4, 0, &updated_on);
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(&font, &state.settings.theme);
     }
 }
 
-fn render_info(font: &Font<'_>, theme: &Theme, i: i32, j: i32, t: &str) {
+fn render_info(font: &Font<'_>, color: Color, i: i32, j: i32, t: &str) {
     let point = Point::new(100 + j * 30, LINE_HEIGHT * i);
-    draw_text(t, font, point, theme.accent);
+    draw_text(t, font, point, color);
 }

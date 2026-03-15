@@ -81,24 +81,29 @@ pub fn render(state: &State) {
     }
     let theme = state.settings.theme;
     let app = &state.apps[state.pos];
-    render_info(&font, &theme, 1, &app.author_id);
-    render_info(&font, &theme, 2, &app.id);
-    render_info(&font, &theme, 3, &app.author_name);
-    render_info(&font, &theme, 4, &app.name);
+    let color = if state.settings.contrast {
+        theme.primary
+    } else {
+        theme.accent
+    };
+    render_info(&font, color, 1, &app.author_id);
+    render_info(&font, color, 2, &app.id);
+    render_info(&font, color, 3, &app.author_name);
+    render_info(&font, color, 4, &app.name);
     if let Some(size) = app.rom_size {
-        render_info(&font, &theme, 5, &format_size(size));
+        render_info(&font, color, 5, &format_size(size));
     }
     if let Some(size) = app.data_size {
-        render_info(&font, &theme, 6, &format_size(size));
+        render_info(&font, color, 6, &format_size(size));
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(&font, &state.settings.theme);
     }
 }
 
-fn render_info(font: &Font<'_>, theme: &Theme, i: i32, t: &str) {
+fn render_info(font: &Font<'_>, color: Color, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
-    draw_text(t, font, point, theme.accent);
+    draw_text(t, font, point, color);
 }
 
 fn format_size(size: usize) -> alloc::string::String {
