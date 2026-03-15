@@ -21,7 +21,7 @@ pub fn draw_cursor(y: i32, has_scroll: bool, pressed: bool, theme: &Theme) {
     }
 
     let style = Style {
-        fill_color: theme.accent,
+        fill_color: theme.bg,
         stroke_color: theme.primary,
         stroke_width: 1,
     };
