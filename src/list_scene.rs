@@ -112,7 +112,12 @@ fn draw_apps(state: &State) {
     let font = state.font.as_font();
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     for (i, app) in apps.enumerate() {
-        let point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
+        let mut point = Point::new(6, 9 + i as i32 * LINE_HEIGHT);
+        let selected = state.top_pos + i == state.pos;
+        if selected && state.input.pressed() {
+            point.x += 1;
+            point.y += 1;
+        }
         draw_text(&app.name, &font, point, state.settings.theme.primary);
         // Don't show the author name
         // if the app name takes more than half of the screen.
@@ -123,7 +128,7 @@ fn draw_apps(state: &State) {
         if app.author_name.len() > 16 {
             continue;
         }
-        let point = Point::new(WIDTH / 2 + 6, 9 + i as i32 * LINE_HEIGHT);
+        point.x += WIDTH / 2;
         let color = state.settings.theme.secondary;
         draw_text(&app.author_name, &font, point, color);
     }

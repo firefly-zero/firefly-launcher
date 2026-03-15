@@ -39,12 +39,15 @@ impl ButtonGroup {
             draw_cursor(y, false, pressed, theme);
         }
         for ((item, _), i) in self.items.iter().zip(0..) {
-            render_button(font, theme, n - i, item);
+            let selected = i == self.cursor as i32;
+            let i = n - i;
+            let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 1;
+            let mut point = Point::new(6, y);
+            if selected && pressed {
+                point.x += 1;
+                point.y += 1;
+            }
+            draw_text(item, font, point, theme.primary);
         }
     }
-}
-
-fn render_button(font: &Font<'_>, theme: &Theme, i: i32, t: &str) {
-    let point = Point::new(6, HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 1);
-    draw_text(t, font, point, theme.primary);
 }

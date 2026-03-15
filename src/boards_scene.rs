@@ -88,14 +88,16 @@ pub fn render(state: &State) {
         return;
     };
     let y = LINE_HEIGHT * (state.board_pos as i32 + 1) - 7;
-    draw_cursor(y, false, state.input.pressed(), &state.settings.theme);
+    let pressed = state.input.pressed();
+    draw_cursor(y, false, pressed, &state.settings.theme);
     let theme = state.settings.theme;
-    for (board, i) in boards.iter().zip(1..) {
-        render_board(&font, &theme, i, board);
+    for (board, i) in boards.iter().zip(0..) {
+        let selected = i == state.board_pos as i32;
+        let mut point = Point::new(6, LINE_HEIGHT * (i + 1));
+        if selected && pressed {
+            point.x += 1;
+            point.y += 1;
+        }
+        draw_text(&board.name, &font, point, theme.primary);
     }
-}
-
-fn render_board(font: &Font<'_>, theme: &Theme, i: i32, b: &BoardInfo) {
-    let point = Point::new(6, LINE_HEIGHT * i);
-    draw_text(&b.name, font, point, theme.primary);
 }
