@@ -38,7 +38,6 @@ mod translations;
 mod utils;
 
 use apps::*;
-use badges_scene::BadgeInfo;
 use boards_scene::BoardInfo;
 use button_group::ButtonGroup;
 use components::*;

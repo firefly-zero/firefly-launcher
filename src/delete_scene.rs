@@ -1,4 +1,4 @@
-use crate::*;
+use crate::State;
 use firefly_rust::sudo;
 
 pub fn init(state: &State) {

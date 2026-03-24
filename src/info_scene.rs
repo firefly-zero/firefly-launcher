@@ -1,7 +1,6 @@
 use crate::*;
 use alloc::format;
 use alloc::vec::Vec;
-use badges_scene::try_load_badges;
 use boards_scene::try_load_boards;
 use firefly_rust::*;
 
@@ -28,17 +27,14 @@ pub fn init(state: &mut State) {
     }
     app.try_load_stats();
     try_load_boards(app);
-    try_load_badges(app);
 
     let lang = state.settings.language;
     let mut items = Vec::new();
-    if app.stats.is_some() {
+    if let Some(stats) = app.stats.as_ref() {
         items.push((Message::Stats.translate(lang), Scene::Stats));
-    }
-    if let Some(badges) = &app.badges
-        && !badges.is_empty()
-    {
-        items.push((Message::Achievements.translate(lang), Scene::Badges));
+        if !stats.badges.is_empty() {
+            items.push((Message::Achievements.translate(lang), Scene::Badges));
+        }
     }
     if let Some(boards) = &app.boards
         && !boards.is_empty()

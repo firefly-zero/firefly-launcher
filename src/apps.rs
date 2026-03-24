@@ -22,7 +22,6 @@ pub struct App {
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
-    pub badges: Option<Vec<BadgeInfo>>,
     pub boards: Option<Vec<BoardInfo>>,
     pub scores: Option<Vec<ScoreInfo>>,
 }
@@ -96,7 +95,6 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
             rom_size: None,
             data_size: None,
             stats: None,
-            badges: None,
             boards: None,
             scores: None,
         });
