@@ -1,6 +1,7 @@
 #![allow(static_mut_refs)]
 
 use crate::*;
+use alloc::vec;
 use alloc::vec::Vec;
 use core::cell::OnceCell;
 use firefly_rust::*;
@@ -40,7 +41,7 @@ pub fn init_state() {
     };
     let peers = firefly_rust::get_peers();
     let is_online = peers.len() > 1;
-    let state = State {
+    let mut state = State {
         scene: Scene::List,
         settings,
         font,
@@ -54,7 +55,29 @@ pub fn init_state() {
         shift: 0,
         splash: None,
     };
+
+    // Load previously saved state, if any.
+    // Currently, the dump only stores the positions in the list.
+    let size = get_file_size("state");
+    if size != 0 {
+        let mut raw = vec![0; size];
+        load_file("state", &mut raw);
+        if raw.len() == 12 {
+            let n_apps = parse_usize(&raw[..4]);
+            // If an app is installed or removed since the dump,
+            // don't restore the state, stay at the top of the list.
+            if n_apps == state.apps.len() {
+                state.pos = parse_usize(&raw[4..8]);
+                state.top_pos = parse_usize(&raw[8..12]);
+            }
+        }
+    }
+
     unsafe { STATE.set(state) }.ok().unwrap();
+}
+
+fn parse_usize(raw: &[u8]) -> usize {
+    usize::from_le_bytes((raw).try_into().unwrap())
 }
 
 impl State {

@@ -1,14 +1,13 @@
 use crate::scroll::ScrollBar;
 use crate::*;
+use alloc::vec::Vec;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
 pub const PER_SCREEN: usize = 12;
 
-pub const fn init(_state: &mut State) {
-    // state.apps = read_apps(state.is_online);
-}
+pub const fn init(_state: &mut State) {}
 
 pub fn update(state: &mut State) {
     let input = state.input.get();
@@ -61,6 +60,14 @@ pub fn update(state: &mut State) {
             let Some(app) = state.apps.get(state.pos) else {
                 return;
             };
+
+            // Save in FS some of the launcher state (list positions).
+            let mut raw = Vec::with_capacity(12);
+            raw.extend_from_slice(&state.apps.len().to_le_bytes());
+            raw.extend_from_slice(&state.pos.to_le_bytes());
+            raw.extend_from_slice(&state.top_pos.to_le_bytes());
+            dump_file("state", &raw);
+
             let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
             state.splash = Some(splash_path);
             sudo::run_app(&app.author_id, &app.id);
