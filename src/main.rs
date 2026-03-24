@@ -37,6 +37,7 @@ mod stats_scene;
 mod translations;
 mod utils;
 
+use alloc::vec::Vec;
 use apps::*;
 use boards_scene::BoardInfo;
 use button_group::ButtonGroup;
@@ -70,6 +71,21 @@ extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
     let splash = splash.as_image();
     draw_image(&splash, Point::MIN);
+}
+
+#[unsafe(no_mangle)]
+extern "C" fn before_exit() {
+    let state = get_state();
+    dump_state(state);
+}
+
+/// Save in FS some of the launcher state (list positions).
+fn dump_state(state: &State) {
+    let mut raw = Vec::with_capacity(12);
+    raw.extend_from_slice(&state.apps.len().to_le_bytes());
+    raw.extend_from_slice(&state.pos.to_le_bytes());
+    raw.extend_from_slice(&state.top_pos.to_le_bytes());
+    dump_file("state", &raw);
 }
 
 #[unsafe(no_mangle)]
