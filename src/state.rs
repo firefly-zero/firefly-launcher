@@ -18,7 +18,6 @@ pub struct State {
     pub is_online: bool,
     /// The currently selected app index.
     pub pos: usize,
-    pub board_pos: usize,
     /// The index of the firs app on the screen.
     pub top_pos: usize,
     pub button_group: Option<ButtonGroup>,
@@ -48,7 +47,6 @@ pub fn init_state() {
         apps: read_apps(is_online),
         is_online,
         pos: 0,
-        board_pos: 0,
         top_pos: 0,
         button_group: None,
         input: InputManager::new(),
@@ -92,11 +90,18 @@ impl State {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),
             Scene::Stats => stats_scene::init(self),
-            Scene::Badges => badges_scene::init(self),
-            Scene::Boards => boards_scene::init(self),
-            Scene::Scores(i) => scores_scene::init(self, i),
             Scene::Catalog => catalog_scene::init(self),
-            Scene::ClearData => delete_scene::init(self),
+            Scene::Delegate(author_id, app_id) => delegate(self, author_id, app_id),
         }
     }
+}
+
+/// Delegate handling of the focused app to the given app;
+pub fn delegate(state: &State, author_id: &str, app_id: &str) {
+    let app = &state.apps[state.pos];
+    let full_id = alloc::format!("{}.{}", app.author_id, app.id);
+    let full_id = full_id.as_bytes();
+    let target_path = alloc::format!("data/{author_id}/{app_id}/etc/target");
+    sudo::dump_file(&target_path, full_id);
+    sudo::run_app(author_id, app_id);
 }

@@ -22,8 +22,6 @@ pub struct App {
     pub rom_size: Option<usize>,
     pub data_size: Option<usize>,
     pub stats: Option<Stats>,
-    pub boards: Option<Vec<BoardInfo>>,
-    pub scores: Option<Vec<ScoreInfo>>,
 }
 
 impl Gt for App {
@@ -95,8 +93,6 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
             rom_size: None,
             data_size: None,
             stats: None,
-            boards: None,
-            scores: None,
         });
     }
     bubble_sort(&mut apps);

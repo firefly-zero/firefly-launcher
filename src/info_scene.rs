@@ -1,7 +1,6 @@
 use crate::*;
 use alloc::format;
 use alloc::vec::Vec;
-use boards_scene::try_load_boards;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
@@ -26,24 +25,24 @@ pub fn init(state: &mut State) {
         app.data_size = Some(get_dir_size(&data_path));
     }
     app.try_load_stats();
-    try_load_boards(app);
 
     let lang = state.settings.language;
     let mut items = Vec::new();
     if let Some(stats) = app.stats.as_ref() {
         items.push((Message::Stats.translate(lang), Scene::Stats));
         if !stats.badges.is_empty() {
-            items.push((Message::Achievements.translate(lang), Scene::Badges));
+            let msg = Message::Achievements.translate(lang);
+            items.push((msg, Scene::Delegate("sys", "badges")));
         }
-    }
-    if let Some(boards) = &app.boards
-        && !boards.is_empty()
-    {
-        items.push((Message::Scoreboards.translate(lang), Scene::Boards));
+        if !stats.scores.is_empty() {
+            let msg = Message::Scoreboards.translate(lang);
+            items.push((msg, Scene::Delegate("sys", "boards")));
+        }
     }
     items.push((Message::ViewInCatalog.translate(lang), Scene::Catalog));
     if app.author_id != "sys" {
-        items.push((Message::Remove.translate(lang), Scene::ClearData));
+        let msg = Message::Remove.translate(lang);
+        items.push((msg, Scene::Delegate("sys", "remover")));
     }
     items.push((Message::Back.translate(lang), Scene::List));
     state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
