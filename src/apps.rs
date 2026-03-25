@@ -119,7 +119,7 @@ pub fn refresh_metas() -> Vec<u8> {
         let author_path = format!("roms/{author_dir}");
         let app_dirs = sudo::DirBuf::list_dirs(&author_path);
         for app_dir in app_dirs.iter() {
-            if author_dir == "sys" && app_dir == "remover" {
+            if hidden_app(author_dir, app_dir) {
                 continue;
             }
             let meta_path = format!("{author_path}/{app_dir}/_meta");
@@ -133,4 +133,8 @@ pub fn refresh_metas() -> Vec<u8> {
     }
     dump_file("metas", &joined);
     joined
+}
+
+fn hidden_app(author: &str, app: &str) -> bool {
+    author == "sys" && matches!(app, "remover" | "badges" | "boards")
 }
