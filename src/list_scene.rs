@@ -1,5 +1,6 @@
 use crate::scroll::ScrollBar;
 use crate::*;
+use alloc::vec;
 use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
@@ -100,7 +101,7 @@ fn draw_splash(splash_path: &str) {
     if let Some(splash) = splash {
         draw_image(&splash.as_image(), Point::MIN);
     } else {
-        let mut buf = alloc::boxed::Box::new([0u8; 9607]);
+        let mut buf = vec![0u8; 19204].into_boxed_slice();
         let splash = load_file("_splash", &mut buf[..]);
         draw_image(&splash.as_image(), Point::MIN);
     }
