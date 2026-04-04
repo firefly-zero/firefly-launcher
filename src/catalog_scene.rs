@@ -44,7 +44,7 @@ pub fn render(state: &State) {
 }
 
 fn draw_centered_text(font: &Font<'_>, theme: &Theme, text: &str, y: i32) {
-    let x = (WIDTH - font.line_width(text) as i32) / 2;
+    let x = (WIDTH - font.line_width_ascii(text) as i32) / 2;
     let point = Point::new(x, y);
     draw_text(text, font, point, theme.primary);
 }

@@ -40,18 +40,18 @@ dependencies = [
 
 [[package]]
 name = "firefly-rust"
-version = "0.12.0"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7a53467e1820accdcc4cf0496f305f4d6203f01a970464febb29996dd800ae4"
+checksum = "c99a781c0a6e84cdf93cc10c8633fb6d1b064a56ff145326aa1ec97796b696a4"
 dependencies = [
  "talc",
 ]
 
 [[package]]
 name = "firefly-types"
-version = "0.8.1"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e9d24df2e684ea2ac8338bd0a7131121d8c73e208523b8695b09646b76adc40"
+checksum = "beadb1cd88c1ffb7680b96aed9fbe6526700797687bd27d86c925c12a89f4b6a"
 dependencies = [
  "postcard",
  "serde",
