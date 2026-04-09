@@ -14,6 +14,7 @@ pub enum Message {
 
     Back,
     Exit,
+    Manual,
     Stats,
     Achievements,
     Scoreboards,
@@ -55,6 +56,7 @@ impl Message {
 
             Self::Back => "back",
             Self::Exit => "exit",
+            Self::Manual => "manual",
             Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
@@ -78,6 +80,7 @@ impl Message {
 
             Self::Back => "terug",
             Self::Exit => "afsluiten",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statistieken",
             Self::Achievements => "prestaties",
             Self::Scoreboards => "scoreborden",
@@ -94,13 +97,14 @@ impl Message {
             Self::AppName => "nom de l’application",
             Self::RomSize => "taille de la ROM",
             Self::DataSize => "taille des données",
-        
+
             Self::Launches => "lancements",
             Self::Installed => "installé",
             Self::Updated => "mis à jour",
-        
+
             Self::Back => "retour",
             Self::Exit => "quitter",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statistiques",
             Self::Achievements => "succès",
             Self::Scoreboards => "classements",
@@ -124,6 +128,7 @@ impl Message {
 
             Self::Back => "zurück",
             Self::Exit => "beenden",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statistik",
             Self::Achievements => "errungenschaften",
             Self::Scoreboards => "punktetafel",
@@ -148,6 +153,7 @@ impl Message {
 
             Self::Back => "back",
             Self::Exit => "exit",
+            Self::Manual => "manual", // TODO
             Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
@@ -171,6 +177,7 @@ impl Message {
 
             Self::Back => "powrót",
             Self::Exit => "wyjdź",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statystyki",
             Self::Achievements => "osiągnięcia",
             Self::Scoreboards => "tabele wyników",
@@ -180,7 +187,6 @@ impl Message {
     }
 
     const fn translate_romanian(&self) -> &'static str {
-        // TODO: translate
         match self {
             Self::AuthorID => "ID-ul autorului",
             Self::AppID => "ID-ul aplicației",
@@ -195,6 +201,7 @@ impl Message {
 
             Self::Back => "înapoi",
             Self::Exit => "ieșire",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statistici",
             Self::Achievements => "realizări",
             Self::Scoreboards => "scoruri",
@@ -218,6 +225,7 @@ impl Message {
 
             Self::Back => "назад",
             Self::Exit => "выйти",
+            Self::Manual => "руководство пользователя",
             Self::Stats => "статистика",
             Self::Achievements => "достижения",
             Self::Scoreboards => "лучшие результаты",
@@ -242,6 +250,7 @@ impl Message {
 
             Self::Back => "back",
             Self::Exit => "exit",
+            Self::Manual => "manual", // TODO
             Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
@@ -265,6 +274,7 @@ impl Message {
 
             Self::Back => "backa",
             Self::Exit => "stäng",
+            Self::Manual => "manual", // TODO
             Self::Stats => "statistik",
             Self::Achievements => "utmärkelser",
             Self::Scoreboards => "topplistor",
@@ -289,6 +299,7 @@ impl Message {
 
             Self::Back => "back",
             Self::Exit => "exit",
+            Self::Manual => "manual", // TODO
             Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
@@ -312,6 +323,7 @@ impl Message {
 
             Self::Back => "тому",
             Self::Exit => "вийти",
+            Self::Manual => "manual", // TODO
             Self::Stats => "статистика",
             Self::Achievements => "досягнення",
             Self::Scoreboards => "найкращі результати",
@@ -335,6 +347,7 @@ impl Message {
 
             Self::Back => "monsi",
             Self::Exit => "tawa",
+            Self::Manual => "lipu",
             Self::Stats => "sona",
             Self::Achievements => "sitelen pali",
             Self::Scoreboards => "nanpa pali",
