@@ -48,10 +48,14 @@ static mut LOADING: bool = true;
 
 #[derive(Clone, Copy)]
 pub enum Scene {
+    /// List all installed apps.
     List,
+    /// Show the app context menu with basic app info and action buttons.
     Info,
     Stats,
+    /// Show QR code with a link to the app in catalog.fireflyzero.com.
     Catalog,
+    /// Delegate handling of the focused app to the given app.
     Delegate(&'static str, &'static str),
 }
 

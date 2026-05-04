@@ -96,8 +96,12 @@ impl State {
     }
 }
 
-/// Delegate handling of the focused app to the given app;
+/// Delegate handling of the focused app to the given app.
 pub fn delegate(state: &State, author_id: &str, app_id: &str) {
+    let splash_path = alloc::format!("roms/{author_id}/{app_id}/_splash");
+    if let Some(splash) = sudo::load_file_buf(&splash_path) {
+        draw_image(&splash.as_image(), Point::MIN);
+    }
     let app = &state.apps[state.pos];
     let full_id = alloc::format!("{}.{}", app.author_id, app.id);
     let full_id = full_id.as_bytes();
