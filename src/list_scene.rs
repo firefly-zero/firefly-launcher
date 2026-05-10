@@ -52,7 +52,7 @@ pub fn update(state: &mut State) {
             if state.pos == state.top_pos + PER_SCREEN {
                 state.pos = usize::min(state.pos + PER_SCREEN, state.apps.len() - 1);
             } else {
-                state.pos = state.top_pos + PER_SCREEN;
+                state.pos = (state.top_pos + PER_SCREEN).min(state.apps.len() - 1);
             }
             play_note(audio::Freq::A4);
         }
