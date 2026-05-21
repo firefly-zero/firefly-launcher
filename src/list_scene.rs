@@ -10,24 +10,8 @@ pub const PER_SCREEN: usize = 12;
 pub const fn init(_state: &mut State) {}
 
 pub fn update(state: &mut State) {
-    let input = state.input.get();
-    // Shift and stutter the selection when the first or the last app
-    // is selected to indicate that there are no more items on the list.
-    let held_for = state.input.held_for;
-    state.shift = if held_for < 30 || held_for % 30 <= 5 {
-        0
-    } else if (input == Input::Down || input == Input::Right) && state.pos + 1 == state.apps.len() {
-        1
-    } else if (input == Input::Up || input == Input::Left) && state.pos == 0 {
-        -1
-    } else {
-        0
-    };
-    // Control the scroll speed when the up.down button is held.
-    if held_for > 30 && !held_for.is_multiple_of(4) {
-        return;
-    }
-
+    let hitting_wall = state.pos == 0 || state.pos + 1 == state.apps.len();
+    state.shift = i32::from(state.input.jitter(hitting_wall));
     match state.input.get() {
         Input::Down => {
             let apps_count = state.apps.len();

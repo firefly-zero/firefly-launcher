@@ -85,7 +85,7 @@ impl State {
 
     pub fn transition_to(&mut self, scene: Scene) {
         self.scene = scene;
-        self.input.dirty = true;
+        // self.input.dirty = true;
         match self.scene {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),

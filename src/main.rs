@@ -23,7 +23,6 @@ mod button_group;
 mod catalog_scene;
 mod components;
 mod info_scene;
-mod input;
 mod list_scene;
 mod scroll;
 mod state;
@@ -36,7 +35,7 @@ use apps::*;
 use button_group::ButtonGroup;
 use components::*;
 use firefly_rust::*;
-use input::{Input, InputManager};
+use firefly_ui::{Input, InputManager};
 use state::*;
 use translations::Message;
 use utils::*;
@@ -127,7 +126,7 @@ extern "C" fn render() {
     // if !state.input.dirty {
     //     return;
     // }
-    state.input.dirty = false;
+    // state.input.dirty = false;
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
