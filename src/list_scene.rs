@@ -2,6 +2,7 @@ use crate::scroll::ScrollBar;
 use crate::*;
 use alloc::vec;
 use firefly_rust::*;
+use firefly_sudo::sudo;
 
 const LINE_HEIGHT: i32 = 12;
 /// How many apps fit on the same page
@@ -83,17 +84,16 @@ pub fn render(state: &State) {
 fn draw_splash(splash_path: &str) {
     let splash = sudo::load_file_buf(splash_path);
     if let Some(splash) = splash {
-        draw_image(&splash.as_image(), Point::MIN);
+        draw_image(&splash.into_image(), Point::MIN);
     } else {
         let mut buf = vec![0u8; 19204].into_boxed_slice();
         let splash = load_file("_splash", &mut buf[..]);
-        draw_image(&splash.as_image(), Point::MIN);
+        draw_image(&splash.into_image(), Point::MIN);
     }
 }
 
 /// Render the list of installed apps.
 fn draw_apps(state: &State) {
-    let font = state.font.as_font();
     let apps = state.apps.iter().skip(state.top_pos).take(PER_SCREEN + 1);
     let theme = state.settings.theme;
     for (i, app) in apps.enumerate() {
@@ -103,7 +103,7 @@ fn draw_apps(state: &State) {
             point.x += 1;
             point.y += 1;
         }
-        draw_text(&app.name, &font, point, theme.primary);
+        draw_text(&app.name, &state.font, point, theme.primary);
         // Don't show the author name
         // if the app name takes more than half of the screen.
         if app.name.len() > 19 {
@@ -119,7 +119,7 @@ fn draw_apps(state: &State) {
         } else {
             theme.secondary
         };
-        draw_text(&app.author_name, &font, point, color);
+        draw_text(&app.author_name, &state.font, point, color);
     }
 }
 
@@ -146,10 +146,9 @@ fn draw_online(state: &State) {
 /// Shouldn't be reachable on a normal installation (but can be hit on dev
 /// environments) because we pre-install sys apps and don't let them be removed.
 fn render_empty(state: &State) {
-    let font = state.font.as_font();
     let point = Point::new(62, HEIGHT / 2 - LINE_HEIGHT / 2);
     let color = state.settings.theme.primary;
-    draw_text("No apps installed", &font, point, color);
+    draw_text("No apps installed", &state.font, point, color);
 }
 
 fn play_note(f: audio::Freq) {

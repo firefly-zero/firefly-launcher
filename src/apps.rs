@@ -3,6 +3,7 @@ use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use alloc::{format, vec};
 use firefly_rust::*;
+use firefly_sudo::sudo;
 use firefly_types::{Encode, Meta, Stats};
 
 pub struct App {
@@ -42,7 +43,7 @@ impl App {
         let Some(raw) = sudo::load_file_buf(&stats_path) else {
             return;
         };
-        let Ok(stats) = firefly_types::Stats::decode(raw.data()) else {
+        let Ok(stats) = firefly_types::Stats::decode(&raw.into_bytes()) else {
             return;
         };
         self.stats = Some(stats);

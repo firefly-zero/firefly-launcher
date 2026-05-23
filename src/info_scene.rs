@@ -2,6 +2,7 @@ use crate::*;
 use alloc::format;
 use alloc::vec::Vec;
 use firefly_rust::*;
+use firefly_sudo::sudo;
 
 const LINE_HEIGHT: i32 = 12;
 
@@ -73,11 +74,11 @@ fn get_dir_size(dir_path: &str) -> usize {
 
 pub fn render(state: &State) {
     clear_screen(state.settings.theme.bg);
-    let font = state.font.as_font();
+    let font = &state.font;
     for (message, i) in FIELDS.iter().zip(1..) {
         let point = Point::new(6, LINE_HEIGHT * i);
         let text = message.translate(state.settings.language);
-        draw_text(text, &font, point, state.settings.theme.primary);
+        draw_text(text, font, point, state.settings.theme.primary);
     }
     let theme = state.settings.theme;
     let app = &state.apps[state.pos];
@@ -86,22 +87,22 @@ pub fn render(state: &State) {
     } else {
         theme.accent
     };
-    render_info(&font, color, 1, &app.author_id);
-    render_info(&font, color, 2, &app.id);
-    render_info(&font, color, 3, &app.author_name);
-    render_info(&font, color, 4, &app.name);
+    render_info(font, color, 1, &app.author_id);
+    render_info(font, color, 2, &app.id);
+    render_info(font, color, 3, &app.author_name);
+    render_info(font, color, 4, &app.name);
     if let Some(size) = app.rom_size {
-        render_info(&font, color, 5, &format_size(size));
+        render_info(font, color, 5, &format_size(size));
     }
     if let Some(size) = app.data_size {
-        render_info(&font, color, 6, &format_size(size));
+        render_info(font, color, 6, &format_size(size));
     }
     if let Some(button_group) = &state.button_group {
-        button_group.render(&font, &state.settings.theme);
+        button_group.render(font, &state.settings.theme);
     }
 }
 
-fn render_info(font: &Font<'_>, color: Color, i: i32, t: &str) {
+fn render_info(font: &FontBuf, color: Color, i: i32, t: &str) {
     let point = Point::new(100, LINE_HEIGHT * i);
     draw_text(t, font, point, color);
 }

@@ -29,7 +29,7 @@ impl ButtonGroup {
         None
     }
 
-    pub fn render(&self, font: &Font<'_>, theme: &Theme) {
+    pub fn render(&self, font: &FontBuf, theme: &Theme) {
         let buttons = read_buttons(Peer::COMBINED);
         let pressed = buttons.s || buttons.e;
         let n = self.items.len() as i32;

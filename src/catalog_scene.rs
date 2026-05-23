@@ -23,11 +23,11 @@ pub fn update(state: &mut State) {
 
 pub fn render(state: &State) {
     clear_screen(state.settings.theme.bg);
-    let font = state.font.as_font();
+    let font = &state.font;
     let theme = state.settings.theme;
 
     if let Some(button_group) = &state.button_group {
-        button_group.render(&font, &theme);
+        button_group.render(font, &theme);
     }
 
     let app = &state.apps[state.pos];
@@ -36,14 +36,14 @@ pub fn render(state: &State) {
     draw_qr(&url, point, Color::Black, Color::White);
 
     let y = point.y + QR_WIDTH + i32::from(font.char_height()) + 8;
-    draw_centered_text(&font, &theme, "catalog.fireflyzero.com/", y);
+    draw_centered_text(font, &theme, "catalog.fireflyzero.com/", y);
 
     let y = y + i32::from(font.char_height());
     let id = alloc::format!("{}.{}", app.author_id, app.id);
-    draw_centered_text(&font, &theme, &id, y);
+    draw_centered_text(font, &theme, &id, y);
 }
 
-fn draw_centered_text(font: &Font<'_>, theme: &Theme, text: &str, y: i32) {
+fn draw_centered_text(font: &FontBuf, theme: &Theme, text: &str, y: i32) {
     let x = (WIDTH - font.line_width_ascii(text) as i32) / 2;
     let point = Point::new(x, y);
     draw_text(text, font, point, theme.primary);

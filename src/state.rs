@@ -5,6 +5,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::cell::OnceCell;
 use firefly_rust::*;
+use firefly_sudo::sudo;
 
 static mut STATE: OnceCell<State> = OnceCell::new();
 
@@ -12,7 +13,7 @@ static mut STATE: OnceCell<State> = OnceCell::new();
 pub struct State {
     scene: Scene,
     pub settings: Settings,
-    pub font: FileBuf,
+    pub font: FontBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
     pub is_online: bool,
@@ -43,7 +44,7 @@ pub fn init_state() {
     let mut state = State {
         scene: Scene::List,
         settings,
-        font,
+        font: font.into(),
         apps: read_apps(is_online),
         is_online,
         pos: 0,
@@ -100,7 +101,7 @@ impl State {
 pub fn delegate(state: &State, author_id: &str, app_id: &str) {
     let splash_path = alloc::format!("roms/{author_id}/{app_id}/_splash");
     if let Some(splash) = sudo::load_file_buf(&splash_path) {
-        draw_image(&splash.as_image(), Point::MIN);
+        draw_image(&splash.into_image(), Point::MIN);
     }
     let app = &state.apps[state.pos];
     let full_id = alloc::format!("{}.{}", app.author_id, app.id);

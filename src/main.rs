@@ -35,6 +35,7 @@ use apps::*;
 use button_group::ButtonGroup;
 use components::*;
 use firefly_rust::*;
+use firefly_sudo::sudo;
 use firefly_ui::{Input, InputManager};
 use state::*;
 use translations::Message;
@@ -61,7 +62,7 @@ pub enum Scene {
 #[unsafe(no_mangle)]
 extern "C" fn boot() {
     let splash = load_file_buf("_splash").unwrap();
-    let splash = splash.as_image();
+    let splash = splash.into_image();
     draw_image(&splash, Point::MIN);
 }
 
