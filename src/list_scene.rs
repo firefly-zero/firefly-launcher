@@ -15,31 +15,39 @@ pub fn update(state: &mut State) {
     state.shift = i32::from(state.input.jitter(hitting_wall));
     match state.input.get() {
         Input::Down => {
+            if state.pos + 1 != state.apps.len() {
+                play_note(audio::Freq::A4);
+            }
             let apps_count = state.apps.len();
             if state.pos + 1 < apps_count {
                 state.pos += 1;
             }
-            play_note(audio::Freq::A4);
         }
         Input::Up => {
+            if state.pos != 0 {
+                play_note(audio::Freq::AS4);
+            }
             state.pos = state.pos.saturating_sub(1);
-            play_note(audio::Freq::AS4);
         }
         Input::Left => {
+            if state.pos != 0 {
+                play_note(audio::Freq::AS4);
+            }
             if state.pos == state.top_pos {
                 state.pos = state.pos.saturating_sub(PER_SCREEN);
             } else {
                 state.pos = state.top_pos;
             }
-            play_note(audio::Freq::AS4);
         }
         Input::Right => {
+            if state.pos + 1 != state.apps.len() {
+                play_note(audio::Freq::A4);
+            }
             if state.pos == state.top_pos + PER_SCREEN {
                 state.pos = usize::min(state.pos + PER_SCREEN, state.apps.len() - 1);
             } else {
                 state.pos = (state.top_pos + PER_SCREEN).min(state.apps.len() - 1);
             }
-            play_note(audio::Freq::A4);
         }
         Input::Select => {
             let Some(app) = state.apps.get(state.pos) else {
@@ -155,22 +163,22 @@ fn render_empty(state: &State) {
 }
 
 fn play_note(f: audio::Freq) {
-    const DURATION: u32 = 140;
+    const DURATION_MS: u32 = 30;
     audio::OUT.clear();
     let gain1 = audio::OUT.add_gain(0.5);
     gain1.modulate(audio::LinearModulator {
         start: 0.0,
         end: 0.5,
         start_at: audio::Time::ZERO,
-        end_at: audio::Time::ms(DURATION / 2),
+        end_at: audio::Time::ms(DURATION_MS / 2),
     });
 
     let gain2 = gain1.add_gain(0.5);
     gain2.modulate(audio::LinearModulator {
         start: 0.5,
         end: 0.0,
-        start_at: audio::Time::ms(DURATION / 2),
-        end_at: audio::Time::ms(DURATION),
+        start_at: audio::Time::ms(DURATION_MS / 2),
+        end_at: audio::Time::ms(DURATION_MS),
     });
 
     gain2.add_sine(f, 0.);
