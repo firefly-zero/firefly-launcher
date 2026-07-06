@@ -165,21 +165,19 @@ fn render_empty(state: &State) {
 fn play_note(f: audio::Freq) {
     const DURATION_MS: u32 = 30;
     audio::OUT.clear();
-    let gain1 = audio::OUT.add_gain(0.5);
-    gain1.modulate(audio::LinearModulator {
-        start: 0.0,
-        end: 0.5,
+    let gain_up = audio::OUT.add_gain(0.5);
+    let modulator = audio::LinearModulator {
         start_at: audio::Time::ZERO,
-        end_at: audio::Time::ms(DURATION_MS / 2),
-    });
+        end_at: audio::ms(DURATION_MS / 2),
+    };
+    gain_up.modulate(0.0, 0.5, modulator);
 
-    let gain2 = gain1.add_gain(0.5);
-    gain2.modulate(audio::LinearModulator {
-        start: 0.5,
-        end: 0.0,
-        start_at: audio::Time::ms(DURATION_MS / 2),
-        end_at: audio::Time::ms(DURATION_MS),
-    });
+    let gain_down = gain_up.add_gain(0.5);
+    let modulator = audio::LinearModulator {
+        start_at: audio::ms(DURATION_MS / 2),
+        end_at: audio::ms(DURATION_MS),
+    };
+    gain_down.modulate(0.5, 0.0, modulator);
 
-    gain2.add_sine(f, 0.);
+    gain_down.add_sine(f, 0.);
 }
