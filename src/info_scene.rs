@@ -47,11 +47,18 @@ pub fn init(state: &mut State) {
         items.push((msg, Scene::Delegate("sys", "manuals")));
     }
     items.push((Message::ViewInCatalog.translate(lang), Scene::Catalog));
-    if app.author_id != "sys" {
+    if can_delete(app) {
         let msg = Message::Remove.translate(lang);
         items.push((msg, Scene::Delegate("sys", "remover")));
     }
     state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
+}
+
+fn can_delete(app: &App) -> bool {
+    if app.author_id == "sys" {
+        return app.id != "installer" && app.id != "connector";
+    }
+    true
 }
 
 pub fn update(state: &mut State) {
