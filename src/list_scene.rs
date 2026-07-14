@@ -11,6 +11,11 @@ pub const PER_SCREEN: usize = 12;
 pub const fn init(_state: &mut State) {}
 
 pub fn update(state: &mut State) {
+    if state.input.get() == Input::None {
+        state.idle += 1;
+    } else {
+        state.idle = 0;
+    }
     let hitting_wall = state.pos == 0 || state.pos + 1 == state.apps.len();
     state.shift = i32::from(state.input.jitter(hitting_wall));
     match state.input.get() {
@@ -95,8 +100,24 @@ pub fn render(state: &State) {
     draw_apps(state);
     ScrollBar::from_state(state).render();
     draw_online(state);
+    draw_wizard(state);
 }
 
+/// If you leave the list view idle for 2m, a tiny wizard will run across the screen.
+fn draw_wizard(state: &State) {
+    const SW: i32 = 16;
+    const SH: i32 = 24;
+    const DELAY: i32 = 2 * 3600; // 2 minutes
+
+    if state.idle < DELAY || state.idle > DELAY + 320 {
+        return;
+    }
+    let sub_p = Point::new((state.idle / 8 % 4) * SW, 0);
+    let sub = state.wizard.sub(sub_p, Size::new(SW, SH));
+    draw_sub_image(&sub, Point::new(state.idle - 120 - SW, HEIGHT - SH));
+}
+
+/// When an app is about to be launched, render its splash screen.
 fn draw_splash(splash_path: &str) {
     let splash = sudo::load_file_buf(splash_path);
     if let Some(splash) = splash {

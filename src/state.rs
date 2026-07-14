@@ -25,6 +25,9 @@ pub struct State {
     pub input: InputManager,
     pub shift: i32,
     pub splash: Option<alloc::string::String>,
+
+    pub wizard: ImageBuf,
+    pub idle: i32,
 }
 
 /// Get the global state
@@ -53,6 +56,8 @@ pub fn init_state() {
         input: InputManager::new(),
         shift: 0,
         splash: None,
+        wizard: load_file_buf("wizard").unwrap().into(),
+        idle: 0,
     };
 
     // Load previously saved state, if any.
