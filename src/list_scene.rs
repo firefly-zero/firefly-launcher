@@ -109,6 +109,9 @@ fn draw_wizard(state: &State) {
     const SH: i32 = 24;
     const DELAY: i32 = 2 * 3600; // 2 minutes
 
+    if !state.settings.easter_eggs {
+        return;
+    }
     if state.idle < DELAY || state.idle > DELAY + 320 {
         return;
     }
