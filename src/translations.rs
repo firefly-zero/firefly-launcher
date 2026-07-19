@@ -1,12 +1,10 @@
 use firefly_rust::Language;
 
 pub enum Message {
-    AuthorID,
     AppID,
     AuthorName,
     AppName,
-    RomSize,
-    DataSize,
+    Size,
 
     Launches,
     Installed,
@@ -43,12 +41,10 @@ impl Message {
 
     const fn translate_english(&self) -> &'static str {
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "author name",
             Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::Size => "size",
 
             Self::Launches => "launches",
             Self::Installed => "installed",
@@ -67,12 +63,10 @@ impl Message {
 
     const fn translate_dutch(&self) -> &'static str {
         match self {
-            Self::AuthorID => "auteur ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "auteurnaam",
             Self::AppName => "appnaam",
-            Self::RomSize => "ROM-grootte",
-            Self::DataSize => "gegevensgrootte",
+            Self::Size => "grootte",
 
             Self::Launches => "starts",
             Self::Installed => "geinstalleerd",
@@ -91,12 +85,10 @@ impl Message {
 
     const fn translate_french(&self) -> &'static str {
         match self {
-            Self::AuthorID => "ID de l’auteur",
-            Self::AppID => "ID de l’application",
+            Self::AppID => "ID",
             Self::AuthorName => "nom de l’auteur",
             Self::AppName => "nom de l’application",
-            Self::RomSize => "taille de la ROM",
-            Self::DataSize => "taille des données",
+            Self::Size => "taille",
 
             Self::Launches => "lancements",
             Self::Installed => "installé",
@@ -115,12 +107,10 @@ impl Message {
 
     const fn translate_german(&self) -> &'static str {
         match self {
-            Self::AuthorID => "autor ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "autorname",
             Self::AppName => "appname",
-            Self::RomSize => "ROM größe",
-            Self::DataSize => "datengröße",
+            Self::Size => "größe",
 
             Self::Launches => "startet",
             Self::Installed => "installiert",
@@ -140,12 +130,10 @@ impl Message {
     const fn translate_italian(&self) -> &'static str {
         // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "author name",
             Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::Size => "size",
 
             Self::Launches => "launches",
             Self::Installed => "installed",
@@ -164,12 +152,10 @@ impl Message {
 
     const fn translate_polish(&self) -> &'static str {
         match self {
-            Self::AuthorID => "ID autora",
-            Self::AppID => "ID aplikacji",
+            Self::AppID => "ID",
             Self::AuthorName => "nazwa autora",
             Self::AppName => "nazwa aplikacji",
-            Self::RomSize => "rozmiar ROM",
-            Self::DataSize => "rozmiar danych",
+            Self::Size => "rozmiar",
 
             Self::Launches => "uruchomienia",
             Self::Installed => "zainstalowano",
@@ -188,12 +174,10 @@ impl Message {
 
     const fn translate_romanian(&self) -> &'static str {
         match self {
-            Self::AuthorID => "ID-ul autorului",
-            Self::AppID => "ID-ul aplicației",
+            Self::AppID => "ID-ul",
             Self::AuthorName => "numele autorului",
             Self::AppName => "numele aplicației",
-            Self::RomSize => "dimensiune ROM",
-            Self::DataSize => "dimensiunea datei",
+            Self::Size => "dimensiune",
 
             Self::Launches => "lansări",
             Self::Installed => "instalat",
@@ -212,12 +196,10 @@ impl Message {
 
     const fn translate_russian(&self) -> &'static str {
         match self {
-            Self::AuthorID => "ID автора",
-            Self::AppID => "ID приложения",
+            Self::AppID => "ID",
             Self::AuthorName => "имя автора",
             Self::AppName => "имя приложения",
-            Self::RomSize => "размер ROMа",
-            Self::DataSize => "размер данных",
+            Self::Size => "размер",
 
             Self::Launches => "запусков",
             Self::Installed => "установлен",
@@ -237,12 +219,10 @@ impl Message {
     const fn translate_spanish(&self) -> &'static str {
         // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "author name",
             Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::Size => "size",
 
             Self::Launches => "launches",
             Self::Installed => "installed",
@@ -261,12 +241,10 @@ impl Message {
 
     const fn translate_swedish(&self) -> &'static str {
         match self {
-            Self::AuthorID => "skapare ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "skaparens namn",
             Self::AppName => "appnamn",
-            Self::RomSize => "ROM-storlek",
-            Self::DataSize => "datastorlek",
+            Self::Size => "storlek",
 
             Self::Launches => "startar",
             Self::Installed => "installerad",
@@ -286,12 +264,10 @@ impl Message {
     const fn translate_turkish(&self) -> &'static str {
         // TODO: translate
         match self {
-            Self::AuthorID => "author ID",
-            Self::AppID => "app ID",
+            Self::AppID => "ID",
             Self::AuthorName => "author name",
             Self::AppName => "app name",
-            Self::RomSize => "ROM size",
-            Self::DataSize => "data size",
+            Self::Size => "size",
 
             Self::Launches => "launches",
             Self::Installed => "installed",
@@ -310,12 +286,10 @@ impl Message {
 
     const fn translate_ukrainian(&self) -> &'static str {
         match self {
-            Self::AuthorID => "ID автора",
-            Self::AppID => "ID програми",
+            Self::AppID => "ID",
             Self::AuthorName => "ім'я автора",
             Self::AppName => "ім'я програми",
-            Self::RomSize => "розмір ROMа",
-            Self::DataSize => "розмір даних",
+            Self::Size => "розмір",
 
             Self::Launches => "запусків",
             Self::Installed => "встановлено",
@@ -334,12 +308,10 @@ impl Message {
 
     const fn translate_toki_pona(&self) -> &'static str {
         match self {
-            Self::AuthorID => "jan pali nimi",
             Self::AppID => "musi nimi",
             Self::AuthorName => "jan pali",
             Self::AppName => "musi",
-            Self::RomSize => "musi suli",
-            Self::DataSize => "sona suli",
+            Self::Size => "suli",
 
             Self::Launches => "namba kepeken",
             Self::Installed => "sin",

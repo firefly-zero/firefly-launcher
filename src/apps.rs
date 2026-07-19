@@ -20,8 +20,7 @@ pub struct App {
     /// First we show system apps, then favorites, and then the rest.
     pub priority: u8,
 
-    pub rom_size: Option<usize>,
-    pub data_size: Option<usize>,
+    pub size: Option<(usize, usize)>,
     pub stats: Option<Stats>,
 }
 
@@ -91,8 +90,7 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
             name: app_name.to_string(),
             author_name: meta.author_name.to_string(),
             priority,
-            rom_size: None,
-            data_size: None,
+            size: None,
             stats: None,
         });
     }

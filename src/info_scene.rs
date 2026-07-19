@@ -7,23 +7,20 @@ use firefly_sudo::sudo;
 const LINE_HEIGHT: i32 = 12;
 
 static FIELDS: &[Message] = &[
-    Message::AuthorID,
     Message::AppID,
     Message::AuthorName,
     Message::AppName,
-    Message::RomSize,
-    Message::DataSize,
+    Message::Size,
 ];
 
 pub fn init(state: &mut State) {
     let app = &mut state.apps[state.pos];
-    if app.rom_size.is_none() {
+    if app.size.is_none() {
         let app_path = format!("roms/{}/{}", app.author_id, app.id);
-        app.rom_size = Some(get_dir_size(&app_path));
-    }
-    if app.data_size.is_none() {
+        let rom_size = get_dir_size(&app_path);
         let data_path = format!("data/{}/{}/etc", app.author_id, app.id);
-        app.data_size = Some(get_dir_size(&data_path));
+        let data_size = get_dir_size(&data_path);
+        app.size = Some((rom_size, data_size));
     }
     app.try_load_stats();
 
@@ -94,15 +91,19 @@ pub fn render(state: &State) {
     } else {
         theme.accent
     };
-    render_info(font, color, 1, &app.author_id);
-    render_info(font, color, 2, &app.id);
-    render_info(font, color, 3, &app.author_name);
-    render_info(font, color, 4, &app.name);
-    if let Some(size) = app.rom_size {
-        render_info(font, color, 5, &format_size(size));
-    }
-    if let Some(size) = app.data_size {
-        render_info(font, color, 6, &format_size(size));
+    let full_id = alloc::format!("{}.{}", app.author_id, app.id);
+    render_info(font, color, 1, &full_id);
+    render_info(font, color, 2, &app.author_name);
+    render_info(font, color, 3, &app.name);
+    if let Some((app_size, data_size)) = app.size {
+        let app_size = format_size(app_size);
+        let size = if data_size == 0 {
+            app_size
+        } else {
+            let data_size = format_size(data_size);
+            alloc::format!("{app_size} + {data_size}")
+        };
+        render_info(font, color, 4, &size);
     }
     if let Some(button_group) = &state.button_group {
         button_group.render(font, &state.settings.theme);
