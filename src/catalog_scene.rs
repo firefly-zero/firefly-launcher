@@ -7,8 +7,16 @@ const QR_WIDTH: i32 = 33;
 pub fn init(state: &mut State) {
     let lang = state.settings.language;
     let items = Box::new([
-        (Message::Back.translate(lang), Scene::Info),
-        (Message::Exit.translate(lang), Scene::List),
+        Button {
+            text: Message::Back.translate(lang),
+            scene: Scene::Info,
+            accent: false,
+        },
+        Button {
+            text: Message::Exit.translate(lang),
+            scene: Scene::List,
+            accent: false,
+        },
     ]);
     state.button_group = Some(ButtonGroup::new(items));
 }

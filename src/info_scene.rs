@@ -26,29 +26,49 @@ pub fn init(state: &mut State) {
         app.size = Some((rom_size, data_size));
     }
     app.try_load_stats();
+    let notif = Notif::new(app);
 
     let lang = state.settings.language;
     let mut items = Vec::new();
     if let Some(stats) = &app.stats {
         if !stats.badges.is_empty() {
-            let msg = Message::Achievements.translate(lang);
-            items.push((msg, Scene::Delegate("sys", "badges")));
+            items.push(Button {
+                text: Message::Achievements.translate(lang),
+                scene: Scene::Delegate("sys", "badges"),
+                accent: notif.badges,
+            });
         }
         if !stats.scores.is_empty() {
             let msg = Message::Scoreboards.translate(lang);
-            items.push((msg, Scene::Delegate("sys", "boards")));
+            items.push(Button {
+                text: msg,
+                scene: Scene::Delegate("sys", "boards"),
+                accent: notif.boards,
+            });
         }
     }
     let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app.id);
     let has_manual = sudo::get_file_size(&manual_path) != 0;
     if has_manual {
         let msg = Message::Manual.translate(lang);
-        items.push((msg, Scene::Delegate("sys", "manuals")));
+        items.push(Button {
+            text: msg,
+            scene: Scene::Delegate("sys", "manuals"),
+            accent: notif.manual,
+        });
     }
-    items.push((Message::ViewInCatalog.translate(lang), Scene::Catalog));
+    items.push(Button {
+        text: Message::ViewInCatalog.translate(lang),
+        scene: Scene::Catalog,
+        accent: false,
+    });
     if can_delete(app) {
         let msg = Message::Remove.translate(lang);
-        items.push((msg, Scene::Delegate("sys", "remover")));
+        items.push(Button {
+            text: msg,
+            scene: Scene::Delegate("sys", "remover"),
+            accent: false,
+        });
     }
     state.button_group = Some(ButtonGroup::new(items.into_boxed_slice()));
 }

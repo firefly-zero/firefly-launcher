@@ -24,14 +24,16 @@ mod catalog_scene;
 mod components;
 mod info_scene;
 mod list_scene;
+mod notifs;
 mod scroll;
 mod state;
 mod translations;
 mod utils;
 
+use crate::notifs::*;
 use alloc::vec::Vec;
 use apps::*;
-use button_group::ButtonGroup;
+use button_group::*;
 use components::*;
 use firefly_rust::*;
 use firefly_ui::{Input, InputManager};

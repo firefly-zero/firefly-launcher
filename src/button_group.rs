@@ -4,13 +4,19 @@ use firefly_rust::*;
 
 const LINE_HEIGHT: i32 = 12;
 
+pub struct Button {
+    pub text: &'static str,
+    pub scene: Scene,
+    pub accent: bool,
+}
+
 pub struct ButtonGroup {
-    pub items: Box<[(&'static str, Scene)]>,
+    pub items: Box<[Button]>,
     pub cursor: usize,
 }
 
 impl ButtonGroup {
-    pub const fn new(items: Box<[(&'static str, Scene)]>) -> Self {
+    pub const fn new(items: Box<[Button]>) -> Self {
         Self { cursor: 0, items }
     }
 
@@ -19,8 +25,8 @@ impl ButtonGroup {
         if input == Input::Back {
             return Some(Scene::List);
         } else if input == Input::Select {
-            let selected = self.items[self.cursor];
-            return Some(selected.1);
+            let selected = &self.items[self.cursor];
+            return Some(selected.scene);
         } else if input == Input::Down && self.cursor < self.items.len() - 1 {
             self.cursor += 1;
         } else if input == Input::Up && self.cursor > 0 {
@@ -38,7 +44,7 @@ impl ButtonGroup {
             let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
             draw_cursor(y, false, pressed, theme);
         }
-        for ((item, _), i) in self.items.iter().zip(0..) {
+        for (button, i) in self.items.iter().zip(0..) {
             let selected = i == self.cursor as i32;
             let i = n - i;
             let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 1;
@@ -47,7 +53,12 @@ impl ButtonGroup {
                 point.x += 1;
                 point.y += 1;
             }
-            draw_text(item, font, point, theme.primary);
+            let color = if button.accent {
+                theme.accent
+            } else {
+                theme.primary
+            };
+            draw_text(button.text, font, point, color);
         }
     }
 }
