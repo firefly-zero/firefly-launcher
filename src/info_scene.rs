@@ -108,8 +108,14 @@ pub fn render(state: &State) {
         render_info(font, color, 4, &size);
     }
     if let Some(stats) = &app.stats {
-        let launches: u32 = stats.launches.iter().sum();
-        render_info(font, color, 5, &format!("{launches}"));
+        let single = stats.launches[0];
+        let multi = stats.launches[1] + stats.launches[2] + stats.launches[3];
+        let launches = if multi == 0 {
+            format!("{single}")
+        } else {
+            format!("{single} + {multi}")
+        };
+        render_info(font, color, 5, &launches);
         let installed_on = format_date(stats.installed_on);
         render_info(font, color, 6, &installed_on);
         let updated_on = format_date(stats.updated_on);
