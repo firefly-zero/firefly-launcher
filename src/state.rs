@@ -26,7 +26,7 @@ pub struct State {
     pub shift: i32,
     pub splash: Option<alloc::string::String>,
 
-    pub wizard: ImageBuf,
+    pub mouse: ImageBuf,
     pub idle: i32,
 }
 
@@ -56,7 +56,7 @@ pub fn init_state() {
         input: InputManager::new(),
         shift: 0,
         splash: None,
-        wizard: load_file_buf("wizard").unwrap().into(),
+        mouse: load_file_buf("mouse").unwrap().into(),
         idle: 0,
     };
 

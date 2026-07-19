@@ -100,24 +100,25 @@ pub fn render(state: &State) {
     draw_apps(state);
     ScrollBar::from_state(state).render();
     draw_online(state);
-    draw_wizard(state);
+    draw_mouse(state);
 }
 
-/// If you leave the list view idle for 2m, a tiny wizard will run across the screen.
-fn draw_wizard(state: &State) {
+/// If you leave the list view idle for 2m, a tiny mouse will run across the screen.
+fn draw_mouse(state: &State) {
     const SW: i32 = 16;
-    const SH: i32 = 24;
+    const SH: i32 = 9;
     const DELAY: i32 = 2 * 3600; // 2 minutes
 
     if !state.settings.easter_eggs {
         return;
     }
-    if state.idle < DELAY || state.idle > DELAY + 320 {
+    let frame = state.idle - DELAY;
+    if !(0..=300).contains(&frame) {
         return;
     }
-    let sub_p = Point::new((state.idle / 8 % 4) * SW, 0);
-    let sub = state.wizard.sub(sub_p, Size::new(SW, SH));
-    draw_sub_image(&sub, Point::new(state.idle - 120 - SW, HEIGHT - SH));
+    let sub_p = Point::new((frame / 8 % 4) * SW, 0);
+    let sub = state.mouse.sub(sub_p, Size::new(SW, SH));
+    draw_sub_image(&sub, Point::new(frame - SW, HEIGHT - SH));
 }
 
 /// When an app is about to be launched, render its splash screen.
