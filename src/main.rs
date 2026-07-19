@@ -20,7 +20,6 @@ extern crate alloc;
 
 mod apps;
 mod button_group;
-mod catalog_scene;
 mod components;
 mod info_scene;
 mod list_scene;
@@ -52,8 +51,6 @@ pub enum Scene {
     List,
     /// Show the app context menu with basic app info and action buttons.
     Info,
-    /// Show QR code with a link to the app in catalog.fireflyzero.com.
-    Catalog,
     /// Delegate handling of the focused app to the given app.
     Delegate(&'static str, &'static str),
 }
@@ -97,7 +94,6 @@ extern "C" fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
-        Scene::Catalog => catalog_scene::update(state),
         Scene::Delegate(_, _) => {}
     }
 }
@@ -129,7 +125,6 @@ extern "C" fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
-        Scene::Catalog => catalog_scene::render(state),
         Scene::Delegate(_, _) => {}
     }
 }

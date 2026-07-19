@@ -10,12 +10,9 @@ pub enum Message {
     Installed,
     Updated,
 
-    Back,
-    Exit,
     Manual,
     Achievements,
     Scoreboards,
-    ViewInCatalog,
     Remove,
 }
 
@@ -49,12 +46,9 @@ impl Message {
             Self::Installed => "installed",
             Self::Updated => "updated",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
             Self::Manual => "manual",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
             Self::Remove => "remove",
         }
     }
@@ -70,12 +64,9 @@ impl Message {
             Self::Installed => "geinstalleerd",
             Self::Updated => "bijgewerkt",
 
-            Self::Back => "terug",
-            Self::Exit => "afsluiten",
             Self::Manual => "manual", // TODO
             Self::Achievements => "prestaties",
             Self::Scoreboards => "scoreborden",
-            Self::ViewInCatalog => "bekijken in catalogus",
             Self::Remove => "verwijderen",
         }
     }
@@ -91,12 +82,9 @@ impl Message {
             Self::Installed => "installé",
             Self::Updated => "mis à jour",
 
-            Self::Back => "retour",
-            Self::Exit => "quitter",
             Self::Manual => "manual", // TODO
             Self::Achievements => "succès",
             Self::Scoreboards => "classements",
-            Self::ViewInCatalog => "voir dans le catalogue",
             Self::Remove => "supprimer",
         }
     }
@@ -112,12 +100,9 @@ impl Message {
             Self::Installed => "installiert",
             Self::Updated => "aktualisiert",
 
-            Self::Back => "zurück",
-            Self::Exit => "beenden",
             Self::Manual => "manual", // TODO
             Self::Achievements => "errungenschaften",
             Self::Scoreboards => "punktetafel",
-            Self::ViewInCatalog => "im Katalog anzeigen",
             Self::Remove => "entfernen",
         }
     }
@@ -134,12 +119,9 @@ impl Message {
             Self::Installed => "installed",
             Self::Updated => "updated",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
             Self::Manual => "manual", // TODO
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
             Self::Remove => "remove",
         }
     }
@@ -155,12 +137,9 @@ impl Message {
             Self::Installed => "zainstalowano",
             Self::Updated => "zaktualizowano",
 
-            Self::Back => "powrót",
-            Self::Exit => "wyjdź",
             Self::Manual => "manual", // TODO
             Self::Achievements => "osiągnięcia",
             Self::Scoreboards => "tabele wyników",
-            Self::ViewInCatalog => "wyświetl w katalogu",
             Self::Remove => "usuń",
         }
     }
@@ -176,12 +155,9 @@ impl Message {
             Self::Installed => "instalat",
             Self::Updated => "actualizat",
 
-            Self::Back => "înapoi",
-            Self::Exit => "ieșire",
             Self::Manual => "manual", // TODO
             Self::Achievements => "realizări",
             Self::Scoreboards => "scoruri",
-            Self::ViewInCatalog => "vezi în catalog",
             Self::Remove => "elimină",
         }
     }
@@ -197,12 +173,9 @@ impl Message {
             Self::Installed => "установлен",
             Self::Updated => "обновлён",
 
-            Self::Back => "назад",
-            Self::Exit => "выйти",
             Self::Manual => "руководство пользователя",
             Self::Achievements => "достижения",
             Self::Scoreboards => "лучшие результаты",
-            Self::ViewInCatalog => "открыть в каталоге",
             Self::Remove => "удалить",
         }
     }
@@ -219,12 +192,9 @@ impl Message {
             Self::Installed => "installed",
             Self::Updated => "updated",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
             Self::Manual => "manual", // TODO
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
             Self::Remove => "remove",
         }
     }
@@ -240,12 +210,9 @@ impl Message {
             Self::Installed => "installerad",
             Self::Updated => "uppdaterad",
 
-            Self::Back => "backa",
-            Self::Exit => "stäng",
             Self::Manual => "manual", // TODO
             Self::Achievements => "utmärkelser",
             Self::Scoreboards => "topplistor",
-            Self::ViewInCatalog => "visa i katalogen",
             Self::Remove => "ta bort",
         }
     }
@@ -262,12 +229,9 @@ impl Message {
             Self::Installed => "installed",
             Self::Updated => "updated",
 
-            Self::Back => "back",
-            Self::Exit => "exit",
             Self::Manual => "manual", // TODO
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
-            Self::ViewInCatalog => "view in catalog",
             Self::Remove => "remove",
         }
     }
@@ -283,12 +247,9 @@ impl Message {
             Self::Installed => "встановлено",
             Self::Updated => "оновлено",
 
-            Self::Back => "тому",
-            Self::Exit => "вийти",
             Self::Manual => "manual", // TODO
             Self::Achievements => "досягнення",
             Self::Scoreboards => "найкращі результати",
-            Self::ViewInCatalog => "відкрити у каталозі",
             Self::Remove => "видалити",
         }
     }
@@ -304,12 +265,9 @@ impl Message {
             Self::Installed => "sin",
             Self::Updated => "sin sike",
 
-            Self::Back => "monsi",
-            Self::Exit => "tawa",
             Self::Manual => "lipu",
             Self::Achievements => "sitelen pali",
             Self::Scoreboards => "nanpa pali",
-            Self::ViewInCatalog => "lukin e lipu",
             Self::Remove => "weka",
         }
     }

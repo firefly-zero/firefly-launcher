@@ -5,6 +5,7 @@ use firefly_rust::*;
 use firefly_sudo::sudo;
 
 const LINE_HEIGHT: i32 = 12;
+const CATALOG_URL: &str = "https://catalog.fireflyzero.com/";
 
 static FIELDS: &[Message] = &[
     Message::AppID,
@@ -57,11 +58,6 @@ pub fn init(state: &mut State) {
             accent: notif.manual,
         });
     }
-    items.push(Button {
-        text: Message::ViewInCatalog.translate(lang),
-        scene: Scene::Catalog,
-        accent: false,
-    });
     if can_delete(app) {
         let msg = Message::Remove.translate(lang);
         items.push(Button {
@@ -145,6 +141,19 @@ pub fn render(state: &State) {
     if let Some(button_group) = &state.button_group {
         button_group.render(font, &state.settings.theme);
     }
+
+    render_qr(theme, app);
+}
+
+fn render_qr(theme: Theme, app: &App) {
+    let url = alloc::format!("{CATALOG_URL}{}.{}", app.author_id, app.id);
+    let w = if url.len() <= 42 { 37 } else { 41 };
+    let point = Point::new((WIDTH - w) - 10, HEIGHT - w - 6);
+    let size = Size::new(w + 2, w + 2);
+    let style = Style::solid(theme.primary);
+    draw_rect(Point::new(point.x - 1, point.y - 1), size, style);
+    draw_rect(Point::new(point.x, point.y), size, style);
+    draw_qr(&url, point, Color::Black, Color::White);
 }
 
 fn render_info(font: &FontBuf, color: Color, i: i32, t: &str) {
