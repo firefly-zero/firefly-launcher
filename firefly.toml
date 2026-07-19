@@ -18,3 +18,5 @@ iso_8859_16 = { path = "iso_8859_16.fff", url = "https://fonts.fireflyzero.com/f
 
 [cheats]
 launch = 1
+info = 2
+manual = 3

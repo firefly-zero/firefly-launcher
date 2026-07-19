@@ -55,21 +55,7 @@ pub fn update(state: &mut State) {
             }
         }
         Input::Select => {
-            let Some(app) = state.apps.get(state.pos) else {
-                return;
-            };
-
-            let updates = app.author_id == "sys" && app.id == "updates";
-            if updates {
-                state.transition_to(Scene::Delegate("sys", "manuals"));
-                return;
-            }
-            let disconnector = app.author_id == "sys" && app.id == "disconnector";
-            if !disconnector {
-                let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
-                state.splash = Some(splash_path);
-            }
-            sudo::run_app(&app.author_id, &app.id);
+            launch_selected(state);
         }
         Input::Back => {
             state.transition_to(Scene::Info);
@@ -84,6 +70,23 @@ pub fn update(state: &mut State) {
     } else if state.pos < state.top_pos {
         state.top_pos = state.pos;
     }
+}
+
+pub fn launch_selected(state: &mut State) {
+    let Some(app) = state.apps.get(state.pos) else {
+        return;
+    };
+    let updates = app.author_id == "sys" && app.id == "updates";
+    if updates {
+        state.transition_to(Scene::Delegate("sys", "manuals"));
+        return;
+    }
+    let disconnector = app.author_id == "sys" && app.id == "disconnector";
+    if !disconnector {
+        let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
+        state.splash = Some(splash_path);
+    }
+    sudo::run_app(&app.author_id, &app.id);
 }
 
 pub fn render(state: &State) {

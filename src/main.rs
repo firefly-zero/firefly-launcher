@@ -35,7 +35,6 @@ use apps::*;
 use button_group::ButtonGroup;
 use components::*;
 use firefly_rust::*;
-use firefly_sudo::sudo;
 use firefly_ui::{Input, InputManager};
 use state::*;
 use translations::Message;
@@ -138,17 +137,28 @@ extern "C" fn render() {
 }
 
 #[unsafe(no_mangle)]
+#[expect(clippy::cast_sign_loss)]
 extern "C" fn cheat(cmd: i32, val: i32) -> i32 {
-    if cmd == 1 {
-        let state = get_state();
-        let Ok(index) = usize::try_from(val) else {
-            return 0;
-        };
-        if let Some(app) = state.apps.get(index) {
-            sudo::run_app(&app.author_id, &app.id);
-            return 1;
+    use crate::list_scene::*;
+
+    let state = get_state();
+    let val = val as usize;
+    match cmd {
+        1 => {
+            state.pos = val;
+            launch_selected(state);
+            1
         }
-        return 0;
+        2 => {
+            state.pos = val;
+            state.transition_to(Scene::Info);
+            1
+        }
+        3 => {
+            state.pos = val;
+            state.transition_to(Scene::Delegate("sys", "manuals"));
+            1
+        }
+        _ => 0,
     }
-    0
 }
