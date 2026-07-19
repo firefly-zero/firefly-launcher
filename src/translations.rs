@@ -13,7 +13,6 @@ pub enum Message {
     Back,
     Exit,
     Manual,
-    Stats,
     Achievements,
     Scoreboards,
     ViewInCatalog,
@@ -53,7 +52,6 @@ impl Message {
             Self::Back => "back",
             Self::Exit => "exit",
             Self::Manual => "manual",
-            Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
             Self::ViewInCatalog => "view in catalog",
@@ -75,7 +73,6 @@ impl Message {
             Self::Back => "terug",
             Self::Exit => "afsluiten",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statistieken",
             Self::Achievements => "prestaties",
             Self::Scoreboards => "scoreborden",
             Self::ViewInCatalog => "bekijken in catalogus",
@@ -97,7 +94,6 @@ impl Message {
             Self::Back => "retour",
             Self::Exit => "quitter",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statistiques",
             Self::Achievements => "succès",
             Self::Scoreboards => "classements",
             Self::ViewInCatalog => "voir dans le catalogue",
@@ -119,7 +115,6 @@ impl Message {
             Self::Back => "zurück",
             Self::Exit => "beenden",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statistik",
             Self::Achievements => "errungenschaften",
             Self::Scoreboards => "punktetafel",
             Self::ViewInCatalog => "im Katalog anzeigen",
@@ -142,7 +137,6 @@ impl Message {
             Self::Back => "back",
             Self::Exit => "exit",
             Self::Manual => "manual", // TODO
-            Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
             Self::ViewInCatalog => "view in catalog",
@@ -164,7 +158,6 @@ impl Message {
             Self::Back => "powrót",
             Self::Exit => "wyjdź",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statystyki",
             Self::Achievements => "osiągnięcia",
             Self::Scoreboards => "tabele wyników",
             Self::ViewInCatalog => "wyświetl w katalogu",
@@ -186,7 +179,6 @@ impl Message {
             Self::Back => "înapoi",
             Self::Exit => "ieșire",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statistici",
             Self::Achievements => "realizări",
             Self::Scoreboards => "scoruri",
             Self::ViewInCatalog => "vezi în catalog",
@@ -208,7 +200,6 @@ impl Message {
             Self::Back => "назад",
             Self::Exit => "выйти",
             Self::Manual => "руководство пользователя",
-            Self::Stats => "статистика",
             Self::Achievements => "достижения",
             Self::Scoreboards => "лучшие результаты",
             Self::ViewInCatalog => "открыть в каталоге",
@@ -231,7 +222,6 @@ impl Message {
             Self::Back => "back",
             Self::Exit => "exit",
             Self::Manual => "manual", // TODO
-            Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
             Self::ViewInCatalog => "view in catalog",
@@ -253,7 +243,6 @@ impl Message {
             Self::Back => "backa",
             Self::Exit => "stäng",
             Self::Manual => "manual", // TODO
-            Self::Stats => "statistik",
             Self::Achievements => "utmärkelser",
             Self::Scoreboards => "topplistor",
             Self::ViewInCatalog => "visa i katalogen",
@@ -276,7 +265,6 @@ impl Message {
             Self::Back => "back",
             Self::Exit => "exit",
             Self::Manual => "manual", // TODO
-            Self::Stats => "stats",
             Self::Achievements => "achievements",
             Self::Scoreboards => "scoreboards",
             Self::ViewInCatalog => "view in catalog",
@@ -298,7 +286,6 @@ impl Message {
             Self::Back => "тому",
             Self::Exit => "вийти",
             Self::Manual => "manual", // TODO
-            Self::Stats => "статистика",
             Self::Achievements => "досягнення",
             Self::Scoreboards => "найкращі результати",
             Self::ViewInCatalog => "відкрити у каталозі",
@@ -320,7 +307,6 @@ impl Message {
             Self::Back => "monsi",
             Self::Exit => "tawa",
             Self::Manual => "lipu",
-            Self::Stats => "sona",
             Self::Achievements => "sitelen pali",
             Self::Scoreboards => "nanpa pali",
             Self::ViewInCatalog => "lukin e lipu",

@@ -11,6 +11,9 @@ static FIELDS: &[Message] = &[
     Message::AuthorName,
     Message::AppName,
     Message::Size,
+    Message::Launches,
+    Message::Installed,
+    Message::Updated,
 ];
 
 pub fn init(state: &mut State) {
@@ -26,8 +29,7 @@ pub fn init(state: &mut State) {
 
     let lang = state.settings.language;
     let mut items = Vec::new();
-    if let Some(stats) = app.stats.as_ref() {
-        items.push((Message::Stats.translate(lang), Scene::Stats));
+    if let Some(stats) = &app.stats {
         if !stats.badges.is_empty() {
             let msg = Message::Achievements.translate(lang);
             items.push((msg, Scene::Delegate("sys", "badges")));
@@ -105,6 +107,15 @@ pub fn render(state: &State) {
         };
         render_info(font, color, 4, &size);
     }
+    if let Some(stats) = &app.stats {
+        let launches: u32 = stats.launches.iter().sum();
+        render_info(font, color, 5, &format!("{launches}"));
+        let installed_on = format_date(stats.installed_on);
+        render_info(font, color, 6, &installed_on);
+        let updated_on = format_date(stats.updated_on);
+        render_info(font, color, 7, &updated_on);
+    }
+
     if let Some(button_group) = &state.button_group {
         button_group.render(font, &state.settings.theme);
     }

@@ -26,7 +26,6 @@ mod info_scene;
 mod list_scene;
 mod scroll;
 mod state;
-mod stats_scene;
 mod translations;
 mod utils;
 
@@ -51,7 +50,6 @@ pub enum Scene {
     List,
     /// Show the app context menu with basic app info and action buttons.
     Info,
-    Stats,
     /// Show QR code with a link to the app in catalog.fireflyzero.com.
     Catalog,
     /// Delegate handling of the focused app to the given app.
@@ -97,7 +95,6 @@ extern "C" fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
-        Scene::Stats => stats_scene::update(state),
         Scene::Catalog => catalog_scene::update(state),
         Scene::Delegate(_, _) => {}
     }
@@ -130,7 +127,6 @@ extern "C" fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
-        Scene::Stats => stats_scene::render(state),
         Scene::Catalog => catalog_scene::render(state),
         Scene::Delegate(_, _) => {}
     }
