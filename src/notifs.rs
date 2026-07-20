@@ -31,7 +31,7 @@ impl Notif {
         app.notif = Some(notif);
     }
 
-    pub fn new(app: &App) -> Self {
+    fn new(app: &App) -> Self {
         let mut new_badges = false;
         let mut my_boards: u64 = 0;
         let mut friends_boards: u64 = 0;

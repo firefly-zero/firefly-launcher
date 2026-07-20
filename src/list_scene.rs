@@ -18,6 +18,7 @@ pub fn update(state: &mut State) {
     }
     let hitting_wall = state.pos == 0 || state.pos + 1 == state.apps.len();
     state.shift = i32::from(state.input.jitter(hitting_wall));
+    let old_pos = state.pos;
     match state.input.get() {
         Input::Down => {
             if state.pos + 1 != state.apps.len() {
@@ -63,12 +64,16 @@ pub fn update(state: &mut State) {
         Input::None => {}
     }
 
-    // If the selection cursor tries to go out of screen,
-    // scroll the list to keep the selection on the screen.
-    if state.pos > state.top_pos + PER_SCREEN {
-        state.top_pos = state.pos - PER_SCREEN;
-    } else if state.pos < state.top_pos {
-        state.top_pos = state.pos;
+    if state.pos != old_pos {
+        let app = &mut state.apps[state.pos];
+        Notif::load_into(app);
+        // If the selection cursor tries to go out of screen,
+        // scroll the list to keep the selection on the screen.
+        if state.pos > state.top_pos + PER_SCREEN {
+            state.top_pos = state.pos - PER_SCREEN;
+        } else if state.pos < state.top_pos {
+            state.top_pos = state.pos;
+        }
     }
 }
 
