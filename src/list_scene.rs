@@ -148,6 +148,28 @@ fn draw_apps(state: &State) {
             point.y += 1;
         }
         draw_text(&app.name, &state.font, point, theme.primary);
+
+        // Notification icon.
+        let sub_p = if let Some(notif) = &app.notif {
+            if notif.badges {
+                Some(Point::new(64, 0))
+            } else if notif.boards {
+                Some(Point::new(32, 0))
+            } else if notif.manual {
+                Some(Point::new(48, 0))
+            } else {
+                None
+            }
+        } else {
+            Some(Point::new(16, 0))
+        };
+        if let Some(sub_p) = sub_p {
+            let size = Size::new(16, 14);
+            let sub = state.icons.sub(sub_p, size);
+            draw_sub_image(&sub, Point::new(200, point.y - 8));
+            continue;
+        }
+
         // Don't show the author name
         // if the app name takes more than half of the screen.
         if app.name.len() > 19 {

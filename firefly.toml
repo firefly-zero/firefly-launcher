@@ -8,6 +8,7 @@ sudo = true
 [files]
 _splash = { path = "splash.png" }
 mouse = { path = "mouse.png" }
+icons = { path = "icons.png" }
 ascii = { path = "ascii.fff", url = "https://fonts.fireflyzero.com/fonts/ascii/eg_6x9.fff", sha256 = "b07e868a74a070efcf4ca65d18839da883d1e273b646d8c54261fadec638c77" }
 iso_8859_1 = { path = "iso_8859_1.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_1/eg_6x9.fff" }
 iso_8859_2 = { path = "iso_8859_2.fff", url = "https://fonts.fireflyzero.com/fonts/iso_8859_1/eg_6x9.fff" }
