@@ -22,6 +22,7 @@ pub struct Notif {
 
 impl Notif {
     pub fn load_into(app: &mut App) {
+        app.try_load_stats();
         let new = Self::new(app);
         let notif = match &app.notif {
             Some(old) => new.merge(old),
@@ -50,7 +51,7 @@ impl Notif {
         let manual_size = sudo::get_file_size(&manual_path) as u32;
 
         Self {
-            manual: manual_size != 0,
+            manual: manual_size != 0 && !new_badges,
             badges: new_badges,
             boards: false,
             manual_size,
@@ -59,13 +60,14 @@ impl Notif {
         }
     }
 
+    #[must_use]
     const fn merge(&self, old: &Self) -> Self {
         Self {
             manual: self.manual || (self.manual_size != old.manual_size),
             badges: self.badges,
             boards: self.boards
-                || (self.my_boards != self.friends_boards)
-                || (old.my_boards != old.friends_boards),
+                || (self.my_boards != old.my_boards)
+                || (self.friends_boards != old.friends_boards),
             manual_size: self.manual_size,
             my_boards: self.my_boards,
             friends_boards: self.friends_boards,

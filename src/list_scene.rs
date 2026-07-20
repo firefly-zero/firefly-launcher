@@ -151,10 +151,12 @@ fn draw_apps(state: &State) {
 
         // Notification icon.
         let sub_p = if let Some(notif) = &app.notif {
-            if notif.badges {
-                Some(Point::new(64, 0))
-            } else if notif.boards {
+            if notif.badges && notif.boards {
+                Some(Point::new(0, 0))
+            } else if notif.badges {
                 Some(Point::new(32, 0))
+            } else if notif.boards {
+                Some(Point::new(64, 0))
             } else if notif.manual {
                 Some(Point::new(48, 0))
             } else {

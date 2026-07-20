@@ -27,10 +27,8 @@ pub fn init(state: &mut State) {
         app.size = Some((rom_size, data_size));
     }
     app.try_load_stats();
-    let notif = match &app.notif {
-        Some(notif) => notif,
-        None => &Notif::new(app),
-    };
+    Notif::load_into(app);
+    let notif = app.notif.as_ref().unwrap();
 
     let lang = state.settings.language;
     let mut items = Vec::new();
