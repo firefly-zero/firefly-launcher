@@ -66,7 +66,9 @@ pub fn update(state: &mut State) {
 
     if state.pos != old_pos {
         let app = &mut state.apps[state.pos];
-        Notif::load_into(app);
+        if app.notif.is_none() {
+            Notif::load_into(app);
+        }
         // If the selection cursor tries to go out of screen,
         // scroll the list to keep the selection on the screen.
         if state.pos > state.top_pos + PER_SCREEN {
@@ -155,25 +157,25 @@ fn draw_apps(state: &State) {
         draw_text(&app.name, &state.font, point, theme.primary);
 
         // Notification icon.
-        let sub_p = if let Some(notif) = &app.notif {
+        let sub_x = if let Some(notif) = &app.notif {
             if notif.badges && notif.boards {
-                Some(Point::new(0, 0))
+                Some(0)
             } else if notif.badges {
-                Some(Point::new(32, 0))
+                Some(32)
             } else if notif.boards {
-                Some(Point::new(64, 0))
+                Some(64)
             } else if notif.manual {
-                Some(Point::new(48, 0))
+                Some(48)
             } else {
                 None
             }
         } else {
-            Some(Point::new(16, 0))
+            Some(16)
         };
-        if let Some(sub_p) = sub_p {
+        if let Some(sub_x) = sub_x {
             let size = Size::new(16, 14);
-            let sub = state.icons.sub(sub_p, size);
-            draw_sub_image(&sub, Point::new(200, point.y - 8));
+            let sub = state.icons.sub(Point::new(sub_x, 0), size);
+            draw_sub_image(&sub, Point::new(208, point.y - 8));
             continue;
         }
 

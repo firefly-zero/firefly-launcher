@@ -63,7 +63,7 @@ impl Notif {
     #[must_use]
     const fn merge(&self, old: &Self) -> Self {
         Self {
-            manual: self.manual || (self.manual_size != old.manual_size),
+            manual: (self.manual && old.manual) || (self.manual_size != old.manual_size),
             badges: self.badges,
             boards: self.boards
                 || (self.my_boards != old.my_boards)
