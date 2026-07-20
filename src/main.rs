@@ -43,8 +43,8 @@ use utils::*;
 
 /// If the splash screen was rendered on the screen.
 static mut RENDERED: bool = false;
-/// If the state is not initialized yet.
-static mut LOADING: bool = true;
+/// The current loading stage.
+static mut LOADING: u8 = 0;
 
 #[derive(Clone, Copy)]
 pub enum Scene {
@@ -102,10 +102,26 @@ extern "C" fn update() {
     if !unsafe { RENDERED } {
         return;
     }
-    if unsafe { LOADING } {
-        init_state();
-        unsafe { LOADING = false };
-        return;
+    match unsafe { LOADING } {
+        0 => {
+            init_state();
+            unsafe { LOADING = 1 };
+            return;
+        }
+        1 => {
+            let state = get_state();
+            attach_notifs(&mut state.apps);
+            // Update the notifications state for the currently selected app.
+            // The idea is that when the launcher is opened, the selected app
+            // is the one that was launched last time. Hence it's the most likely
+            // to have its state changed (manual opened, badges earned, etc).
+            if let Some(app) = state.apps.get_mut(state.pos) {
+                Notif::load_into(app);
+            }
+            unsafe { LOADING = 2 };
+            return;
+        }
+        _ => {}
     }
 
     let state = get_state();
@@ -128,7 +144,7 @@ extern "C" fn render() {
         return;
     }
     // Don't render until the list of apps is loaded.
-    if unsafe { LOADING } {
+    if unsafe { LOADING <= 1 } {
         return;
     }
 

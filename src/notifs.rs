@@ -21,6 +21,15 @@ pub struct Notif {
 }
 
 impl Notif {
+    pub fn load_into(app: &mut App) {
+        let new = Self::new(app);
+        let notif = match &app.notif {
+            Some(old) => new.merge(old),
+            None => new,
+        };
+        app.notif = Some(notif);
+    }
+
     pub fn new(app: &App) -> Self {
         let mut new_badges = false;
         let mut my_boards: u64 = 0;
@@ -50,7 +59,7 @@ impl Notif {
         }
     }
 
-    pub const fn merge(&self, old: &Self) -> Self {
+    const fn merge(&self, old: &Self) -> Self {
         Self {
             manual: self.manual || (self.manual_size != old.manual_size),
             badges: self.badges,

@@ -79,19 +79,6 @@ pub fn init_state() {
         }
     }
 
-    // Update the notifications state for the currently selected app.
-    // The idea is that when the launcher is opened, the selected app
-    // is the one that was launched last time. Hence it's the most likely
-    // to have its state changed (manual opened, badges earned, etc).
-    if let Some(app) = state.apps.get_mut(state.pos) {
-        let new = Notif::new(app);
-        let notif = match &app.notif {
-            Some(old) => new.merge(old),
-            None => new,
-        };
-        app.notif = Some(notif);
-    }
-
     unsafe { STATE.set(state) }.ok().unwrap();
 }
 

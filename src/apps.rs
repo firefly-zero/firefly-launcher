@@ -99,12 +99,11 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
         });
     }
     bubble_sort(&mut apps);
-    attach_notifs(&mut apps);
     apps
 }
 
 /// Read notifications for all apps.
-fn attach_notifs(apps: &mut [App]) {
+pub fn attach_notifs(apps: &mut [App]) {
     let mut notifs = Vec::new();
     let Some(file) = load_file_buf("notifs") else {
         return;
