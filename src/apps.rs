@@ -22,6 +22,7 @@ pub struct App {
 
     pub size: Option<(usize, usize)>,
     pub stats: Option<Stats>,
+    pub notif: Option<Notif>,
 }
 
 impl Gt for App {
@@ -67,6 +68,7 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
                 continue;
             }
         };
+
         // Hide the launcher itself from the list.
         let mut app_id = meta.app_id;
         let mut app_name = meta.app_name;
@@ -84,6 +86,7 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
                 }
             }
         }
+
         apps.push(App {
             id: app_id.to_string(),
             author_id: meta.author_id.to_string(),
@@ -92,10 +95,48 @@ pub fn read_apps(is_online: bool) -> Vec<App> {
             priority,
             size: None,
             stats: None,
+            notif: None,
         });
     }
     bubble_sort(&mut apps);
+    attach_notifs(&mut apps);
     apps
+}
+
+/// Read notifications for all apps.
+fn attach_notifs(apps: &mut [App]) {
+    let mut notifs = Vec::new();
+    let Some(file) = load_file_buf("notifs") else {
+        return;
+    };
+    let raw_vec = file.into_bytes();
+    let mut raw_slice = &raw_vec[..];
+    while !raw_slice.is_empty() {
+        let res = postcard::take_from_bytes::<NamedNotif<'_>>(raw_slice);
+        match res {
+            Ok((notif, unused)) => {
+                raw_slice = unused;
+                notifs.push(notif);
+            }
+            Err(err) => {
+                let msg = alloc::format!("parse notif: {err}");
+                log_error(&msg);
+            }
+        }
+    }
+    let mut notifs = &notifs[..];
+
+    for app in apps.iter_mut() {
+        let Some(idx) = notifs
+            .iter()
+            .position(|notif| notif.author == app.author_id && notif.app == app.id)
+        else {
+            continue;
+        };
+        let notif = &notifs[idx];
+        notifs = &notifs[idx + 1..];
+        app.notif = Some(notif.notif.clone());
+    }
 }
 
 /// Load metas from cache, creating it if doesn't exist.

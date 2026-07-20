@@ -10,6 +10,7 @@
     clippy::allow_attributes
 )]
 #![expect(
+    clippy::option_if_let_else,
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
     clippy::collapsible_if,
@@ -66,6 +67,7 @@ extern "C" fn boot() {
 extern "C" fn before_exit() {
     let state = get_state();
     dump_state(state);
+    dump_notifs(state);
 }
 
 /// Save in FS some of the launcher state (list positions).
@@ -75,6 +77,23 @@ fn dump_state(state: &State) {
     raw.extend_from_slice(&state.pos.to_le_bytes());
     raw.extend_from_slice(&state.top_pos.to_le_bytes());
     dump_file("state", &raw);
+}
+
+fn dump_notifs(state: &mut State) {
+    let mut raw: Vec<u8> = Vec::new();
+    for app in &mut state.apps {
+        let Some(notif) = app.notif.take() else {
+            continue;
+        };
+        let notif = NamedNotif {
+            author: &app.author_id,
+            app: &app.id,
+            notif,
+        };
+        // TODO: don't unwrap
+        raw = postcard::to_extend(&notif, raw).unwrap();
+    }
+    dump_file("notifs", &raw);
 }
 
 #[unsafe(no_mangle)]

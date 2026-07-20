@@ -32,6 +32,7 @@ dependencies = [
  "firefly-types",
  "firefly-ui",
  "postcard",
+ "serde",
 ]
 
 [[package]]
@@ -45,18 +46,18 @@ dependencies = [
 
 [[package]]
 name = "firefly-sudo"
-version = "0.14.1"
+version = "0.14.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb0725b6b02d09f2cdcadb729cde7257bd7f30f140acc9e851007b9414504eec"
+checksum = "5ede7b3450c23bdc16b5d58e5e736e55601a52a658f4673bd8aa8006ebe37271"
 dependencies = [
  "firefly-rust",
 ]
 
 [[package]]
 name = "firefly-types"
-version = "0.11.0"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "404cfd65fc0c437c230d1fb23ad1eba84898ace7331a118f72ab3207b4c90490"
+checksum = "ec5657c56ca5e540cc815032dd0242b7bf4c331cbfc426db2c83697d0f7c070d"
 dependencies = [
  "postcard",
  "serde",

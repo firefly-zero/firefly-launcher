@@ -1,52 +1,65 @@
-use firefly_sudo::sudo;
-
 use crate::apps::App;
+use firefly_sudo::sudo;
+use serde::*;
 
-#[derive(Default)]
+#[derive(Default, Serialize, Deserialize)]
+pub struct NamedNotif<'a> {
+    pub author: &'a str,
+    pub app: &'a str,
+    pub notif: Notif,
+}
+
+#[derive(Default, Serialize, Deserialize, Clone)]
 pub struct Notif {
     pub manual: bool,
     pub badges: bool,
     pub boards: bool,
+
+    manual_size: u32,
+    my_boards: u64,
+    friends_boards: u64,
 }
 
 impl Notif {
     pub fn new(app: &App) -> Self {
-        let goals = Goal::new(app);
-        Self {
-            manual: goals.manual_size != 0,
-            badges: goals.new_badges != 0,
-            boards: false,
-        }
-    }
-}
-
-pub struct Goal {
-    manual_size: u32,
-    new_badges: u8,
-    boards_sum: u64,
-}
-
-impl Goal {
-    fn new(app: &App) -> Self {
-        let mut new_badges: u8 = 0;
-        let mut boards_sum: u64 = 0;
+        let mut new_badges = false;
+        let mut my_boards: u64 = 0;
+        let mut friends_boards: u64 = 0;
         if let Some(stats) = &app.stats {
             for badge in &stats.badges {
                 if badge.new {
-                    new_badges = new_badges.saturating_add(1);
+                    new_badges = true;
+                    break;
                 }
             }
             for board in &stats.scores {
-                boards_sum += u64::from(board.me[0].unsigned_abs());
-                boards_sum += u64::from(board.friends[0].score.unsigned_abs());
+                my_boards += u64::from(board.me[0].unsigned_abs());
+                friends_boards += u64::from(board.friends[0].score.unsigned_abs());
             }
         }
         let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app.id);
         let manual_size = sudo::get_file_size(&manual_path) as u32;
+
         Self {
+            manual: manual_size != 0,
+            badges: new_badges,
+            boards: false,
             manual_size,
-            new_badges,
-            boards_sum,
+            my_boards,
+            friends_boards,
+        }
+    }
+
+    pub const fn merge(&self, old: &Self) -> Self {
+        Self {
+            manual: self.manual || (self.manual_size != old.manual_size),
+            badges: self.badges,
+            boards: self.boards
+                || (self.my_boards != self.friends_boards)
+                || (old.my_boards != old.friends_boards),
+            manual_size: self.manual_size,
+            my_boards: self.my_boards,
+            friends_boards: self.friends_boards,
         }
     }
 }
