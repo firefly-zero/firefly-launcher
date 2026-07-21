@@ -170,12 +170,12 @@ fn draw_apps(state: &State) {
                 None
             }
         } else {
-            Some(16)
+            None
         };
         if let Some(sub_x) = sub_x {
             let size = Size::new(16, 14);
             let sub = state.icons.sub(Point::new(sub_x, 0), size);
-            draw_sub_image(&sub, Point::new(208, point.y - 8));
+            draw_sub_image(&sub, Point::new(208, point.y - 7));
             continue;
         }
 
