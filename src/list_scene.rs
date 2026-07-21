@@ -109,7 +109,6 @@ pub fn render(state: &State) {
     draw_selection(state);
     draw_apps(state);
     ScrollBar::from_state(state).render();
-    draw_online(state);
     draw_mouse(state);
 }
 
@@ -158,7 +157,9 @@ fn draw_apps(state: &State) {
 
         // Notification icon.
         let sub_x = if let Some(notif) = &app.notif {
-            if notif.badges && notif.boards {
+            if state.is_online && app.author_id == "sys" && app.id == "disconnector" {
+                Some(80)
+            } else if notif.badges && notif.boards {
                 Some(0)
             } else if notif.badges {
                 Some(32)
@@ -204,16 +205,6 @@ fn draw_selection(state: &State) {
     let has_scroll = state.apps.len() - 1 > PER_SCREEN;
     let y = 2 + pos as i32 * LINE_HEIGHT + state.shift;
     draw_cursor(y, has_scroll, state.input.pressed(), &state.settings.theme);
-}
-
-/// Render a green indicator in a corner if the device is connected to other devices.
-fn draw_online(state: &State) {
-    if !state.is_online {
-        return;
-    }
-    let p = Point::new(WIDTH - 23, HEIGHT - 12);
-    let s = Style::solid(state.settings.theme.accent);
-    draw_circle(p, 8, s);
 }
 
 /// Show message about no apps (except launcher itself) installed.
