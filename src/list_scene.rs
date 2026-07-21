@@ -202,9 +202,9 @@ fn draw_apps(state: &State) {
 /// Render a selection box around the currently selected app.
 fn draw_selection(state: &State) {
     let pos = state.pos.saturating_sub(state.top_pos);
-    let has_scroll = state.apps.len() - 1 > PER_SCREEN;
+    let dx = if state.apps.len() > PER_SCREEN { 10 } else { 0 };
     let y = 2 + pos as i32 * LINE_HEIGHT + state.shift;
-    draw_cursor(y, has_scroll, state.input.pressed(), &state.settings.theme);
+    draw_cursor(y, dx, state.input.pressed(), &state.settings.theme);
 }
 
 /// Show message about no apps (except launcher itself) installed.
