@@ -21,16 +21,27 @@ impl ButtonGroup {
     }
 
     pub fn update(&mut self, input: &InputManager) -> Option<Scene> {
-        let input = input.get();
-        if input == Input::Back {
-            return Some(Scene::List);
-        } else if input == Input::Select {
-            let selected = &self.items[self.cursor];
-            return Some(selected.scene);
-        } else if input == Input::Down && self.cursor < self.items.len() - 1 {
-            self.cursor += 1;
-        } else if input == Input::Up && self.cursor > 0 {
-            self.cursor -= 1;
+        match input.get() {
+            Input::Back => {
+                return Some(Scene::List);
+            }
+            Input::Select => {
+                let selected = &self.items[self.cursor];
+                return Some(selected.scene);
+            }
+            Input::Down if self.cursor < self.items.len() - 1 => {
+                self.cursor += 1;
+            }
+            Input::Up if self.cursor > 0 => {
+                self.cursor -= 1;
+            }
+            Input::Left => {
+                self.cursor = 0;
+            }
+            Input::Right => {
+                self.cursor = self.items.len() - 1;
+            }
+            _ => {}
         }
         None
     }
@@ -42,7 +53,7 @@ impl ButtonGroup {
         {
             let i = n - self.cursor as i32;
             let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
-            draw_cursor(y, 50, pressed, theme);
+            draw_cursor(y, 49, pressed, theme);
         }
         for (button, i) in self.items.iter().zip(0..) {
             let selected = i == self.cursor as i32;
