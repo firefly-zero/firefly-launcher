@@ -176,8 +176,7 @@ fn draw_apps(state: &State) {
         if let Some(sub_x) = sub_x {
             let size = Size::new(16, 14);
             let sub = state.icons.sub(Point::new(sub_x, 0), size);
-            draw_sub_image(&sub, Point::new(208, point.y - 7));
-            continue;
+            draw_sub_image(&sub, Point::new(210, point.y - 7));
         }
 
         // Don't show the author name
@@ -185,8 +184,9 @@ fn draw_apps(state: &State) {
         if app.name.len() > 19 {
             continue;
         }
+        let max_w = if sub_x.is_some() { 13 } else { 16 };
         // Don't show the author name if it doesn't fit on the screen.
-        if app.author_name.len() > 16 {
+        if app.author_name.len() > max_w {
             continue;
         }
         point.x += WIDTH / 2;
