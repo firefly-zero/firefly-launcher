@@ -59,6 +59,16 @@ pub fn init(state: &mut State) {
             accent: notif.manual,
         });
     }
+    let log_path = alloc::format!("data/{}/{}/logs", app.author_id, app.id);
+    let has_log = sudo::get_file_size(&log_path) != 0;
+    if has_log {
+        let msg = "logs";
+        items.push(Button {
+            text: msg,
+            scene: Scene::Delegate("sys", "logs"),
+            accent: false,
+        });
+    }
     if can_delete(app) {
         let msg = Message::Remove.translate(lang);
         items.push(Button {

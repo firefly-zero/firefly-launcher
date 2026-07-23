@@ -175,5 +175,5 @@ pub fn refresh_metas() -> Vec<u8> {
 }
 
 fn hidden_app(author: &str, app: &str) -> bool {
-    author == "sys" && matches!(app, "remover" | "badges" | "boards" | "manuals")
+    author == "sys" && matches!(app, "remover" | "badges" | "boards" | "manuals" | "logs")
 }

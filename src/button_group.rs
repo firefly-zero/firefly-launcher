@@ -53,7 +53,7 @@ impl ButtonGroup {
         {
             let i = n - self.cursor as i32;
             let y = HEIGHT - LINE_HEIGHT * i + LINE_HEIGHT / 2 - 8;
-            draw_cursor(y, 49, pressed, theme);
+            draw_cursor(y, 53, pressed, theme);
         }
         for (button, i) in self.items.iter().zip(0..) {
             let selected = i == self.cursor as i32;
