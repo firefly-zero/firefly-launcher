@@ -157,7 +157,7 @@ fn draw_apps(state: &State) {
 
         // Notification icon.
         let sub_x = if let Some(notif) = &app.notif {
-            if state.is_online && app.author_id == "sys" && app.id == "disconnector" {
+            if state.peers.len() > 1 && app.author_id == "sys" && app.id == "disconnector" {
                 Some(80)
             } else if notif.badges && notif.boards {
                 Some(0)

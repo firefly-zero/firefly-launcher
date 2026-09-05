@@ -16,7 +16,7 @@ pub struct State {
     pub font: FontBuf,
     /// The list of all installed apps.
     pub apps: Vec<App>,
-    pub is_online: bool,
+    pub peers: Vec<String>,
     /// The currently selected app index.
     pub pos: usize,
     /// The index of the firs app on the screen.
@@ -43,14 +43,14 @@ pub fn init_state() {
         log_error("failed to load font, ROM is corrupted");
         panic!();
     };
-    let peers = firefly_rust::get_peers();
+    let peers = get_peer_names();
     let is_online = peers.len() > 1;
     let mut state = State {
         scene: Scene::List,
         settings,
         font: font.into(),
         apps: read_apps(is_online),
-        is_online,
+        peers,
         pos: 0,
         top_pos: 0,
         button_group: None,
@@ -119,4 +119,8 @@ pub fn delegate(state: &mut State, author_id: &str, app_id: &str) {
     let target_path = alloc::format!("data/{author_id}/{app_id}/etc/target");
     sudo::dump_file(&target_path, full_id);
     sudo::run_app(author_id, app_id);
+}
+
+pub fn get_peer_names() -> Vec<String> {
+    get_peers().iter().map(get_name_buf).collect()
 }
