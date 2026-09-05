@@ -49,7 +49,12 @@ pub fn init(state: &mut State) {
             });
         }
     }
-    let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app.id);
+    let app_id = if app.author_id == "sys" && app.id == "disconnector" {
+        "connector"
+    } else {
+        &app.id
+    };
+    let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app_id);
     let has_manual = sudo::get_file_size(&manual_path) != 0;
     if has_manual {
         let msg = Message::Manual.translate(lang);

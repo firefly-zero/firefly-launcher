@@ -39,7 +39,12 @@ impl App {
         if self.stats.is_some() {
             return;
         }
-        let stats_path = format!("data/{}/{}/stats", self.author_id, self.id);
+        let app_id = if self.author_id == "sys" && self.id == "disconnector" {
+            "connector"
+        } else {
+            &self.id
+        };
+        let stats_path = format!("data/{}/{}/stats", self.author_id, app_id);
         let Some(raw) = sudo::load_file_buf(&stats_path) else {
             return;
         };

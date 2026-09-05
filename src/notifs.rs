@@ -47,7 +47,12 @@ impl Notif {
                 friends_boards += u64::from(board.friends[0].score.unsigned_abs());
             }
         }
-        let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app.id);
+        let app_id = if app.author_id == "sys" && app.id == "disconnector" {
+            "connector"
+        } else {
+            &app.id
+        };
+        let manual_path = alloc::format!("roms/{}/{}/_manual", app.author_id, app_id);
         let manual_size = sudo::get_file_size(&manual_path) as u32;
 
         Self {
