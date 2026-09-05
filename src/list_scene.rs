@@ -11,6 +11,11 @@ pub const PER_SCREEN: usize = 12;
 pub const fn init(_state: &mut State) {}
 
 pub fn update(state: &mut State) {
+    let peers = get_peers();
+    if peers.len() < state.peers.len() {
+        show_disconnect_err(state, peers);
+        return;
+    }
     let old_pos = state.pos;
     handle_input(state);
     if state.pos != old_pos {
@@ -26,6 +31,18 @@ pub fn update(state: &mut State) {
             state.top_pos = state.pos;
         }
     }
+}
+
+fn show_disconnect_err(state: &mut State, peers: Peers) {
+    let names: Vec<_> = peers.iter().map(get_name_buf).collect();
+    let name = state
+        .peers
+        .iter()
+        .find(|name| !names.contains(name))
+        .unwrap();
+    let msg = alloc::format!("{name} disconnected");
+    state.peers = names;
+    state.transition_to(Scene::Error(msg));
 }
 
 fn handle_input(state: &mut State) {
