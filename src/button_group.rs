@@ -27,7 +27,7 @@ impl ButtonGroup {
             }
             Input::Select => {
                 let selected = &self.items[self.cursor];
-                return Some(selected.scene);
+                return Some(selected.scene.clone());
             }
             Input::Down if self.cursor < self.items.len() - 1 => {
                 self.cursor += 1;

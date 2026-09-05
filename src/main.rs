@@ -22,6 +22,7 @@ extern crate alloc;
 mod apps;
 mod button_group;
 mod components;
+mod error_scene;
 mod info_scene;
 mod list_scene;
 mod notifs;
@@ -46,12 +47,14 @@ static mut RENDERED: bool = false;
 /// The current loading stage.
 static mut LOADING: u8 = 0;
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub enum Scene {
     /// List all installed apps.
     List,
     /// Show the app context menu with basic app info and action buttons.
     Info,
+    /// Show an error message.
+    Error(alloc::string::String),
     /// Delegate handling of the focused app to the given app.
     Delegate(&'static str, &'static str),
 }
@@ -129,6 +132,7 @@ extern "C" fn update() {
     match state.scene() {
         Scene::List => list_scene::update(state),
         Scene::Info => info_scene::update(state),
+        Scene::Error(_) => error_scene::update(state),
         Scene::Delegate(_, _) => {}
     }
 }
@@ -160,6 +164,7 @@ extern "C" fn render() {
     match state.scene() {
         Scene::List => list_scene::render(state),
         Scene::Info => info_scene::render(state),
+        Scene::Error(msg) => error_scene::render(state, msg),
         Scene::Delegate(_, _) => {}
     }
 }

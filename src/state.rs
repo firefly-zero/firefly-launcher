@@ -1,6 +1,7 @@
 #![allow(static_mut_refs)]
 
 use crate::*;
+use alloc::string::String;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::cell::OnceCell;
@@ -97,6 +98,7 @@ impl State {
         match self.scene {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),
+            Scene::Error(_) => {}
             Scene::Delegate(author_id, app_id) => delegate(self, author_id, app_id),
         }
     }
