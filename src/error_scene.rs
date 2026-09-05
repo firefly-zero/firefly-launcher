@@ -1,9 +1,14 @@
 use crate::*;
+use firefly_sudo::sudo;
 use firefly_ui::*;
 
-pub fn update(state: &mut State) {
+pub fn update(state: &mut State, disconnect: bool) {
     if matches!(state.input.get(), Input::Back | Input::Select) {
-        state.transition_to(Scene::List);
+        if disconnect {
+            sudo::run_app("sys", "disconnector");
+        } else {
+            state.transition_to(Scene::List);
+        }
     }
 }
 

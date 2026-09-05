@@ -13,7 +13,7 @@ pub const fn init(_state: &mut State) {}
 pub fn update(state: &mut State) {
     let peers = get_peers();
     if peers.len() < state.peers.len() {
-        show_disconnect_err(state, peers);
+        handle_disconnect(state, peers);
         return;
     }
     let old_pos = state.pos;
@@ -33,8 +33,13 @@ pub fn update(state: &mut State) {
     }
 }
 
-fn show_disconnect_err(state: &mut State, peers: Peers) {
+/// Handle the situation when a peer disconnects.
+///
+/// Shows an error message about the disconnected peer.
+/// If that was the last peer, also stops the multiplayer.
+fn handle_disconnect(state: &mut State, peers: Peers) {
     let names: Vec<_> = peers.iter().map(get_name_buf).collect();
+    let disconnect = names.len() < 2;
     let name = state
         .peers
         .iter()
@@ -42,7 +47,7 @@ fn show_disconnect_err(state: &mut State, peers: Peers) {
         .unwrap();
     let msg = alloc::format!("{name} disconnected");
     state.peers = names;
-    state.transition_to(Scene::Error(msg));
+    state.transition_to(Scene::Error { msg, disconnect });
 }
 
 fn handle_input(state: &mut State) {

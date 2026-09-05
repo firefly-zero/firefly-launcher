@@ -98,7 +98,7 @@ impl State {
         match self.scene {
             Scene::List => list_scene::init(self),
             Scene::Info => info_scene::init(self),
-            Scene::Error(_) => {}
+            Scene::Error { .. } => {}
             Scene::Delegate(author_id, app_id) => delegate(self, author_id, app_id),
         }
     }
