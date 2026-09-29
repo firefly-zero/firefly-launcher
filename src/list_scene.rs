@@ -115,7 +115,7 @@ pub fn launch_selected(state: &mut State) {
     }
     let disconnector = app.author_id == "sys" && app.id == "disconnector";
     if !disconnector {
-        let splash_path = alloc::format!("roms/{}/{}/_splash", &app.author_id, &app.id);
+        let splash_path = alloc::format!("roms/{}/{}/_splash", app.author_id, app.id);
         state.splash = Some(splash_path);
     }
     sudo::run_app(&app.author_id, &app.id);
